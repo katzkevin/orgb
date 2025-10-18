@@ -6,9 +6,22 @@
 ################################################################################
 # OF ROOT
 #   The location of your root openFrameworks installation
-#       (default) OF_ROOT = ../../.. 
+#       (default) OF_ROOT = ../../..
 ################################################################################
 OF_ROOT = /Users/katz/workspace/of_v0.12.1_osx_release
+
+################################################################################
+# EMSCRIPTEN SPECIFIC CONFIGURATION
+#   Settings for compiling to WebAssembly for browser deployment
+################################################################################
+# Use the emscripten platform
+PLATFORM_OS = Emscripten
+
+# Set the binary name
+BIN_NAME = orgb
+
+# Memory configuration (128MB default, can be increased if needed)
+# PROJECT_EMSCRIPTEN_TOTAL_MEMORY = 268435456  # 256MB if needed
 
 ################################################################################
 # PROJECT ROOT
@@ -77,7 +90,8 @@ OF_ROOT = /Users/katz/workspace/of_v0.12.1_osx_release
 # add a runtime path to search for those shared libraries, since they aren't
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-PROJECT_LDFLAGS=-Wl,-rpath,@executable_path -L/opt/homebrew/opt/boost/lib -lboost_filesystem
+# NOTE: Disabled for Emscripten - macOS-specific flags and boost not available in browser
+# PROJECT_LDFLAGS=-Wl,-rpath,@executable_path -L/opt/homebrew/opt/boost/lib -lboost_filesystem
 
 ################################################################################
 # PROJECT DEFINES
@@ -105,7 +119,8 @@ PROJECT_LDFLAGS=-Wl,-rpath,@executable_path -L/opt/homebrew/opt/boost/lib -lboos
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_CFLAGS = -I/opt/homebrew/opt/boost/include 
+# NOTE: Disabled for Emscripten - boost not available in browser
+# PROJECT_CFLAGS = -I/opt/homebrew/opt/boost/include 
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
