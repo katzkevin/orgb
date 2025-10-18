@@ -21,7 +21,7 @@ void ofApp::initializeForms() {
         
 //        std::shared_ptr<VisualForm>(new LaserWaves("LaserWaves")),
         // std::shared_ptr<VisualForm>(new GravityParticles("GravityParticles")),
-        // std::shared_ptr<VisualForm>(new Field("Field")),
+        std::shared_ptr<VisualForm>(new Field("Field")),
         std::shared_ptr<VisualForm>(new RandomParticles("RandomParticles")),
         // std::shared_ptr<VisualForm>(new GlowLinePlayground("GlowLinePlayground")),
         std::shared_ptr<VisualForm>(new Shape("Shape")),
@@ -101,9 +101,6 @@ void ofApp::initializeForms() {
     }
     if (scanlinesEffect) {
         postProcessingParameterGroup.add(scanlinesEffect->getParameterGroup());
-    }
-    if (glitchEffect) {
-        postProcessingParameterGroup.add(glitchEffect->getParameterGroup());
     }
     gui.add(postProcessingParameterGroup);
 
@@ -216,12 +213,10 @@ void ofApp::setup() {
     // Create and configure effects
     filmGrainEffect = std::make_shared<FilmGrainEffect>();
     scanlinesEffect = std::make_shared<ScanlinesEffect>();
-    glitchEffect = std::make_shared<DigitalGlitchEffect>();
 
     // Add effects to pipeline
     postProcessing->addEffect(filmGrainEffect);
     postProcessing->addEffect(scanlinesEffect);
-    postProcessing->addEffect(glitchEffect);
 
     ofLogNotice("ofApp::setup") << "Shader pipeline initialized";
     postProcessing->printPipeline();

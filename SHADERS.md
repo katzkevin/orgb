@@ -20,10 +20,6 @@ void ofApp::setup() {
     // Add effects
     postProcessing->addEffect(std::make_shared<FilmGrainEffect>());
     postProcessing->addEffect(std::make_shared<ScanlinesEffect>());
-
-    auto glitch = std::make_shared<DigitalGlitchEffect>();
-    glitch->setEnabled(false);
-    postProcessing->addEffect(glitch);
 }
 
 // In draw()
@@ -53,8 +49,7 @@ ShaderEffect (base class)
 
 Effects
 ├── FilmGrainEffect
-├── ScanlinesEffect
-└── DigitalGlitchEffect
+└── ScanlinesEffect
 ```
 
 ## Using Effects
@@ -78,16 +73,6 @@ scanlines->setRGBShift(1.0f);         // chromatic aberration
 scanlines->setVignette(0.4f);         // 0.0 - 1.0
 ```
 
-### DigitalGlitchEffect
-
-```cpp
-auto glitch = std::make_shared<DigitalGlitchEffect>();
-glitch->setIntensity(0.5f);         // 0.0 - 1.0
-glitch->setBlockSize(16.0f);        // pixel size
-glitch->setColorShift(0.3f);        // RGB channel shift
-glitch->setTrigger();               // trigger glitch burst
-```
-
 ### Pipeline Control
 
 ```cpp
@@ -95,11 +80,6 @@ glitch->setTrigger();               // trigger glitch burst
 if (auto effect = postProcessing->getEffect("Film Grain")) {
     effect->toggle();
 }
-
-// Get specific effect
-auto glitch = std::dynamic_pointer_cast<DigitalGlitchEffect>(
-    postProcessing->getEffect("Digital Glitch")
-);
 
 // Enable/disable all
 postProcessing->enableAll();

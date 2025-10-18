@@ -106,24 +106,6 @@ bool test_ScanlinesEffect_Parameters() {
     return effect->getIntensity() == 0.8f && effect->getScanlineCount() == 300.0f;
 }
 
-bool test_DigitalGlitchEffect_Creation() {
-    auto effect = std::make_shared<DigitalGlitchEffect>();
-    return effect != nullptr && effect->getName() == "Digital Glitch";
-}
-
-bool test_DigitalGlitchEffect_DefaultDisabled() {
-    auto effect = std::make_shared<DigitalGlitchEffect>();
-    // Glitch effect should be disabled by default
-    return !effect->isEnabled();
-}
-
-bool test_DigitalGlitchEffect_Parameters() {
-    auto effect = std::make_shared<DigitalGlitchEffect>();
-    effect->setIntensity(0.7f);
-    effect->setBlockSize(32.0f);
-    return effect->getIntensity() == 0.7f && effect->getBlockSize() == 32.0f;
-}
-
 bool test_ShaderPipeline_Creation() {
     auto pipeline = std::make_shared<ShaderPipeline>(1920, 1080);
     return pipeline != nullptr && pipeline->getWidth() == 1920 && pipeline->getHeight() == 1080;
@@ -222,13 +204,10 @@ bool test_Effect_ToggleState() {
 bool test_Effect_ParameterCount() {
     auto filmGrain = std::make_shared<FilmGrainEffect>();
     auto scanlines = std::make_shared<ScanlinesEffect>();
-    auto glitch = std::make_shared<DigitalGlitchEffect>();
 
     // FilmGrain has 2 parameters (intensity, grain size)
     // Scanlines has 5 parameters
-    // Glitch has 4 parameters
-    return filmGrain->getParameters().size() == 2 && scanlines->getParameters().size() == 5 &&
-           glitch->getParameters().size() == 4;
+    return filmGrain->getParameters().size() == 2 && scanlines->getParameters().size() == 5;
 }
 
 // ============================================================================
@@ -246,9 +225,6 @@ int main() {
     ShaderTest::runTest("FilmGrainEffect parameters", test_FilmGrainEffect_Parameters);
     ShaderTest::runTest("ScanlinesEffect creation", test_ScanlinesEffect_Creation);
     ShaderTest::runTest("ScanlinesEffect parameters", test_ScanlinesEffect_Parameters);
-    ShaderTest::runTest("DigitalGlitchEffect creation", test_DigitalGlitchEffect_Creation);
-    ShaderTest::runTest("DigitalGlitchEffect default disabled", test_DigitalGlitchEffect_DefaultDisabled);
-    ShaderTest::runTest("DigitalGlitchEffect parameters", test_DigitalGlitchEffect_Parameters);
 
     // Pipeline tests
     ShaderTest::runTest("ShaderPipeline creation", test_ShaderPipeline_Creation);

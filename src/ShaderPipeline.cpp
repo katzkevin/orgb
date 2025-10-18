@@ -261,7 +261,6 @@ std::shared_ptr<ShaderPipeline> createRetroGlitchPipeline(int width, int height)
     // TODO: Add actual effects once they're implemented
     // pipeline->addEffect(std::make_shared<FilmGrainEffect>());
     // pipeline->addEffect(std::make_shared<ScanlinesEffect>());
-    // pipeline->addEffect(std::make_shared<DigitalGlitchEffect>());
 
     ofLogNotice("ShaderPipelinePresets") << "Created RetroGlitch pipeline";
     return pipeline;

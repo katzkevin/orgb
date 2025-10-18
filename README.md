@@ -61,7 +61,7 @@ just shader-test
 just shader-check
 ```
 
-includes film grain, scanlines, and digital glitch effects. see [SHADERS.md](SHADERS.md) for usage.
+includes film grain and scanlines effects. see [SHADERS.md](SHADERS.md) for usage.
 
 ## testing
 

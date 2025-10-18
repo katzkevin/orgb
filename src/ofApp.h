@@ -183,7 +183,6 @@ class ofApp : public ofBaseApp {
     std::shared_ptr<ShaderPipeline> postProcessing;
     std::shared_ptr<FilmGrainEffect> filmGrainEffect;
     std::shared_ptr<ScanlinesEffect> scanlinesEffect;
-    std::shared_ptr<DigitalGlitchEffect> glitchEffect;
     ofParameterGroup postProcessingParameterGroup;
 
     /*
