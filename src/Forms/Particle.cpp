@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-Particle::Particle(ofVec3f pos, ofVec3f vel, ofColor c) : BaseParticle(pos, vel) { color = c; }
+Particle::Particle(glm::vec3 pos, glm::vec3 vel, ofColor c) : BaseParticle(pos, vel) { color = c; }
 
 //------------------------------------------------------------
 

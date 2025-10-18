@@ -46,20 +46,55 @@ MOSQUITTO_CLIENT_ID=orgb-client
 
 works without MQTT too, just uses OSC instead.
 
+## shaders
+
+production-ready post-processing shader system:
+
+```bash
+# validate all shaders
+just shader-validate
+
+# run shader tests
+just shader-test
+
+# check everything (validation + tests)
+just shader-check
+```
+
+includes film grain, scanlines, and digital glitch effects. see [SHADERS.md](SHADERS.md) for usage.
+
 ## testing
 
 got 130+ unit tests covering the core stuff:
 
 ```bash
+# run C++ unit tests
 just test
+
+# run shader tests
+just shader-test
+
+# run everything
+just test && just shader-check
 ```
 
 see [TESTING.md](TESTING.md) for details.
+
+## ci/cd
+
+automated validation on every push:
+
+- ✅ shader compilation checks
+- ✅ unit tests (C++ + shaders)
+- ✅ code quality checks
+
+workflows run in parallel for speed. see [.github/workflows/](.github/workflows/) for config.
 
 ## tech
 
 - C++17
 - openFrameworks 0.12.1
+- GLSL shaders (GL2/GL3/ES2)
 - MQTT (mosquitto)
 - OSC
 - NDI video output

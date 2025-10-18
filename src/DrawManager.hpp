@@ -35,7 +35,12 @@ class DrawManager {
     virtual ~DrawManager(){};
 
     void beginDraw();
+    void endDraw();  // End drawing without drawing to screen
     void endAndDrawFbo();
+
+    // FBO accessors for post-processing
+    ofFbo& getFboFront() { return fboFront; }
+    ofFbo& getFboBack() { return fboBack; }
 
     ShaderPackage shaderPackageBlurX;
     void shadeBlurX(float delta, float gain = 1.0);

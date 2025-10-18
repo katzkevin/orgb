@@ -29,21 +29,21 @@ ofVec3f GravityParticles::startPositionForPress(const Press &p) {
 }
 
 static void wallBounce(Particle &particle) {
-    ofVec2f pos = particle.position;
-    ofVec2f vel = particle.velocity;
+    glm::vec3 pos = particle.position;
+    glm::vec3 vel = particle.velocity;
 
     if (pos.x < 0) {
-        particle.velocity = ofVec2f(-vel.x, vel.y);
+        particle.velocity = glm::vec3(-vel.x, vel.y, vel.z);
         int xOver = -pos.x;
         // This will be problematic at extremely high velocities (if xOver is greater than width?
-        particle.position = ofVec2f(xOver, pos.y);
+        particle.position = glm::vec3(xOver, pos.y, pos.z);
     }
     // TODO Off by one? exactly getWidth
     else if (pos.x >= ofGetWidth()) {
-        particle.velocity = ofVec2f(-vel.x, vel.y);
+        particle.velocity = glm::vec3(-vel.x, vel.y, vel.z);
         int xOver = pos.x - ofGetWidth();
         // This will be problematic at extremely high velocities (if xOver is greater than width?
-        particle.position = ofVec2f(ofGetWidth() - xOver, pos.y);
+        particle.position = glm::vec3(ofGetWidth() - xOver, pos.y, pos.z);
     }
 }
 

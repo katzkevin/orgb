@@ -9,16 +9,16 @@
 
 #include "Utilities.hpp"
 
-BaseParticle::BaseParticle(ofVec3f pos, ofVec3f vel) {
+BaseParticle::BaseParticle(glm::vec3 pos, glm::vec3 vel) {
     position = pos;
     velocity = vel;
 }
 
-void BaseParticle::update(float dt, ofVec3f acceleration) {
+void BaseParticle::update(float dt, glm::vec3 acceleration) {
     velocity = velocity + acceleration * dt;
     position = position + velocity * dt;
 }
 
-void BaseParticle::updateVelocity(ofVec3f newVelocity) { velocity = newVelocity; }
+void BaseParticle::updateVelocity(glm::vec3 newVelocity) { velocity = newVelocity; }
 
-void BaseParticle::updatePosition(ofVec3f newPosition) { position = newPosition; }
+void BaseParticle::updatePosition(glm::vec3 newPosition) { position = newPosition; }

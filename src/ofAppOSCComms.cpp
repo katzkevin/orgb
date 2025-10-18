@@ -17,7 +17,8 @@ void ofApp::pollForOSCMessages() {
         receiver.getNextMessage(m);
         if (monitorFrameRateMode) {
             warnOnSlow("OSC IO getNextMessage", t0,
-                       TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO);  // Check every update frame
+                       TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO,
+                       ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
         }
 
         if (m.getAddress() == MIDI_GUITAR_OSC_ADDRESS) {
@@ -131,6 +132,6 @@ void ofApp::pollForOSCMessages() {
         }
     }
     
-    warnOnSlow("OSC IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO);  // Check every update frame
+    warnOnSlow("OSC IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO, ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
     
 }

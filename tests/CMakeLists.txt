@@ -89,6 +89,10 @@ set(SRC_FILES
     ../src/Press.cpp
     ../src/ColorProvider.cpp
     ../src/KeyState.cpp
+    ../src/Forms/Flock.cpp
+    ../src/Forms/BaseParticle.cpp
+    ../src/Forms/Particle.cpp
+    ../src/Forms/SizedSprite.cpp
 )
 
 # Test files
@@ -97,6 +101,7 @@ set(TEST_FILES
     test_press.cpp
     test_keystate.cpp
     test_colorprovider.cpp
+    test_flock.cpp
 )
 
 # Create test executable

@@ -38,6 +38,8 @@
 #include "Utilities.hpp"
 #include "VisualForm.hpp"
 #include "ofxOscParameterSync.h"
+#include "ShaderPipeline.hpp"
+#include "Effects/AllEffects.hpp"
 
 
 // #include "FieldWithTrails.hpp"
@@ -175,6 +177,15 @@ class ofApp : public ofBaseApp {
      * GPU
      */
     DrawManager dm;
+
+    /*
+     * Post-Processing Shaders
+     */
+    std::shared_ptr<ShaderPipeline> postProcessing;
+    std::shared_ptr<FilmGrainEffect> filmGrainEffect;
+    std::shared_ptr<ScanlinesEffect> scanlinesEffect;
+    std::shared_ptr<DigitalGlitchEffect> glitchEffect;
+    ofParameterGroup postProcessingParameterGroup;
 
     /*
      * Moments

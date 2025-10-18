@@ -53,25 +53,25 @@ TEST_F(UtilitiesTest, PositiveModuloHueWrapping) {
 // ============================================================================
 
 TEST_F(UtilitiesTest, PolarToRectangularZeroAngle) {
-    ofVec2f result = polarToRectangular(10.0f, 0.0f);
+    glm::vec2 result = polarToRectangular(10.0f, 0.0f);
     EXPECT_NEAR(result.x, 10.0f, EPSILON);
     EXPECT_NEAR(result.y, 0.0f, EPSILON);
 }
 
 TEST_F(UtilitiesTest, PolarToRectangular90Degrees) {
-    ofVec2f result = polarToRectangular(10.0f, PI / 2.0f);
+    glm::vec2 result = polarToRectangular(10.0f, PI / 2.0f);
     EXPECT_NEAR(result.x, 0.0f, EPSILON);
     EXPECT_NEAR(result.y, 10.0f, EPSILON);
 }
 
 TEST_F(UtilitiesTest, PolarToRectangular180Degrees) {
-    ofVec2f result = polarToRectangular(10.0f, PI);
+    glm::vec2 result = polarToRectangular(10.0f, PI);
     EXPECT_NEAR(result.x, -10.0f, EPSILON);
     EXPECT_NEAR(result.y, 0.0f, EPSILON);
 }
 
 TEST_F(UtilitiesTest, SphericalToRectangularZeroAngles) {
-    ofVec3f result = sphericalToRectangular(10.0f, 0.0f, PI / 2.0f);
+    glm::vec3 result = sphericalToRectangular(10.0f, 0.0f, PI / 2.0f);
     EXPECT_NEAR(result.x, 10.0f, EPSILON);
     EXPECT_NEAR(result.y, 0.0f, EPSILON);
     EXPECT_NEAR(result.z, 0.0f, EPSILON);
@@ -122,10 +122,14 @@ TEST_F(UtilitiesTest, TransitionEaseInBoundaries) {
 }
 
 TEST_F(UtilitiesTest, TransitionEaseInCurve) {
-    // Cubic ease-in should be slow at start
-    EXPECT_LT(transitionEaseIn(0.25f), 0.25f);
-    EXPECT_LT(transitionEaseIn(0.5f), 0.5f);
-    EXPECT_GT(transitionEaseIn(0.75f), 0.5f);
+    // Cubic ease-in should be slow at start (below linear), accelerate at end
+    EXPECT_LT(transitionEaseIn(0.25f), 0.25f);  // 0.25^3 = 0.015625 < 0.25
+    EXPECT_LT(transitionEaseIn(0.5f), 0.5f);    // 0.5^3 = 0.125 < 0.5
+    EXPECT_LT(transitionEaseIn(0.75f), 0.75f);  // 0.75^3 = 0.421875 < 0.75
+    // But it should be accelerating (derivative increasing)
+    float early = transitionEaseIn(0.25f);
+    float late = transitionEaseIn(0.75f);
+    EXPECT_GT(late - transitionEaseIn(0.5f), transitionEaseIn(0.5f) - early);
 }
 
 TEST_F(UtilitiesTest, TransitionEaseInReverseBoundaries) {
@@ -240,8 +244,8 @@ TEST_F(UtilitiesTest, DeterministicRandomPctDifferentSalts) {
 
 TEST_F(UtilitiesTest, DeterministicRandomUnitVectorLength) {
     // Unit vector should have length ~1
-    ofVec3f v = deterministicRandomUnitVector(42.0f);
-    float length = v.length();
+    glm::vec3 v = deterministicRandomUnitVector(42.0f);
+    float length = glm::length(v);
 
     EXPECT_NEAR(length, 1.0f, 0.1f);  // Allow some tolerance for float math
 }

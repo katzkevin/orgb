@@ -35,6 +35,18 @@ void DrawManager::beginDraw() {
     activeCanvas = boost::optional<ofFbo>(fboFront);
 }
 
+void DrawManager::endDraw() {
+    // End drawing without drawing to screen (for post-processing pipeline)
+    if (activeCanvas.get().getId() != fboFront.getId()) {
+        throw std::runtime_error("Canvas must be front canvas.");
+    }
+    if (!activeCanvas.is_initialized()) {
+        throw std::runtime_error("Can't end draw without an active canvas");
+    }
+    activeCanvas.get().end();
+    activeCanvas = boost::none;
+}
+
 void DrawManager::endAndDrawFbo() {
     // Extremely stateful, see existing examples
     if (activeCanvas.get().getId() != fboFront.getId()) {

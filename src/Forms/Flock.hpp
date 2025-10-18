@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 
+#include <glm/glm.hpp>
 #include "SizedSprite.hpp"
 #include "Utilities.hpp"
 #include "ofMain.h"
@@ -19,7 +20,7 @@ class Flock {
     Flock();
     virtual ~Flock(){};
 
-    void update(float dt);
+    void update(float dt, float elapsedTimeF);
 
     std::vector<SizedSprite> l;
 
@@ -33,9 +34,6 @@ class Flock {
     float minVelocity;
     float maxVelocity;
     float margin;
-    float noiseSpatialFrequency;
-    float noiseTemporalRate;
-    float noiseScale;
     float xMin;
     float xMax;
     float yMin;

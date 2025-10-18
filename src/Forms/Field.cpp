@@ -128,9 +128,6 @@ void Field::update(KeyState& ks, ColorProvider& clr) {
     flock.minVelocity = minVelocity * pow(ffwModulation, 0.5);
     flock.maxVelocity = maxVelocity * pow(ffwModulation, 0.5);
     flock.margin = margin;
-    flock.noiseSpatialFrequency = noiseSpatialFrequency;
-    flock.noiseTemporalRate = noiseTemporalRate;
-    flock.noiseScale = noiseScale;
     flock.xMin = 0;
     flock.xMax = width;
     flock.yMin = 0;
@@ -143,7 +140,7 @@ void Field::update(KeyState& ks, ColorProvider& clr) {
     adjustFlockPopulation();
 
     // ofVec3f steer = steerAccordingToKeyPresses(ks);
-    flock.update(ofGetLastFrameTime());
+    flock.update(ofGetLastFrameTime(), ofGetElapsedTimef());
 }
 
 void Field::translateField() {
@@ -161,16 +158,16 @@ void Field::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
     ofDisableDepthTest();  // Speeds things up
 
     if (noiseVisualize) {
-        drawNoiseVisualize(noiseSpatialFrequency, noiseTemporalRate, noiseScale);
+        drawNoiseVisualize(noiseSpatialFrequency, noiseTemporalRate, noiseScale, ofGetElapsedTimef());
         return;
     }
 
     float computedDampenRadius;
     float scale = std::min(ofGetWidth() / width, ofGetHeight() / height);
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
-        float colinearityWithOpticalAxis = abs(it->velocity.getNormalized().dot(ofVec3f(0, 0, 1)));
-        // float colinearityWithXAxis = abs(it->velocity.getNormalized().dot(ofVec3f(1,0,0)));
-        // float colinearityWithYAxis = abs(it->velocity.getNormalized().dot(ofVec3f(0,1,0)));
+        float colinearityWithOpticalAxis = abs(glm::dot(glm::normalize(it->velocity), glm::vec3(0, 0, 1)));
+        // float colinearityWithXAxis = abs(glm::dot(glm::normalize(it->velocity), glm::vec3(1,0,0)));
+        // float colinearityWithYAxis = abs(glm::dot(glm::normalize(it->velocity), glm::vec3(0,1,0)));
 
         switch (drawStyle) {
             case 1:

@@ -14,9 +14,14 @@
 #include <random>
 #include <unordered_map>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 #include "Press.hpp"
 #include "boost/functional/hash.hpp"
-#include "ofMain.h"
+#include "core/Random.hpp"
+#include "core/MathUtils.hpp"
+#include "ofMain.h"  // Still needed for logging, drawing, etc.
 
 #define NUM_NOTES 12
 #define TWELFTH_ROOT_TWO 1.0594631
@@ -47,13 +52,14 @@ enum PARAMTYPE { COLORS = 0, PARAM_TYPE_UNKNOWN };
 
 double getSystemTimeSecondsPrecise();
 
-void warnOnSlow(std::string label, double t0, float thresholdSeconds, int perNFrames = 30, float warmupTimeS = 5.0);
-void monitorFrameRate(float targetFrameRate, int perNFrames = 30, float warmupTimeS = 5.0);
+// Performance monitoring - now accepts frame info as parameters
+void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS, int perNFrames = 30, float warmupTimeS = 5.0);
+void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate, int perNFrames = 30, float warmupTimeS = 5.0);
 
 int positive_modulo(int x, int y);
 float positive_modulo(float x, float y);
-ofVec2f polarToRectangular(float r, float thetaRadians);
-ofVec3f sphericalToRectangular(float r, float thetaRadians, float phiRadians);
+glm::vec2 polarToRectangular(float r, float thetaRadians);
+glm::vec3 sphericalToRectangular(float r, float thetaRadians, float phiRadians);
 float exponentialMap(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp = true,
                      float shaper = 0.5);
 
@@ -65,12 +71,12 @@ std::mt19937 getRandomEngine(std::string seed);
 
 unsigned int deterministicRandom(float salt);
 float deterministicRandomPct(float salt);
-ofVec3f deterministicRandomUnitVector(float salt);
-ofVec3f getRandomlyRotatedVectorRad(ofVec3f inVector, float radians);
-ofVec3f getRotatedAwayFromVectorRad(ofVec3f inVector, ofVec3f rotateAwayFrom, float radians);
-ofVec3f randomUnitVector();
-ofVec3f randomUnitVector2D();
-std::pair<ofVec3f, ofVec3f> edgeToEdgeLineSegment(const Press &p, unsigned int seed);
+glm::vec3 deterministicRandomUnitVector(float salt);
+glm::vec3 getRandomlyRotatedVectorRad(glm::vec3 inVector, float radians);
+glm::vec3 getRotatedAwayFromVectorRad(glm::vec3 inVector, glm::vec3 rotateAwayFrom, float radians);
+glm::vec3 randomUnitVector();
+glm::vec3 randomUnitVector2D();
+std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned int seed);
 
 float getGaussian();
 float getGaussian(float mu, float sigma);
@@ -86,8 +92,8 @@ float getGlowDampenRatio(float glowIntensity, float computedGlow, float distance
 void kkEnableAlphaBlending();
 void kkDisableAlphaBlending();
 
-ofVec2f applyGlobalTransformation(ofVec2f input);
-ofVec3f applyGlobalTransformation(ofVec3f input);
+glm::vec2 applyGlobalTransformation(glm::vec2 input);
+glm::vec3 applyGlobalTransformation(glm::vec3 input);
 
 float noteRelativeFrequency(int note);
 float midiToHz(int note);
@@ -96,9 +102,9 @@ float easeOutCubicTransitionFunction(const float pct);
 float pctToGain(float pct, float kurtosis);
 
 float noiseForCoordinates(float x, float y, float spatialFrequency, float temporalRate, float timeS);
-ofVec3f noiseGradientForCoordinates(float x, float y, float spatialFrequency, float temporalRate, float noiseScale,
-                                    float timeS);
-void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseScale);
+glm::vec3 noiseGradientForCoordinates(float x, float y, float spatialFrequency, float temporalRate, float noiseScale,
+                                      float timeS);
+void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseScale, float elapsedTimeF);
 
 namespace ColorUtilities {
 ofColor generateNoisyColor(ofColor baseColor, float baseAlphaPct, float hueNoiseMaximumPct,

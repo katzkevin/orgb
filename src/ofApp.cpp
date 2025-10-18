@@ -93,6 +93,20 @@ void ofApp::initializeForms() {
     adsrParameterGroup.setName("ADSR");
     gui.add(adsrParameterGroup);
 
+    // Add post-processing effects to GUI
+    postProcessingParameterGroup.clear();
+    postProcessingParameterGroup.setName("Post-Processing");
+    if (filmGrainEffect) {
+        postProcessingParameterGroup.add(filmGrainEffect->getParameterGroup());
+    }
+    if (scanlinesEffect) {
+        postProcessingParameterGroup.add(scanlinesEffect->getParameterGroup());
+    }
+    if (glitchEffect) {
+        postProcessingParameterGroup.add(glitchEffect->getParameterGroup());
+    }
+    gui.add(postProcessingParameterGroup);
+
     for (auto form : forms) {
         form->setup();
 
@@ -197,10 +211,28 @@ void ofApp::setup() {
     // TODO Does this impact Pi / LED ?
 #endif
     
+    // Initialize post-processing pipeline
+    int width = ofGetWidth();
+    int height = ofGetHeight();
+    postProcessing = std::make_shared<ShaderPipeline>(width, height);
+
+    // Create and configure effects
+    filmGrainEffect = std::make_shared<FilmGrainEffect>();
+    scanlinesEffect = std::make_shared<ScanlinesEffect>();
+    glitchEffect = std::make_shared<DigitalGlitchEffect>();
+
+    // Add effects to pipeline
+    postProcessing->addEffect(filmGrainEffect);
+    postProcessing->addEffect(scanlinesEffect);
+    postProcessing->addEffect(glitchEffect);
+
+    ofLogNotice("ofApp::setup") << "Shader pipeline initialized";
+    postProcessing->printPipeline();
+
     updateLastInteractionMoment();
     initializeForms();
     switchToForm(0);
-    
+
 }
 
 //--------------------------------------------------------------
@@ -210,7 +242,7 @@ void ofApp::update() {
     exitAfterFramesHandler();
     
     if (monitorFrameRateMode) {
-        monitorFrameRate(ofGetTargetFrameRate());
+        monitorFrameRate(ofGetTargetFrameRate(), ofGetFrameNum(), ofGetElapsedTimef(), ofGetFrameRate());
     }
 
     if (enableNDI) {
@@ -221,7 +253,7 @@ void ofApp::update() {
     double t0 = getSystemTimeSecondsPrecise();
     forms[currentFormIndex]->update(ks, clr);
     if (monitorFrameRateMode) {
-        warnOnSlow("Form Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_UPDATE_FORM);
+        warnOnSlow("Form Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_UPDATE_FORM, ofGetFrameNum(), ofGetElapsedTimef());
     }
 
 #ifndef TARGET_RASPBERRY_PI
@@ -230,8 +262,8 @@ void ofApp::update() {
     ofSetWindowTitle(strm.str());
 #endif
 
-    // Clean all keys that have been released for more than 5 seconds.
-    ks.cleanup(KEYSTATE_CLEANUP_TIME);
+    // Clean all keys that have been released for more than 10 seconds.
+    ks.cleanup(KEYSTATE_CLEANUP_TIME, ofGetFrameNum(), ofGetLastFrameTime());
 
     // NOTE: Disable homeostasis
     // ks.circumplexHomeostasis();
@@ -267,8 +299,18 @@ void ofApp::draw() {
     ofPushStyle();
     forms[currentFormIndex]->draw(ks, clr, dm);
     ofPopStyle();
-    dm.endAndDrawFbo();
-    
+
+    // End drawing to FBO (don't draw yet)
+    dm.endDraw();
+
+    // Apply post-processing pipeline and draw to screen
+    if (postProcessing && postProcessing->hasEnabledEffects()) {
+        postProcessing->processAndDraw(dm.getFboFront(), 0, 0);
+    } else {
+        // No post-processing - just draw FBO directly
+        dm.getFboFront().draw(0, 0);
+    }
+
     if (guiShow) {
         gui.draw();
     }
@@ -300,7 +342,7 @@ void ofApp::draw() {
     led.draw(image);
 #endif
     if (monitorFrameRateMode) {
-        warnOnSlow("Draw", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_DRAW);
+        warnOnSlow("Draw", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_DRAW, ofGetFrameNum(), ofGetElapsedTimef());
     }
 }
 
@@ -325,6 +367,13 @@ void ofApp::mouseExited(int x, int y) {}
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h) {
     dm = DrawManager();
+
+    // Resize post-processing pipeline
+    if (postProcessing) {
+        postProcessing->resize(w, h);
+        ofLogNotice("ofApp::windowResized") << "Resized shader pipeline to " << w << "x" << h;
+    }
+
     initializeForms();
     switchToForm(currentFormIndex);
 }

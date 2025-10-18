@@ -12,6 +12,7 @@
 #include <boost/optional.hpp>
 
 #include "Utilities.hpp"
+#include "core/Random.hpp"
 
 // #define EXPONENTIAL_DECAY_CONSTANT -0.001 // Slow decay
 #define SECONDS_TO_DECAY 14
@@ -25,7 +26,7 @@
 #define ALLOW_NOTE_INCREASE_PCT 0.20
 
 KeyState::KeyState() : arousal(0.5), valence(0.5) {
-    randomSeed = static_cast<unsigned int>(ofRandomuf() * 4096);
+    randomSeed = orgb::core::Random::generateSeed();
 //    attackTimeS.set("Attack Time S", 0, 0, 0.2);
 //    decayTimeS.set("Decay Time S", 3.0, 0, 5);
 //    sustainLevelPct.set("Sustain Level Percent", 1, 0, 1);
@@ -88,14 +89,12 @@ void KeyState::ephemeralKeyPressedHandler(int key, float velocityPct, unsigned i
             // The new velocity suggests that this should be deleted
             ephemeralPresses.erase(key);
             assert(ephemeralPresses.find(key) == ephemeralPresses.end());
-        } else if (velocityPct <= result->second.velocityPct + ALLOW_NOTE_INCREASE_PCT) {
-            // The press is already here, decaying
-            // ofLogVerbose() << key << " " << velocityPct << " Update from " << result->second.velocityPct;
+        } else if (velocityPct < result->second.velocityPct + ALLOW_NOTE_INCREASE_PCT) {
+            // The press is already here, decaying (increase < threshold)
             result->second.velocityPct = velocityPct;
             // Do not change ID
         } else {
-            // If the velocity goes up by more thatn  ALLOW_NOTE_INCREASE_PCT, it's not a sustain, it's a new nFParticote
-            // ofLogVerbose() << key << " " << velocityPct << " New from " << result->second.velocityPct;
+            // If the velocity goes up by >= ALLOW_NOTE_INCREASE_PCT, it's not a sustain, it's a new note
             double now = getSystemTimeSecondsPrecise();
             Press p = Press(key, velocityPct, now, Press::PressType::GUITAR, messageId);
             p.setReleased(now);
@@ -180,10 +179,10 @@ std::list<Press> KeyState::activePresses() {
     return emit;
 }
 
-void KeyState::cleanup(float ttlSecondsAfterRelease) {
-    decayEphemeralKeypressAmplitudes();
+void KeyState::cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime) {
+    decayEphemeralKeypressAmplitudes(deltaTime);
 
-    if (ofGetFrameNum() % 100 == 0 && (presses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE ||
+    if (currentFrame % 100 == 0 && (presses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE ||
                                        ephemeralPresses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE)) {
         ofLogVerbose("KeyState") << "Presses overload: presses.size()=" << presses.size()
                                  << " / ephemeralPresses.size()=" << ephemeralPresses.size();
@@ -208,11 +207,11 @@ void KeyState::cleanup(float ttlSecondsAfterRelease) {
     }
 }
 
-void KeyState::decayEphemeralKeypressAmplitudes() {
+void KeyState::decayEphemeralKeypressAmplitudes(double deltaTime) {
     double now = getSystemTimeSecondsPrecise();
     std::list<int> keysToRemove;
 
-    double dt = ofGetLastFrameTime();
+    double dt = deltaTime;
 
     // 0.8 ^ (1s/60) = 0.99628,   0.99628 ^ 60 = 0.8
     // 0.8 ^ (2s) = 0.64,   0.64 ^ 1/2 = 0.8
@@ -318,6 +317,6 @@ void KeyState::setValencePct(float valencePct) {
 
 float KeyState::valencePct() const { return valence; }
 
-float KeyState::arousalGain() const { return pctToGain(1 - arousalPct(), arousalKurtosis); }
+float KeyState::arousalGain() const { return pctToGain(arousalPct(), arousalKurtosis); }
 
-float KeyState::valenceGain() const { return pctToGain(1 - valencePct(), valenceKurtosis); }
+float KeyState::valenceGain() const { return pctToGain(valencePct(), valenceKurtosis); }

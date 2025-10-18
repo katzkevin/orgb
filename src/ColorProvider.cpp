@@ -6,6 +6,7 @@
 //
 
 #include "ColorProvider.hpp"
+#include "core/MathUtils.hpp"
 
 
 
@@ -44,7 +45,7 @@ ofColor ColorProvider::color(const Press& p) const {
         // notePct = (p.note % NUM_NOTES) / static_cast<float>(NUM_NOTES);
         indexPct = (p.note % NUM_NOTES) / static_cast<float>(NUM_NOTES);
     } else {
-        indexPct = ofMap(p.note, PIANO_MIDI_MIN, PIANO_MIDI_MAX, 0, 1, true);
+        indexPct = orgb::core::MathUtils::map(static_cast<float>(p.note), static_cast<float>(PIANO_MIDI_MIN), static_cast<float>(PIANO_MIDI_MAX), 0.0f, 1.0f, true);
     }
     
     float indexInPalette = indexPct * palette.size();
@@ -92,16 +93,16 @@ void ColorProvider::setPalette(float baseHue, float baseSaturation, float baseVa
     float v = baseValue;
     
     float hueStepSize;
-    
+
     if (clockwise){
         if (baseHue <= maxHue) {
             hueStepSize = (maxHue - baseHue) / static_cast<float>(NUM_NOTES);
         } else {
-            hueStepSize = (255 - (baseHue - maxHue)) / static_cast<float>(NUM_NOTES);
+            hueStepSize = (256.0f - (baseHue - maxHue)) / static_cast<float>(NUM_NOTES);
         }
     } else {
         if (baseHue <= maxHue) {
-            hueStepSize = -(255 - (maxHue - baseHue)) / static_cast<float>(NUM_NOTES);
+            hueStepSize = -(256.0f - (maxHue - baseHue)) / static_cast<float>(NUM_NOTES);
         } else {
             hueStepSize = -(baseHue - maxHue) / static_cast<float>(NUM_NOTES);
         }
@@ -111,9 +112,9 @@ void ColorProvider::setPalette(float baseHue, float baseSaturation, float baseVa
     
     for (int i = 0; i < NUM_NOTES; i++) {
         colors.push_back(ofColor::fromHsb(static_cast<int>(h), static_cast<int>(s), static_cast<int>(v)));
-        h = positive_modulo(h + hueStepSize, 255.0);
-        s = ofClamp(s + satStepSize, 0, 255.0);
-        v = ofClamp(v + valStepSize, 0, 255.0);
+        h = positive_modulo(h + hueStepSize, 256.0f);
+        s = orgb::core::MathUtils::clamp(s + satStepSize, 0.0f, 255.0f);
+        v = orgb::core::MathUtils::clamp(v + valStepSize, 0.0f, 255.0f);
     }
     setPalette(colors);
 }

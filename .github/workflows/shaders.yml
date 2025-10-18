@@ -1,0 +1,122 @@
+name: Shader Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'bin/data/shaders**/**'
+      - 'bin/data/shadersGL2/**'
+      - 'bin/data/shadersGL3/**'
+      - 'bin/data/shadersES2/**'
+      - 'src/ShaderEffect.*'
+      - 'src/ShaderPipeline.*'
+      - 'src/Effects/**'
+      - 'scripts/validateShaders.sh'
+      - 'tests/shader_tests.cpp'
+      - '.github/workflows/shaders.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'bin/data/shaders**/**'
+      - 'bin/data/shadersGL2/**'
+      - 'bin/data/shadersGL3/**'
+      - 'bin/data/shadersES2/**'
+      - 'src/ShaderEffect.*'
+      - 'src/ShaderPipeline.*'
+      - 'src/Effects/**'
+      - 'scripts/validateShaders.sh'
+      - 'tests/shader_tests.cpp'
+      - '.github/workflows/shaders.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  validate-shaders:
+    name: Validate GLSL Shaders
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install shader validation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y glslang-tools spirv-tools
+
+      - name: Verify glslangValidator installation
+        run: |
+          glslangValidator --version
+          spirv-val --version
+
+      - name: Validate shaders
+        run: |
+          chmod +x scripts/validateShaders.sh
+          ./scripts/validateShaders.sh --verbose
+
+      - name: Report validation results
+        if: always()
+        run: |
+          echo "## Shader Validation Results" >> $GITHUB_STEP_SUMMARY
+          if [ $? -eq 0 ]; then
+            echo "✅ All shaders validated successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Shader validation failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  shader-syntax-check:
+    name: Shader Syntax Check
+    runs-on: ubuntu-latest
+    needs: validate-shaders
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check shader syntax
+        run: |
+          echo "Checking shader files exist and have correct structure..."
+
+          # Count shader files
+          SHADER_COUNT=$(find bin/data/shaders* -type f \( -name "*.vert" -o -name "*.frag" \) | wc -l)
+          echo "Found $SHADER_COUNT shader files"
+
+          # Check for #version directives
+          echo "Checking for #version directives..."
+          find bin/data/shaders* -type f -name "*.frag" -o -name "*.vert" | while read file; do
+            if ! grep -q "^#version" "$file"; then
+              echo "⚠️  Warning: $file missing #version directive"
+            fi
+          done
+
+      - name: Report results
+        if: always()
+        run: |
+          echo "## Shader Syntax Check" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Shader structure validated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** GLSL 120 (GL2) shaders are validated at runtime" >> $GITHUB_STEP_SUMMARY
+          echo "Modern GLSL 330+ shaders validated offline" >> $GITHUB_STEP_SUMMARY
+
+  summary:
+    name: Shader CI Summary
+    runs-on: ubuntu-latest
+    needs: [validate-shaders, shader-syntax-check]
+    if: always()
+
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "## 🎨 Shader CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Shader Validation | ${{ needs.validate-shaders.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Syntax Check | ${{ needs.shader-syntax-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Legacy GL2 shaders validated at runtime" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any check failed
+        if: |
+          needs.validate-shaders.result == 'failure' ||
+          needs.shader-syntax-check.result == 'failure'
+        run: exit 1

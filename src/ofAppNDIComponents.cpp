@@ -109,7 +109,7 @@ bool ofApp::ndiUpdateHandler() {
             ofLogVerbose("NDI") << "Receiver is not connected and interval elapsed. Attempting to select video source...";
             double t0 = getSystemTimeSecondsPrecise();
             ndiScanForVideoSources();
-            warnOnSlow("NDI Scan for Video", t0, WARN_INTERVAL_DENOMINATOR_NDI_SCAN);
+            warnOnSlow("NDI Scan for Video", t0, WARN_INTERVAL_DENOMINATOR_NDI_SCAN, ofGetFrameNum(), ofGetElapsedTimef());
             // If this switches, then we'll show video next frame.
         }
         return false;

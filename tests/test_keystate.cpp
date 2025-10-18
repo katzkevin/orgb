@@ -111,7 +111,7 @@ TEST_F(KeyStateTest, CleanupRemovesOldReleased) {
 
     // Wait and cleanup with 0 second TTL
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ks.cleanup(0.05f);  // Remove after 0.05 seconds
+    ks.cleanup(0.05f, 0, 1.0/60.0);  // Remove after 0.05 seconds
 
     // Should be removed now
     EXPECT_EQ(ks.allPresses().size(), 0);
@@ -122,7 +122,7 @@ TEST_F(KeyStateTest, CleanupPreservesRecent) {
     ks.keyReleasedHandler(60);
 
     // Cleanup immediately with high TTL
-    ks.cleanup(10.0f);  // Keep for 10 seconds
+    ks.cleanup(10.0f, 0, 1.0/60.0);  // Keep for 10 seconds
 
     // Should still be there
     EXPECT_EQ(ks.allPresses().size(), 1);
@@ -132,7 +132,7 @@ TEST_F(KeyStateTest, CleanupPreservesActive) {
     ks.newKeyPressedHandler(60, 0.8f, 1);
 
     // Cleanup should never remove active presses
-    ks.cleanup(0.0f);
+    ks.cleanup(0.0f, 0, 1.0/60.0);
 
     EXPECT_EQ(ks.allPresses().size(), 1);
     EXPECT_TRUE(ks.isActivelyPressed(60));
@@ -224,10 +224,11 @@ TEST_F(KeyStateTest, EphemeralPressUpdate) {
 }
 
 TEST_F(KeyStateTest, EphemeralPressNewNote) {
-    ks.ephemeralKeyPressedHandler(60, 0.8f, 1);
+    ks.ephemeralKeyPressedHandler(60, 0.7f, 1);
 
-    // Velocity increases significantly = new note
-    ks.ephemeralKeyPressedHandler(60, 1.0f, 2);
+    // Velocity increases significantly (>= ALLOW_NOTE_INCREASE_PCT = 0.20) = new note
+    // 0.95 - 0.7 = 0.25 > 0.20, so this should trigger a new note
+    ks.ephemeralKeyPressedHandler(60, 0.95f, 2);
 
     // Should have new message ID
     EXPECT_EQ(ks.ephemeralPresses.at(60).id, 2u);
@@ -248,7 +249,7 @@ TEST_F(KeyStateTest, EphemeralPressDecay) {
     ks.ephemeralKeyPressedHandler(60, 1.0f, 1);
 
     // Decay should reduce velocity over time
-    ks.decayEphemeralKeypressAmplitudes();
+    ks.decayEphemeralKeypressAmplitudes(1.0/60.0);
 
     EXPECT_LT(ks.ephemeralPresses.at(60).velocityPct, 1.0f);
 }

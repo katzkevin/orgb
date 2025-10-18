@@ -20,7 +20,7 @@ class KeyState {
     KeyState();
     virtual ~KeyState(){};
 
-    void cleanup(float ttlSecondsAfterRelease);
+    void cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime);
     void keyReleasedHandler(int key);
 
     bool isActivelyPressed(int key);
@@ -37,7 +37,7 @@ class KeyState {
     std::list<Press> activePresses();
 
     std::unordered_map<int, Press> ephemeralPresses;
-    void decayEphemeralKeypressAmplitudes();
+    void decayEphemeralKeypressAmplitudes(double deltaTime);
 
     const std::list<Press> allEphemeralPresses();
     const std::multimap<int, Press> allEphemeralPressesChromaticGrouped();

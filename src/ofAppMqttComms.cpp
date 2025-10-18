@@ -67,7 +67,8 @@ void ofApp::pollForMQTTMessages() {
         client.update();
         if (monitorFrameRateMode) {
             warnOnSlow("MQTT IO Update", t0,
-                       TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO);  // Check every update frame
+                       TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO,
+                       ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
         }
         // If there isn't a message at this point, the onMessage handler _wasn't invoked_, queue is empty.
         if (mqttMessageEncountered == false) {
@@ -75,7 +76,7 @@ void ofApp::pollForMQTTMessages() {
         }
     }
 
-    warnOnSlow("MQTT IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO);  // Check every update frame
+    warnOnSlow("MQTT IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
     
 }
 

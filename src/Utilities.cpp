@@ -15,14 +15,13 @@
 
 double getSystemTimeSecondsPrecise() { return ofGetSystemTimeMicros() / 1000000.0; }
 
-void warnOnSlow(std::string label, double t0, float thresholdSeconds, int perNFrames, float warmupTimeS) {
-    float tNowSeconds = ofGetElapsedTimeMillis() / 1000.0;
-    if (ofGetFrameNum() % perNFrames != 0 || tNowSeconds < warmupTimeS) {
+void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS, int perNFrames, float warmupTimeS) {
+    if (frameNum % perNFrames != 0 || elapsedTimeS < warmupTimeS) {
         return;
     }
     float t1 = getSystemTimeSecondsPrecise();
     float dt = t1 - t0;
-    
+
     if (dt > thresholdSeconds) {
         ofLogWarning("warnOnSlow") << label << " runnng slowly: " << (t1 - t0) * 1000.0
                        << "ms (Target: " << thresholdSeconds * 1000.0 << "ms)";
@@ -32,14 +31,13 @@ void warnOnSlow(std::string label, double t0, float thresholdSeconds, int perNFr
     }
 }
 
-void monitorFrameRate(float targetFrameRate, int perNFrames, float warmupTimeS) {
-    if (ofGetFrameNum() % perNFrames != 0 || ofGetElapsedTimeMillis() / 1000.0 < warmupTimeS) {
+void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate, int perNFrames, float warmupTimeS) {
+    if (frameNum % perNFrames != 0 || elapsedTimeS < warmupTimeS) {
         return;
     }
-    float frameRate = ofGetFrameRate();
-    bool frameRateViolation = frameRate < targetFrameRate - 3;
+    bool frameRateViolation = currentFrameRate < targetFrameRate - 3;
     if (frameRateViolation) {
-        ofLogWarning() << "Running slowly @ " << frameRate;
+        ofLogWarning() << "Running slowly @ " << currentFrameRate;
     }
 }
 
@@ -53,32 +51,35 @@ float positive_modulo(float x, float y) {
     return fmod(fmod(x, y) + y, y);
 }
 
-ofVec2f polarToRectangular(float r, float thetaRadians) {
-    return ofVec2f(cos(thetaRadians) * r, sin(thetaRadians) * r);
+glm::vec2 polarToRectangular(float r, float thetaRadians) {
+    return glm::vec2(cos(thetaRadians) * r, sin(thetaRadians) * r);
 }
 
-ofVec3f sphericalToRectangular(float r, float thetaRadians, float phiRadians) {
-    return ofVec3f(cos(thetaRadians) * sin(phiRadians) * r, sin(thetaRadians) * sin(phiRadians) * r,
-                   cos(phiRadians) * r);
+glm::vec3 sphericalToRectangular(float r, float thetaRadians, float phiRadians) {
+    return glm::vec3(cos(thetaRadians) * sin(phiRadians) * r, sin(thetaRadians) * sin(phiRadians) * r,
+                     cos(phiRadians) * r);
 }
 
 float exponentialMap(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp,
                      float shaper) {
-    float pct = ofMap(value, inputMin, inputMax, 0, 1, clamp);
+    using orgb::core::MathUtils;
+    float pct = MathUtils::map(value, inputMin, inputMax, 0.0f, 1.0f, clamp);
     float shaped = powf(pct, shaper);
-    return ofMap(shaped, 0, 1, outputMin, outputMax, clamp);
+    return MathUtils::map(shaped, 0.0f, 1.0f, outputMin, outputMax, clamp);
 }
 
-float transitionEaseIn(float pct) { return pow(ofClamp(pct, 0.0, 1.0), 3); }
+float transitionEaseIn(float pct) {
+    return pow(orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), 3);
+}
 
 float transitionEaseInReverse(float pct) {
     // Return 0 if pct >= 1.0
-    return pow(1 - ofClamp(pct, 0.0, 1.0), 3);
+    return pow(1 - orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), 3);
 }
 
 float transitionEaseOutExponential(float pct, float exponent) {
     // Return 1 if pct >= 1.0
-    return 1 - pow(1 - ofClamp(pct, 0, 1), exponent);
+    return 1 - pow(1 - orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), exponent);
 }
 
 boost::optional<std::string> getEnvOptional(std::string key) {
@@ -139,110 +140,116 @@ float deterministicRandomPct(float salt) {
     return ofMap(hash1ui, 0, MAX_HASH, 0, 1.0, true);
 }
 
-ofVec3f deterministicRandomUnitVector(float salt) {
+glm::vec3 deterministicRandomUnitVector(float salt) {
     float theta = deterministicRandomPct(salt * 33.3) * 2 * PI;
     float phi = deterministicRandomPct(salt * 44.4) * 2 * PI;
-    return ofVec3f(sin(theta) * cos(phi), sin(phi) * cos(theta), cos(theta));
+    return glm::vec3(sin(theta) * cos(phi), sin(phi) * cos(theta), cos(theta));
 }
 
-ofVec3f getRandomlyRotatedVectorRad(ofVec3f inVector, float radians) {
+glm::vec3 getRandomlyRotatedVectorRad(glm::vec3 inVector, float radians) {
     // Rotate this vector randomly in a direction, for conical sampling.
     return getRotatedAwayFromVectorRad(inVector, randomUnitVector(), radians);
 }
 
-ofVec3f getRotatedAwayFromVectorRad(ofVec3f inVector, ofVec3f rotateAwayFrom, float radians) {
-    ofVec3f rotationAxis = inVector.getCrossed(inVector + rotateAwayFrom);
-    return inVector.getRotatedRad(radians, rotationAxis);
+glm::vec3 getRotatedAwayFromVectorRad(glm::vec3 inVector, glm::vec3 rotateAwayFrom, float radians) {
+    glm::vec3 rotationAxis = glm::cross(inVector, inVector + rotateAwayFrom);
+    if (glm::length(rotationAxis) > 0.0001f) {
+        return glm::rotate(inVector, radians, glm::normalize(rotationAxis));
+    }
+    return inVector;
 }
 
-ofVec3f randomUnitVector() {
-    float theta = ofRandomuf() * 2 * PI;
-    float phi = ofRandomuf() * 2 * PI;
-    return ofVec3f(sin(theta) * cos(phi), sin(phi) * cos(theta), cos(theta));
+glm::vec3 randomUnitVector() {
+    using orgb::core::Random;
+    float theta = Random::uniform() * 2 * PI;
+    float phi = Random::uniform() * 2 * PI;
+    return glm::vec3(sin(theta) * cos(phi), sin(phi) * cos(theta), cos(theta));
 }
 
-ofVec3f randomUnitVector2D() {
-    float angle = ofRandomuf() * 2 * PI;
-    return ofVec3f(cos(angle), sin(angle), 0);
+glm::vec3 randomUnitVector2D() {
+    using orgb::core::Random;
+    float angle = Random::uniform() * 2 * PI;
+    return glm::vec3(cos(angle), sin(angle), 0);
 }
 
-std::pair<ofVec3f, ofVec3f> edgeToEdgeLineSegment(const Press &p, unsigned int seed) {
-    float x0 = ofMap(deterministicRandomPct(seed % GEOMETRY_PRIME + 1), 0, 1, 0, ofGetWidth());
-    float y0 = ofMap(deterministicRandomPct(seed % GEOMETRY_PRIME + 2), 0, 1, 0, ofGetHeight());
+std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned int seed) {
+    using orgb::core::MathUtils;
+    float x0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 1), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetWidth()));
+    float y0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 2), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetHeight()));
     float z0 = 0;
-    
-    float x1 = ofMap(deterministicRandomPct(seed % GEOMETRY_PRIME + 4), 0, 1, 0, ofGetWidth());
-    float y1 = ofMap(deterministicRandomPct(seed % GEOMETRY_PRIME + 5), 0, 1, 0, ofGetHeight());
+
+    float x1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 4), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetWidth()));
+    float y1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 5), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetHeight()));
     float z1 = 0;
-    
+
     float t = -0.05 * ofGetWidth();
     float r = 1.05 * ofGetWidth();
     float b = 1.05 * ofGetHeight();
     float l = -0.05 * ofGetWidth();
-    
-    int c = static_cast<int>(ofMap(deterministicRandomPct(p.id % GEOMETRY_PRIME), 0, 1, 0, 12));
-    
-    ofVec3f from;
-    ofVec3f to;
+
+    int c = static_cast<int>(MathUtils::map(deterministicRandomPct(p.id % GEOMETRY_PRIME), 0.0f, 1.0f, 0.0f, 12.0f));
+
+    glm::vec3 from;
+    glm::vec3 to;
         
     switch (c) {
             // Top to
         case 0:
-            from = ofVec3f(x0, t, z0);
-            to = ofVec3f(r, y1, z1);
+            from = glm::vec3(x0, t, z0);
+            to = glm::vec3(r, y1, z1);
             break;
         case 1:
-            from = ofVec3f(x0, t, z0);
-            to = ofVec3f(x1, b, z1);
+            from = glm::vec3(x0, t, z0);
+            to = glm::vec3(x1, b, z1);
             break;
         case 2:
-            from = ofVec3f(x0, t, z0);
-            to = ofVec3f(l, y1, z1);
+            from = glm::vec3(x0, t, z0);
+            to = glm::vec3(l, y1, z1);
             break;
-            
+
             // Right to
         case 3:
-            from = ofVec3f(r, y0, z0);
-            to = ofVec3f(x1, b, z1);
+            from = glm::vec3(r, y0, z0);
+            to = glm::vec3(x1, b, z1);
             break;
         case 4:
-            from = ofVec3f(r, y0, z0);
-            to = ofVec3f(l, y1, z1);
+            from = glm::vec3(r, y0, z0);
+            to = glm::vec3(l, y1, z1);
             break;
         case 5:
-            from = ofVec3f(r, y0, z0);
-            to = ofVec3f(x1, t, z1);
+            from = glm::vec3(r, y0, z0);
+            to = glm::vec3(x1, t, z1);
             break;
-            
+
             // Bottom to
         case 6:
-            from = ofVec3f(x0, b, z0);
-            to = ofVec3f(l, y1, z1);
+            from = glm::vec3(x0, b, z0);
+            to = glm::vec3(l, y1, z1);
             break;
         case 7:
-            from = ofVec3f(x0, b, z0);
-            to = ofVec3f(x1, t, z1);
+            from = glm::vec3(x0, b, z0);
+            to = glm::vec3(x1, t, z1);
             break;
         case 8:
-            from = ofVec3f(x0, b, z0);
-            to = ofVec3f(r, y1, z1);
+            from = glm::vec3(x0, b, z0);
+            to = glm::vec3(r, y1, z1);
             break;
-            
+
             // Left to
         case 9:
-            from = ofVec3f(l, y0, z0);
-            to = ofVec3f(x1, t, z0);
+            from = glm::vec3(l, y0, z0);
+            to = glm::vec3(x1, t, z0);
             break;
         case 10:
-            from = ofVec3f(l, y0, z0);
-            to = ofVec3f(r, y1, z1);
+            from = glm::vec3(l, y0, z0);
+            to = glm::vec3(r, y1, z1);
             break;
         case 11:
-            from = ofVec3f(l, y0, z0);
-            to = ofVec3f(x1, b, z1);
+            from = glm::vec3(l, y0, z0);
+            to = glm::vec3(x1, b, z1);
             break;
     }
-    return std::pair<ofVec3f, ofVec3f>(from, to);
+    return std::pair<glm::vec3, glm::vec3>(from, to);
     
 }
 
@@ -269,20 +276,24 @@ void kkDisableAlphaBlending() {
     ofDisableAlphaBlending();
 }
 
-ofVec2f applyGlobalTransformation(ofVec2f input) { return ofVec2f(applyGlobalTransformation(ofVec3f(input))); }
+glm::vec2 applyGlobalTransformation(glm::vec2 input) {
+    glm::vec3 result3 = applyGlobalTransformation(glm::vec3(input.x, input.y, 0));
+    return glm::vec2(result3.x, result3.y);
+}
 
-ofVec3f applyGlobalTransformation(ofVec3f input) {
+glm::vec3 applyGlobalTransformation(glm::vec3 input) {
     // https://forum.openframeworks.cc/t/how-to-find-out-translated-coordinate-in-the-middle-of-draw/24866/10?u=kevinkatz
     glm::mat4 modelMatrix = glm::inverse(ofGetCurrentViewMatrix()) * ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
-    auto transformed = modelMatrix * ofVec4f(input.x, input.y, input.z, 1);
-    return ofVec3f(transformed.x, transformed.y, transformed.z);
+    glm::vec4 transformed = modelMatrix * glm::vec4(input.x, input.y, input.z, 1);
+    return glm::vec3(transformed.x, transformed.y, transformed.z);
 }
 
 float noteRelativeFrequency(int note) { return pow(TWELFTH_ROOT_TWO, note % NUM_NOTES); }
 
 float midiToHz(int note) {
-    // return pow(2, (note − 69) / 12) * 440.0;
-    return pow(2, (note - 69) / NUM_NOTES) * 440.0;
+    // MIDI to Hz: A4 (MIDI 69) = 440 Hz
+    // Each semitone is 2^(1/12) frequency ratio
+    return pow(2.0, (note - 69) / 12.0) * 440.0;
 }
 
 float easeOutCubicTransitionFunction(const float pct) {
@@ -306,20 +317,20 @@ float noiseForCoordinates(float x, float y, float spatialFrequency, float tempor
                          (y - (ofGetHeight() / 2.0)) * spatialFrequency / 100, temporalRate * timeS);
 }
 
-ofVec3f noiseGradientForCoordinates(float x, float y, float spatialFrequency, float temporalRate, float noiseScale,
-                                    float timeS) {
+glm::vec3 noiseGradientForCoordinates(float x, float y, float spatialFrequency, float temporalRate, float noiseScale,
+                                      float timeS) {
     float noiseHere = noiseForCoordinates(x, y, spatialFrequency, temporalRate, timeS);
     float dx = noiseForCoordinates(x + NOISE_GRADIENT_EPSILON, y, spatialFrequency, temporalRate, timeS) - noiseHere;
     float dy = noiseForCoordinates(x, y + NOISE_GRADIENT_EPSILON, spatialFrequency, temporalRate, timeS) - noiseHere;
-    ofVec3f gradient = ofVec3f(dx, dy, 0) / NOISE_GRADIENT_EPSILON;
+    glm::vec3 gradient = glm::vec3(dx, dy, 0) / NOISE_GRADIENT_EPSILON;
     return gradient * exp(noiseScale);
 }
 
-void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseScale) {
+void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseScale, float elapsedTimeF) {
     ofPushStyle();
     ofPushMatrix();
     ofSetLineWidth(1.0);
-    float timeS = ofGetElapsedTimef();
+    float timeS = elapsedTimeF;
     for (int x = 0; x < ofGetWidth(); x += 8) {
         for (int y = 0; y < ofGetHeight(); y += 8) {
             float noise = noiseForCoordinates(x, y, spatialFrequency, temporalRate, timeS);

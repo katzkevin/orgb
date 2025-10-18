@@ -188,16 +188,46 @@ To integrate with CI/CD:
 3. **Random number tests**: Deterministic tests only; true randomness not tested
 4. **Integration tests missing**: No end-to-end MQTT, OSC, or GPU shader tests yet
 
+## Shader Tests
+
+### shader_tests.cpp
+
+Dedicated shader effect and pipeline tests. See `shader_tests.cpp` for:
+
+- Effect instantiation and validation
+- Parameter get/set operations
+- Pipeline creation and management
+- Effect enable/disable toggling
+- Effect ordering/reordering
+- Pipeline resize operations
+
+To validate shader compilation offline:
+
+```bash
+cd ..
+./scripts/validateShaders.sh --verbose
+```
+
+**Installing glslangValidator:**
+```bash
+# macOS
+brew install glslang
+
+# Linux
+sudo apt install glslang-tools
+```
+
 ## Future Test Additions
 
 - [ ] MQTT message parsing and validation
 - [ ] OSC message handling
-- [ ] DrawManager shader pipeline
+- [x] DrawManager shader pipeline (see shader_tests.cpp)
 - [ ] Form initialization and switching
 - [ ] Parameter serialization/deserialization
 - [ ] Performance benchmarks (frame rate under load)
 - [ ] Memory leak detection (valgrind integration)
 - [ ] Thread safety tests for communication handlers
+- [ ] Visual regression tests (golden image comparison)
 
 ## Debugging Failed Tests
 

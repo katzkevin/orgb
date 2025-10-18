@@ -14,6 +14,7 @@
 
 #include "Utilities.hpp"
 #include "boost/functional/hash.hpp"
+#include "core/MathUtils.hpp"
 
 std::ostream& operator<<(std::ostream& os, const Press& p) {
     os << "(" << p.note << ", " << p.velocityPct << ", " << p.tSystemTimeSeconds << ")";
@@ -118,10 +119,10 @@ float Press::noteOverallPct() const {
     // Return the [0,1) interval note value
     switch (pressType) {
         case PressType::GUITAR:
-            return ofMap(note, GUITAR_MIDI_MIN, GUITAR_MIDI_MAX, 0, 1, true);
+            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(GUITAR_MIDI_MIN), static_cast<float>(GUITAR_MIDI_MAX), 0.0f, 1.0f, true);
         case PressType::PIANO:
         default:
-            return ofMap(note, PIANO_MIDI_MIN, PIANO_MIDI_MAX, 0, 1, true);
+            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(PIANO_MIDI_MIN), static_cast<float>(PIANO_MIDI_MAX), 0.0f, 1.0f, true);
     }
 }
 
@@ -234,15 +235,15 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
     double attackComponent;
     double decayComponent;
     double releaseComponent;
-    if (ofIsFloatEqual(attackTimeS, 0.0)) {
+    if (orgb::core::MathUtils::floatEqual(attackTimeS, 0.0)) {
         attackComponent = 1.0;
     } else {
         double attackVelocity = 1.0 / attackTimeS;
         attackComponent = attackVelocity * timeSpentAttackingS;
         assert(attackComponent <= 1.0);
     }
-    if (ofIsFloatEqual(decayTimeS, 0.0)) {
-        if (!ofIsFloatEqual(timeSpentDecayingS, 0.0)) {
+    if (orgb::core::MathUtils::floatEqual(decayTimeS, 0.0)) {
+        if (!orgb::core::MathUtils::floatEqual(timeSpentDecayingS, 0.0)) {
             decayComponent = -(1.0 - sustainLevelPct);
         } else {
             decayComponent = 0.0;
@@ -252,10 +253,10 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
         decayComponent = decayVelocity * timeSpentDecayingS;
         assert(-1.0 <= decayComponent && decayComponent <= 0.0);
     }
-    if (ofIsFloatEqual(releaseTimeS, 0.0)) {
+    if (orgb::core::MathUtils::floatEqual(releaseTimeS, 0.0)) {
         // Instead of releasing from the sustain level, calculate velocity from 1.0-mark. This avoids the 0.0001 sustain
         // super-slow velocity.
-        if (!ofIsFloatEqual(timeSpentReleasingS, 0.0)) {
+        if (!orgb::core::MathUtils::floatEqual(timeSpentReleasingS, 0.0)) {
             releaseComponent = -1.0;
         } else {
             releaseComponent = 0.0;
@@ -266,7 +267,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
         // Release can be less than -1, as is the case when a press has been released for a long time
         assert(releaseComponent <= 0.0);
     }
-    return ofClamp(attackComponent + decayComponent + releaseComponent, 0.0, 1.0);
+    return orgb::core::MathUtils::clamp(attackComponent + decayComponent + releaseComponent, 0.0, 1.0);
 }
 
 // float computeEnvelope(float dt, boost::optional<float> dtReleased, float attackTimeSeconds, float releaseTimeSeconds)

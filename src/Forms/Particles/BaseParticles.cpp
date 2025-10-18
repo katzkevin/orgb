@@ -94,7 +94,7 @@ void BaseParticles::update(KeyState & ks, ColorProvider & clr) {
 void BaseParticles::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
     
     if (noiseVisualize) {
-        drawNoiseVisualize(noiseSpatialFrequency, noiseTemporalRate, noiseScale);
+        drawNoiseVisualize(noiseSpatialFrequency, noiseTemporalRate, noiseScale, ofGetElapsedTimef());
         return;
     }
     
