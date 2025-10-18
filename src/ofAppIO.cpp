@@ -7,8 +7,8 @@
 
 #include <unordered_map>
 
-#include "ofApp.h"
 #include "json.hpp"
+#include "ofApp.h"
 
 // for convenience
 using json = nlohmann::json;
@@ -39,11 +39,11 @@ void ofApp::noteOnHandler(int key, float velocityPct, unsigned int messageId, bo
                         previousForm();
                         break;
                     case 1:  // C#
-                        ofLogNotice() << "Meta Input: " <<  metaInputIndex;
+                        ofLogNotice() << "Meta Input: " << metaInputIndex;
                         nextForm();
                         break;
                     case 2:  // D
-                        ofLogNotice() <<  "Meta Input: " << metaInputIndex << ", exiting...";
+                        ofLogNotice() << "Meta Input: " << metaInputIndex << ", exiting...";
                         ofExit(0);
                         break;
                     default:  //
@@ -65,15 +65,15 @@ void ofApp::noteOffHandler(int key) {
 std::string ofApp::dumpSettingsToJsonFile() {
     ofLogNotice() << "Dumping settings to JSON.";
     std::string settingsName = "settings_" + ofGetTimestampString() + ".json";
-    
+
     // There is a bug in ofxBaseGui.cpp saveToFile, file must be created and filled with valid json before saved
     // to if we're using JSON instead of xml.
-    
+
     ofBuffer dataBuffer;
     dataBuffer.set("{}");
     // fill the buffer with something important
     ofBufferToFile(settingsName, dataBuffer);
-    
+
     gui.saveToFile(settingsName);
     return settingsName;
 }
@@ -84,24 +84,23 @@ void ofApp::loadSettingsFromJsonString(std::string payloadString) {
     gui.loadFrom(j);
 }
 
-
-void ofApp::jsonHandlerEphemeralNote(nlohmann::basic_json<>& j, unsigned int messageId) {
+void ofApp::jsonHandlerEphemeralNote(nlohmann::basic_json<> & j, unsigned int messageId) {
     std::unordered_map<int, float> incomingPresses;
     std::unordered_map<int, unsigned int> messageIds;
     if (incomingPresses.size()) {
         updateLastInteractionMoment();
     }
-    for (auto& elt : j.items()) {
+    for (auto & elt : j.items()) {
         std::string key = elt.key();
         float value = elt.value();
-        messageIds[std::stoi(key)] = messageId + std::stoi(key); // Ultimately the ID is offset from the note.
+        messageIds[std::stoi(key)] = messageId + std::stoi(key);  // Ultimately the ID is offset from the note.
         incomingPresses.emplace(std::stoi(key), value);
     }
 
     ks.ephemeralKeyPressMapHandler(incomingPresses, messageIds);
 }
 
-void ofApp::jsonHandlerClassification(nlohmann::basic_json<>& j) {
+void ofApp::jsonHandlerClassification(nlohmann::basic_json<> & j) {
     // {"type": "arousal", "value": 0.5, "time": "2022-05-25T21:15:21.729171+00:00"}
 
     float messageValue;
@@ -118,7 +117,7 @@ void ofApp::jsonHandlerClassification(nlohmann::basic_json<>& j) {
     }
 }
 
-void ofApp::jsonHandlerMidiMessage(nlohmann::basic_json<>& j) {
+void ofApp::jsonHandlerMidiMessage(nlohmann::basic_json<> & j) {
     int messageNote;
     int messageVelocity;
     int messageChannel;
@@ -247,7 +246,7 @@ void ofApp::jsonHandlerMidiMessage(nlohmann::basic_json<>& j) {
     }
 }
 
-void ofApp::jsonHandlerParamMessage(nlohmann::basic_json<>& j) {
+void ofApp::jsonHandlerParamMessage(nlohmann::basic_json<> & j) {
     float messageValue;
     std::vector<std::vector<int>> colorRgbsRaw;
     std::vector<ofColor> colors;
@@ -257,7 +256,7 @@ void ofApp::jsonHandlerParamMessage(nlohmann::basic_json<>& j) {
         case PARAMTYPE::COLORS:
             colorRgbsRaw = j["value"].get<std::vector<std::vector<int>>>();
             if (colorRgbsRaw.size() == NUM_NOTES) {
-                for (auto& it : colorRgbsRaw) {
+                for (auto & it : colorRgbsRaw) {
                     if (it.size() == 3) {
                         colors.push_back(ofColor(it.at(0), it.at(1), it.at(2)));
                     } else {
@@ -276,38 +275,38 @@ void ofApp::jsonHandlerParamMessage(nlohmann::basic_json<>& j) {
     }
 }
 
-void ofApp::jsonHandlerOfParamMessage(nlohmann::basic_json<>& j) {
+void ofApp::jsonHandlerOfParamMessage(nlohmann::basic_json<> & j) {
     ofLogNotice("IO") << "Received message: " << j;
-//    ofxBaseGui * colorGroup = gui.getControl("Color");
-//    if (!colorGroup) {
-//        ofLogError() << "'Color' not found";
-//        return;
-//    }
-//    ofAbstractParameter * p = (ofAbstractParameter *) colorGroup;
-//    ofLogNotice() << "p is type: " << p->type();
-//    if (p->type() == typeid(ofParameterGroup).name()) {
-//        ofLogNotice() << "Type ID Match";
-//        ofParameterGroup *g = static_cast<ofParameterGroup*>(p);
-//    } else {
-//        ofLogNotice() << "Type ID Mismatch";
-//        return;
-//    }
-    
-//    ofLogNotice() << ofJoinString(gui.getControlNames(), ", ");
-//    ofxBaseGui * colorGroup = gui.getControl("Color");
-//    if (!colorGroup) {
-//        ofLogError() << "'Color' group not found";
-//        return;
-//    }
-//
-//    else if (colorGroup->getParameter().type() == typeid(ofParameter<float>).name()) {
-//        ofLogNotice() << "Type ID Match";
-//        float v = colorGroup->getParameter().cast<float>();
-//        ofLogNotice() << "Got! " << v;
-//    } else {
-//        ofLogNotice() << "Type ID Mismatch";
-//        return;
-//    }
+    //    ofxBaseGui * colorGroup = gui.getControl("Color");
+    //    if (!colorGroup) {
+    //        ofLogError() << "'Color' not found";
+    //        return;
+    //    }
+    //    ofAbstractParameter * p = (ofAbstractParameter *) colorGroup;
+    //    ofLogNotice() << "p is type: " << p->type();
+    //    if (p->type() == typeid(ofParameterGroup).name()) {
+    //        ofLogNotice() << "Type ID Match";
+    //        ofParameterGroup *g = static_cast<ofParameterGroup*>(p);
+    //    } else {
+    //        ofLogNotice() << "Type ID Mismatch";
+    //        return;
+    //    }
+
+    //    ofLogNotice() << ofJoinString(gui.getControlNames(), ", ");
+    //    ofxBaseGui * colorGroup = gui.getControl("Color");
+    //    if (!colorGroup) {
+    //        ofLogError() << "'Color' group not found";
+    //        return;
+    //    }
+    //
+    //    else if (colorGroup->getParameter().type() == typeid(ofParameter<float>).name()) {
+    //        ofLogNotice() << "Type ID Match";
+    //        float v = colorGroup->getParameter().cast<float>();
+    //        ofLogNotice() << "Got! " << v;
+    //    } else {
+    //        ofLogNotice() << "Type ID Mismatch";
+    //        return;
+    //    }
     std::string group;
     std::string name;
     float valuePct;
@@ -318,65 +317,67 @@ void ofApp::jsonHandlerOfParamMessage(nlohmann::basic_json<>& j) {
     } catch (nlohmann::detail::out_of_range e) {
         ofLogWarning() << "JSON Parse error: " << e.what();
     }
-    
-    bool validName = name == "Base Hue" || name == "Max Hue" || name == "Base Saturation" || name == "Max Saturation" || name == "Base Value" || name == "Max Value" || name == "Clockwise" || name == "Cyclical";
+
+    bool validName = name == "Base Hue" || name == "Max Hue" || name == "Base Saturation" || name == "Max Saturation" ||
+                     name == "Base Value" || name == "Max Value" || name == "Clockwise" || name == "Cyclical";
     if (group != "Color" || !validName) {
         ofLogNotice() << "Invalid parameter combo. Ignoring.";
         return;
     }
-    
+
     ofParameterGroup * g = getParameterGroup(group);
     if (!g) {
         ofLogWarning() << group << " not found. Discarding message.";
         return;
     }
-    
+
     // TODO This doesn't work with subclassed ofParams.
-        
+
     ofAbstractParameter * p;
     try {
         p = &(g->get(name));
-    } catch (...){
+    } catch (...) {
         ofLogWarning() << "Got exception fetching " << name << " from " << group << ". Discarding message.";
         return;
     }
-    
+
     if (!p) {
         ofLogWarning() << name << " not found in " << group << ". Discarding message.";
-        //return;
+        // return;
     }
-    
+
     if (p->type() == typeid(ofParameter<float>).name()) {
-        ofParameter<float> * pa = static_cast<ofParameter<float>*>(p);
+        ofParameter<float> * pa = static_cast<ofParameter<float> *>(p);
         float paramMin = pa->getMin();
         float paramMax = pa->getMax();
         ofLogNotice() << "Param is float " << paramMin << " to " << paramMax;
         p->cast<float>() = ofMap(valuePct, 0, 1, paramMin, paramMax, true);
-    } if (p->type() == typeid(ofParameter<int>).name()) {
-        ofParameter<int> * pa = static_cast<ofParameter<int>*>(p);
+    }
+    if (p->type() == typeid(ofParameter<int>).name()) {
+        ofParameter<int> * pa = static_cast<ofParameter<int> *>(p);
         int paramMin = pa->getMin();
         int paramMax = pa->getMax();
         ofLogNotice() << "Param is int " << paramMin << " to " << paramMax;
         p->cast<int>() = ofMap(valuePct, 0, 1, paramMin, paramMax, true);
-    } if (p->type() == typeid(ofParameter<bool>).name()) {
+    }
+    if (p->type() == typeid(ofParameter<bool>).name()) {
         ofLogNotice() << "Param is bool";
         p->cast<bool>() = 0.5 <= valuePct;
     }
-
 }
 
 ofParameterGroup * ofApp::getParameterGroup(std::string groupName) {
-    
     ofxBaseGui * controlGroup = gui.getControl(groupName);
     if (!controlGroup) {
-        ofLogError() << groupName << " not found in gui.getControl (top level groups): " << ofJoinString(gui.getControlNames(), ", ");
+        ofLogError() << groupName << " not found in gui.getControl (top level groups): "
+                     << ofJoinString(gui.getControlNames(), ", ");
         return nullptr;
     }
-    
+
     ofLogVerbose() << "p is type: " << controlGroup->getParameter().type();
     if (controlGroup->getParameter().type() == typeid(ofParameterGroup).name()) {
         ofAbstractParameter * p = &(controlGroup->getParameter());
-        ofParameterGroup * g = static_cast<ofParameterGroup*>(p);
+        ofParameterGroup * g = static_cast<ofParameterGroup *>(p);
         return g;
     } else {
         return nullptr;

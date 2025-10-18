@@ -9,18 +9,19 @@
 #define StableThunder_hpp
 
 #include <stdio.h>
-#include "ofMain.h"
-#include "Thunder.hpp"
+
 #include "Press.hpp"
+#include "Thunder.hpp"
+#include "ofMain.h"
 
 class RapidThunder : public Thunder {
-public:
+   public:
     RapidThunder(std::string _name);
-    virtual ~RapidThunder(){};
-    
+    virtual ~RapidThunder() {};
+
     ofParameter<float> boltHz;
 
-protected:
+   protected:
     LightningBolt getOrCreateBolt(const Press & p, float arousalGain, unsigned int randomSeed) override;
 };
 

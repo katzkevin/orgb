@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -n '330,394p' SHADERS.md)",
+      "Bash(sed -n '500,608p' SHADERS.md)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

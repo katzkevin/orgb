@@ -11,9 +11,9 @@
 #include "BaseWaves.hpp"
 
 class LaserWaves : public BaseWaves {
-public:
+   public:
     LaserWaves(std::string name);
-    virtual ~LaserWaves(){};
+    virtual ~LaserWaves() {};
 };
 
 #endif /* LaserWaves_hpp */

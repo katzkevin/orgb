@@ -13,26 +13,26 @@ Field::Field(std::string name) : VisualForm(name) {
     depth = std::min(width, height);
 }
 
-void Field::spriteColorChanged(ofColor& c) {
+void Field::spriteColorChanged(ofColor & c) {
     int i = 0;
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         it->setColor(generateNoisySpriteColor(++i));
     }
 }
-void Field::spriteColorChangedFloatParam(float& f) {
+void Field::spriteColorChangedFloatParam(float & f) {
     int i = 0;
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         it->setColor(generateNoisySpriteColor(++i));
     }
 }
 
-void Field::spriteSizeChanged(float& s) {
+void Field::spriteSizeChanged(float & s) {
     int i = 0;
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         it->setSize(generateNoisySpriteSize(++i));
     }
 }
-void Field::spriteVariationChanged(float& v) {
+void Field::spriteVariationChanged(float & v) {
     int i = 0;
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         it->setSize(generateNoisySpriteSize(++i));
@@ -102,7 +102,7 @@ ofColor Field::generateNoisySpriteColor(float salt) {
                                               spriteSaturationNoiseMaximumPct, spriteBaseAlphaPct, salt);
 }
 
-void Field::newPressHandler(ColorProvider& clr, Press& p) {
+void Field::newPressHandler(ColorProvider & clr, Press & p) {
     ofColor color = clr.color(p, 1.0);
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         if (ofRandomuf() < 0.5) {
@@ -114,7 +114,7 @@ void Field::newPressHandler(ColorProvider& clr, Press& p) {
     }
 }
 
-void Field::update(KeyState& ks, ColorProvider& clr) {
+void Field::update(KeyState & ks, ColorProvider & clr) {
     // float arousalShaped = math::tan(ks.arousalPct()) / 1.556;
     float arousalExponent = ofMap(ks.arousalPct(), 0, 1, -0.2, 2.2);
     float ffwModulation = pow(2, arousalExponent) / 2;  // [sqrt(x), x^2]
@@ -150,7 +150,7 @@ void Field::translateField() {
     ofTranslate(0.5 * ofGetWidth() - 0.5 * width, 0.5 * ofGetHeight() - 0.5 * height, 0);
 }
 
-void Field::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
+void Field::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     ofPushStyle();
     kkDisableAlphaBlending();  // Speeds things up if we're all opaque.
     ofSetCircleResolution(8);
@@ -179,8 +179,8 @@ void Field::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
                 ofTranslate(0.5 * ofGetWidth() - 0.5 * width, 0.5 * ofGetHeight() - 0.5 * height, 0);
                 ofScale(scale);
                 // colinearityWithOpticalAxis = abs(it->velocity.getNormalized().dot(ofVec3f(0,0,1)));
-                computedDampenRadius =
-                    getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
+                computedDampenRadius = getGlowDampenRatio(glowIntensity, intensityAtEighthWidth,
+                                                          std::min(ofGetWidth(), ofGetHeight()) / 8.0);
                 dm.shadeGlowCircle(it->position, it->size * (1 - colinearityWithOpticalAxis), it->color, glowIntensity,
                                    computedDampenRadius, blendMode, toneMap);
                 ofPopMatrix();
@@ -244,9 +244,9 @@ void Field::rotateFlockHueOverTime() {
     }
 }
 
-ofVec3f Field::steerAccordingToKeyPresses(KeyState& ks) {
+ofVec3f Field::steerAccordingToKeyPresses(KeyState & ks) {
     ofVec3f steer = ofVec3f(0, 0, 0);
-    for (const auto& press : ks.activePresses()) {
+    for (const auto & press : ks.activePresses()) {
         //         Let's do (1-x)^5 for [0,1]
         float effect = press.audibleAmplitudePct(ks.attackTimeS, 0.2, 0, 0);
         steer += deterministicRandomUnitVector(press.id) * effect * 20;

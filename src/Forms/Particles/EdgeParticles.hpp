@@ -9,17 +9,17 @@
 #define EdgeParticles_hpp
 
 #include <stdio.h>
-#include "GravityParticles.hpp"
+
 #include "ColorProvider.hpp"
+#include "GravityParticles.hpp"
 
 class EdgeParticles : public GravityParticles {
    public:
     EdgeParticles(std::string name);
-    virtual ~EdgeParticles(){};
-    
+    virtual ~EdgeParticles() {};
 
    protected:
-    ofVec3f startPositionForPress(const Press &p) override;
+    ofVec3f startPositionForPress(const Press & p) override;
 };
 
 #endif /* EdgeParticles_hpp */

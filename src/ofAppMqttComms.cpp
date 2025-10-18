@@ -45,7 +45,7 @@ void ofApp::dumpSettingsToMqtt() {
         ofLogNotice("MQTT") << "MQTT Client not connected, skipping dumpSettingsToMqtt.";
         return;
     } else {
-        ofLogNotice("MQTT") << "Writing settings to " << SETTINGS_MQTT_TOPIC;   
+        ofLogNotice("MQTT") << "Writing settings to " << SETTINGS_MQTT_TOPIC;
     }
     ofJson json;
     gui.saveTo(json);
@@ -66,9 +66,8 @@ void ofApp::pollForMQTTMessages() {
         // onMessage will set midiMessage encountered to true if there is a message.
         client.update();
         if (monitorFrameRateMode) {
-            warnOnSlow("MQTT IO Update", t0,
-                       TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO,
-                       ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
+            warnOnSlow("MQTT IO Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(),
+                       ofGetElapsedTimef());  // Check every update frame
         }
         // If there isn't a message at this point, the onMessage handler _wasn't invoked_, queue is empty.
         if (mqttMessageEncountered == false) {
@@ -76,17 +75,17 @@ void ofApp::pollForMQTTMessages() {
         }
     }
 
-    warnOnSlow("MQTT IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(), ofGetElapsedTimef());  // Check every update frame
-    
+    warnOnSlow("MQTT IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(),
+               ofGetElapsedTimef());  // Check every update frame
 }
 
-void ofApp::mqttOnMessage(ofxMQTTMessage& msg) {
+void ofApp::mqttOnMessage(ofxMQTTMessage & msg) {
     // Update loop will set this to false
 
     mqttMessageEncountered = true;
 
     ofLogNotice("MQTT") << "Received message: [" << msg.topic << "] " << msg.payload;
-        
+
     try {
         if (msg.topic == MIDI_GUITAR_MQTT_TOPIC) {
             ofLogError() << "MIDI Guitar over MQTT not implemented";

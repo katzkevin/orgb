@@ -1,6 +1,6 @@
-#include <boost/filesystem.hpp>
-
 #include "ofApp.h"
+
+#include <boost/filesystem.hpp>
 
 #define KEYSTATE_CLEANUP_TIME 10
 void ofApp::initializeForms() {
@@ -126,18 +126,17 @@ void ofApp::initializeForms() {
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    
     ofSetLogLevel(getLogLevelEnum(getEnv("OFW_LOG_LEVEL", "OF_LOG_NOTICE")));
     ofSetLogLevel("NDI", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("OSC", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("MQTT", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("warnOnSlow", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_WARN_ON_SLOW", "OF_LOG_WARNING")));
     monitorFrameRateMode = getEnv("MONITOR_FRAME_RATE", "false") == "true";
-    
+
     enableNDI = getEnv("ENABLE_NDI", "true") == "true";
     enableMQTT = getEnv("ENABLE_MQTT", "true") == "true";
     requireMQTT = getEnv("REQUIRE_MQTT", "true") == "true";
-    
+
     try {
         exitAfterFrames = boost::optional<int>(stoi(getEnv("EXIT_AFTER_FRAMES")));
         ofLogWarning() << "EXIT_AFTER_FRAMES present. Will exit after " << exitAfterFrames.value() << " frames.";
@@ -146,21 +145,21 @@ void ofApp::setup() {
         exitAfterFrames = boost::none;
     }
 
-
 #ifdef TARGET_RASPBERRY_PI
     metaParameterGroup.add(ledBrightnessPct.set("LED Brightness", stof(getEnv("LED_BRIGHTNESS")), 0, 1));
     metaParameterGroup.add(idleLedBrightnessPct.set("Idle LED Brightness", stof(getEnv("IDLE_LED_BRIGHTNESS")), 0, 1));
-    
-    uint8_t ledBrightness = static_cast<uint8_t>(ofMap(ledBrightnessPct, 0, 1, 0, 100)); // LED API expects uint8_t [0,100]
-    uint8_t idleLedBrightness = static_cast<uint8_t>(ofMap(idleLedBrightnessPct, 0, 1, 0, 100)); // LED API expects uint8_t [0,100]
-    
+
+    uint8_t ledBrightness =
+        static_cast<uint8_t>(ofMap(ledBrightnessPct, 0, 1, 0, 100));  // LED API expects uint8_t [0,100]
+    uint8_t idleLedBrightness =
+        static_cast<uint8_t>(ofMap(idleLedBrightnessPct, 0, 1, 0, 100));  // LED API expects uint8_t [0,100]
+
     clockwiseRotations = initializeLEDMatrices();
 #endif
 
     ks = KeyState();
     clr = ColorProvider();
 
-    
     fontSize = stoi(getEnv("APPLICATION_LOGO_FONT_SIZE", "13"));
     if (!helveticaNeue.load("Inter-Bold.ttf", fontSize, true, true)) {
         throw std::runtime_error("Couldn't load font.");
@@ -176,8 +175,6 @@ void ofApp::setup() {
         throw std::runtime_error("Couldn't load font.");
     }
     helveticaNeueTiny.setLetterSpacing(stof(getEnv("FONT_SIZE_TINY_SPACING", "0.9")));
-        
-    
 
     guiShow = false;
     debugShow = false;
@@ -193,13 +190,13 @@ void ofApp::setup() {
         mqttConnectHandler();
         ofLogNotice("MQTT") << "Set up.";
     }
-    
+
     if (enableNDI) {
         ofLogNotice("NDI") << "Initializing NDI and watching sources.";
         NDIlib_initialize();
         finder_.watchSources();
     }
-    
+
 #ifdef TARGET_RASPBERRY_PI
     ofLogVerbose() << "VerticalSync disabled; FPS Target: " << ofGetTargetFrameRate();
     ofSetFrameRate(TARGET_FRAME_RATE);
@@ -210,7 +207,7 @@ void ofApp::setup() {
     ofLogVerbose() << "VerticalSync enabled; FPS Target: " << ofGetTargetFrameRate();
     // TODO Does this impact Pi / LED ?
 #endif
-    
+
     // Initialize post-processing pipeline
     int width = ofGetWidth();
     int height = ofGetHeight();
@@ -232,7 +229,6 @@ void ofApp::setup() {
     updateLastInteractionMoment();
     initializeForms();
     switchToForm(0);
-
 }
 
 //--------------------------------------------------------------
@@ -240,20 +236,20 @@ void ofApp::update() {
     noteDebugHandler();
     startupTimeHandler();
     exitAfterFramesHandler();
-    
+
     if (monitorFrameRateMode) {
         monitorFrameRate(ofGetTargetFrameRate(), ofGetFrameNum(), ofGetElapsedTimef(), ofGetFrameRate());
     }
 
     if (enableNDI) {
-        ndiUpdateHandler(); // Returns true when we have an active frame
+        ndiUpdateHandler();  // Returns true when we have an active frame
     }
-    
 
     double t0 = getSystemTimeSecondsPrecise();
     forms[currentFormIndex]->update(ks, clr);
     if (monitorFrameRateMode) {
-        warnOnSlow("Form Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_UPDATE_FORM, ofGetFrameNum(), ofGetElapsedTimef());
+        warnOnSlow("Form Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_UPDATE_FORM, ofGetFrameNum(),
+                   ofGetElapsedTimef());
     }
 
 #ifndef TARGET_RASPBERRY_PI
@@ -274,7 +270,6 @@ void ofApp::update() {
     if (enableMQTT) {
         pollForMQTTMessages();
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -282,17 +277,15 @@ void ofApp::draw() {
     double t0 = getSystemTimeSecondsPrecise();
 
     bool ndiPreempt;
-    
-    
+
     dm.beginDraw();  // Sets a new main frame Context
 
     //    ofEnableAlphaBlending();
     ofBackground(0, 0, 0, 255 * (1 - trail));
     //    ofDisableAlphaBlending();
 
-    
     if (enableNDI) {
-    // Will draw screen if NDI is connected. Will return false otherwise.
+        // Will draw screen if NDI is connected. Will return false otherwise.
         ndiDrawHandler();
     }
 
@@ -314,7 +307,7 @@ void ofApp::draw() {
     if (guiShow) {
         gui.draw();
     }
-    
+
     if (debugShow) {
         std::stringstream stream;
         stream << "Arousal: ";
@@ -327,14 +320,13 @@ void ofApp::draw() {
         ofDrawRectangle(0, ofGetHeight() - 5, ofGetWidth() * ks.arousalPct(), 5);
         ofPopStyle();
     }
-    
+
     bool showWebsite = getEnv("SHOW_WEBSITE", "false") == "true";
-    
+
     showWebsite ? applicationLogoAndWebsiteHandler() : applicationLogoHandler();  // Draws logo if necessary
-    amperageTestHandler();     // Brightens everything if necessary
+    amperageTestHandler();                                                        // Brightens everything if necessary
     debugModeHandler();
 
-    
 #ifdef TARGET_RASPBERRY_PI
     brightnessUpdateHandler();
     image.clear();
@@ -342,7 +334,8 @@ void ofApp::draw() {
     led.draw(image);
 #endif
     if (monitorFrameRateMode) {
-        warnOnSlow("Draw", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_DRAW, ofGetFrameNum(), ofGetElapsedTimef());
+        warnOnSlow("Draw", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_DRAW, ofGetFrameNum(),
+                   ofGetElapsedTimef());
     }
 }
 

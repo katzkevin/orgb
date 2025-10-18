@@ -7,9 +7,7 @@
 
 #include "RapidThunder.hpp"
 
-RapidThunder::RapidThunder(std::string _name) : Thunder(_name) {
-    parameters.add(boltHz.set("boltHz", 10, 4, 60));
-}
+RapidThunder::RapidThunder(std::string _name) : Thunder(_name) { parameters.add(boltHz.set("boltHz", 10, 4, 60)); }
 
 LightningBolt RapidThunder::getOrCreateBolt(const Press & p, float arousalGain, unsigned int randomSeed) {
     // Slower with low arousal, faster with high arousal
@@ -19,9 +17,9 @@ LightningBolt RapidThunder::getOrCreateBolt(const Press & p, float arousalGain, 
         if (getSystemTimeSecondsPrecise() - storedBolt.tCreatedSeconds < effectiveInterBoltTimeS) {
             return storedBolt;
         } else {
-            bolts.erase(p.id); // If found but stale, delete then recreate after catch.
+            bolts.erase(p.id);  // If found but stale, delete then recreate after catch.
         }
-    } catch (const std::out_of_range& oor) {
+    } catch (const std::out_of_range & oor) {
         // If not found, proceed to create
     }
     LightningBolt b = createBolt(p, arousalGain, randomSeed);

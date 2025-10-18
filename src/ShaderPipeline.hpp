@@ -27,7 +27,7 @@ class ShaderPipeline {
 
     // Effect management
     void addEffect(std::shared_ptr<ShaderEffect> effect);
-    void removeEffect(const std::string& name);
+    void removeEffect(const std::string & name);
     void removeEffectAt(size_t index);
     void clearEffects();
 
@@ -37,10 +37,10 @@ class ShaderPipeline {
     void moveEffectDown(size_t index);  // Move toward end (applied later)
 
     // Effect access
-    std::shared_ptr<ShaderEffect> getEffect(const std::string& name);
+    std::shared_ptr<ShaderEffect> getEffect(const std::string & name);
     std::shared_ptr<ShaderEffect> getEffectAt(size_t index);
     size_t getEffectCount() const { return effects.size(); }
-    std::vector<std::shared_ptr<ShaderEffect>>& getEffects() { return effects; }
+    std::vector<std::shared_ptr<ShaderEffect>> & getEffects() { return effects; }
 
     // Bulk enable/disable
     void enableAll();
@@ -50,10 +50,10 @@ class ShaderPipeline {
     // Main render interface
     // Applies all enabled effects in order to the input FBO
     // Returns the final processed FBO
-    ofFbo& process(ofFbo& input);
+    ofFbo & process(ofFbo & input);
 
     // Direct draw to screen (convenience)
-    void processAndDraw(ofFbo& input, float x = 0, float y = 0);
+    void processAndDraw(ofFbo & input, float x = 0, float y = 0);
 
     // FBO management
     void resize(int width, int height);
@@ -80,8 +80,8 @@ class ShaderPipeline {
     int height;
 
     // Helper to get appropriate processing FBO
-    ofFbo& getCurrentFbo(int index);
-    ofFbo& getNextFbo(int index);
+    ofFbo & getCurrentFbo(int index);
+    ofFbo & getNextFbo(int index);
 
     void initializeFbos();
 };

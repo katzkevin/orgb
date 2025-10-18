@@ -11,13 +11,14 @@
 #include <stdio.h>
 
 #include <glm/glm.hpp>
+
 #include "Particle.h"
 #include "ofMain.h"
 
 class SizedSprite : public Particle {
    public:
     SizedSprite(glm::vec3 pos, glm::vec3 vel, ofColor c, float s);
-    virtual ~SizedSprite(){};
+    virtual ~SizedSprite() {};
 
     unsigned int id;
     float size;

@@ -9,20 +9,23 @@
 #define LightningBolt_hpp
 
 #include <stdio.h>
+
 #include "Utilities.hpp"
 
 class LightningBolt {
-public:
+   public:
     LightningBolt(ofVec3f from, ofVec3f to, int depth, float jitterUnit, float branchingFactor, float seed);
-    virtual ~LightningBolt(){};
-    
+    virtual ~LightningBolt() {};
+
     void draw(ofColor color);
-    
+
     double tCreatedSeconds;
-    
-private:
-    void singleLightningBoltR(vector<ofPoint> &ls, int lo, int hi, float jitterUnit, float branchingFactor, float seed);
-    vector<ofPoint> singleLightningBolt(ofPoint from, ofPoint to, int ttl, float jitterUnit, float branchingFactor, float seed);
+
+   private:
+    void singleLightningBoltR(vector<ofPoint> & ls, int lo, int hi, float jitterUnit, float branchingFactor,
+                              float seed);
+    vector<ofPoint> singleLightningBolt(ofPoint from, ofPoint to, int ttl, float jitterUnit, float branchingFactor,
+                                        float seed);
 
     vector<ofPoint> trunk;
     std::list<LightningBolt> branches;

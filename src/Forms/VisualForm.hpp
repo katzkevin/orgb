@@ -19,11 +19,11 @@
 class VisualForm {
    public:
     VisualForm(std::string name);
-    virtual void setup(){};
-    virtual void update(KeyState& ks, ColorProvider& clr){};
-    virtual void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) = 0;  // ABSTRACT!
-    virtual void newPressHandler(ColorProvider& clr, Press& p){};
-    virtual void pressHandler(Press& p){};
+    virtual void setup() {};
+    virtual void update(KeyState & ks, ColorProvider & clr) {};
+    virtual void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) = 0;  // ABSTRACT!
+    virtual void newPressHandler(ColorProvider & clr, Press & p) {};
+    virtual void pressHandler(Press & p) {};
 
     ofParameterGroup parameters;
     std::string name;

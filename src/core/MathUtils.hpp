@@ -13,7 +13,7 @@ namespace core {
  * Replacements for openFrameworks ofMap, ofClamp, ofIsFloatEqual
  */
 class MathUtils {
-public:
+   public:
     /**
      * Maps a value from one range to another
      * Equivalent to openFrameworks ofMap()
@@ -26,7 +26,7 @@ public:
      * @param clampResult If true, clamp result to output range
      * @return Mapped value
      */
-    template<typename T>
+    template <typename T>
     static T map(T value, T inputMin, T inputMax, T outputMin, T outputMax, bool clampResult = false) {
         if (std::abs(inputMax - inputMin) < std::numeric_limits<T>::epsilon()) {
             return outputMin;
@@ -54,7 +54,7 @@ public:
      * @param max Maximum value
      * @return Clamped value
      */
-    template<typename T>
+    template <typename T>
     static T clamp(T value, T min, T max) {
         return std::max(min, std::min(value, max));
     }
@@ -68,9 +68,7 @@ public:
      * @param epsilon Tolerance (default: 1e-6f)
      * @return True if values are equal within epsilon
      */
-    static bool floatEqual(float a, float b, float epsilon = 1e-6f) {
-        return std::abs(a - b) < epsilon;
-    }
+    static bool floatEqual(float a, float b, float epsilon = 1e-6f) { return std::abs(a - b) < epsilon; }
 
     /**
      * Checks if two doubles are equal within epsilon tolerance
@@ -80,9 +78,7 @@ public:
      * @param epsilon Tolerance (default: 1e-9)
      * @return True if values are equal within epsilon
      */
-    static bool floatEqual(double a, double b, double epsilon = 1e-9) {
-        return std::abs(a - b) < epsilon;
-    }
+    static bool floatEqual(double a, double b, double epsilon = 1e-9) { return std::abs(a - b) < epsilon; }
 
     /**
      * Linear interpolation between two values
@@ -92,7 +88,7 @@ public:
      * @param amount Interpolation amount (0.0 to 1.0)
      * @return Interpolated value
      */
-    template<typename T>
+    template <typename T>
     static T lerp(T start, T end, float amount) {
         return start + (end - start) * amount;
     }
@@ -105,7 +101,7 @@ public:
      * @param max Maximum of range
      * @return Normalized value (0-1)
      */
-    template<typename T>
+    template <typename T>
     static float normalize(T value, T min, T max) {
         if (max == min) return 0.0f;
         return static_cast<float>(value - min) / static_cast<float>(max - min);
@@ -115,4 +111,4 @@ public:
 }  // namespace core
 }  // namespace orgb
 
-#endif // ORGB_CORE_MATH_UTILS_HPP
+#endif  // ORGB_CORE_MATH_UTILS_HPP

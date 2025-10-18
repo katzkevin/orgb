@@ -11,16 +11,15 @@
 #include <stdio.h>
 
 #include <boost/optional.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <random>
 #include <unordered_map>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
 #include "Press.hpp"
 #include "boost/functional/hash.hpp"
-#include "core/Random.hpp"
 #include "core/MathUtils.hpp"
+#include "core/Random.hpp"
 #include "ofMain.h"  // Still needed for logging, drawing, etc.
 
 #define NUM_NOTES 12
@@ -53,8 +52,10 @@ enum PARAMTYPE { COLORS = 0, PARAM_TYPE_UNKNOWN };
 double getSystemTimeSecondsPrecise();
 
 // Performance monitoring - now accepts frame info as parameters
-void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS, int perNFrames = 30, float warmupTimeS = 5.0);
-void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate, int perNFrames = 30, float warmupTimeS = 5.0);
+void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS,
+                int perNFrames = 30, float warmupTimeS = 5.0);
+void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate,
+                      int perNFrames = 30, float warmupTimeS = 5.0);
 
 int positive_modulo(int x, int y);
 float positive_modulo(float x, float y);
@@ -76,7 +77,7 @@ glm::vec3 getRandomlyRotatedVectorRad(glm::vec3 inVector, float radians);
 glm::vec3 getRotatedAwayFromVectorRad(glm::vec3 inVector, glm::vec3 rotateAwayFrom, float radians);
 glm::vec3 randomUnitVector();
 glm::vec3 randomUnitVector2D();
-std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned int seed);
+std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press & p, unsigned int seed);
 
 float getGaussian();
 float getGaussian(float mu, float sigma);
@@ -109,8 +110,8 @@ void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseS
 namespace ColorUtilities {
 ofColor generateNoisyColor(ofColor baseColor, float baseAlphaPct, float hueNoiseMaximumPct,
                            float saturationNoiseMaximumPct, float valueNoiseMaximumPct, float salt);
-ofColor withSaturation(const ofColor& c, uint8_t newSaturation);
-ofColor withValue(const ofColor& c, uint8_t newValue);
+ofColor withSaturation(const ofColor & c, uint8_t newSaturation);
+ofColor withValue(const ofColor & c, uint8_t newValue);
 }  // namespace ColorUtilities
 
 MIDITYPE stringToMidiType(std::string str);

@@ -23,7 +23,7 @@ class ShaderHotReloader {
     ShaderHotReloader() : enabled(true), checkInterval(0.5f), lastCheck(0) {}
 
     // Register a shader for hot reloading
-    void watch(ofShader* shader, const std::string& vertPath, const std::string& fragPath,
+    void watch(ofShader * shader, const std::string & vertPath, const std::string & fragPath,
                std::function<void()> onReload = nullptr) {
         WatchEntry entry;
         entry.shader = shader;
@@ -45,7 +45,7 @@ class ShaderHotReloader {
         if (now - lastCheck < checkInterval) return;
         lastCheck = now;
 
-        for (auto& [key, entry] : watchList) {
+        for (auto & [key, entry] : watchList) {
             if (hasFileChanged(entry)) {
                 reloadShader(entry);
             }
@@ -57,7 +57,7 @@ class ShaderHotReloader {
 
    private:
     struct WatchEntry {
-        ofShader* shader;
+        ofShader * shader;
         std::string vertPath;
         std::string fragPath;
         std::time_t vertModTime;
@@ -70,12 +70,12 @@ class ShaderHotReloader {
     float lastCheck;
     std::map<std::string, WatchEntry> watchList;
 
-    void updateModificationTimes(WatchEntry& entry) {
+    void updateModificationTimes(WatchEntry & entry) {
         entry.vertModTime = getModificationTime(entry.vertPath);
         entry.fragModTime = getModificationTime(entry.fragPath);
     }
 
-    std::time_t getModificationTime(const std::string& path) {
+    std::time_t getModificationTime(const std::string & path) {
         try {
             if (!fs::exists(path)) return 0;
             auto ftime = fs::last_write_time(path);
@@ -87,14 +87,14 @@ class ShaderHotReloader {
         }
     }
 
-    bool hasFileChanged(const WatchEntry& entry) {
+    bool hasFileChanged(const WatchEntry & entry) {
         std::time_t vertMod = getModificationTime(entry.vertPath);
         std::time_t fragMod = getModificationTime(entry.fragPath);
 
         return (vertMod != entry.vertModTime) || (fragMod != entry.fragModTime);
     }
 
-    void reloadShader(WatchEntry& entry) {
+    void reloadShader(WatchEntry & entry) {
         ofLogNotice("ShaderHotReloader") << "Reloading: " << entry.vertPath;
 
         try {
@@ -112,7 +112,7 @@ class ShaderHotReloader {
             } else {
                 ofLogError("ShaderHotReloader") << "✗ Reload failed - keeping old shader";
             }
-        } catch (const std::exception& e) {
+        } catch (const std::exception & e) {
             ofLogError("ShaderHotReloader") << "✗ Exception during reload: " << e.what();
         }
     }

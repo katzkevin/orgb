@@ -5,19 +5,19 @@
  */
 
 #include <gtest/gtest.h>
-#include <thread>
+
 #include <chrono>
+#include <thread>
+
 #include "KeyState.hpp"
 #include "Utilities.hpp"
 
 class KeyStateTest : public ::testing::Test {
-protected:
+   protected:
     KeyState ks;
     const float EPSILON = 0.001f;
 
-    void SetUp() override {
-        ks = KeyState();
-    }
+    void SetUp() override { ks = KeyState(); }
 };
 
 // ============================================================================
@@ -111,7 +111,7 @@ TEST_F(KeyStateTest, CleanupRemovesOldReleased) {
 
     // Wait and cleanup with 0 second TTL
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ks.cleanup(0.05f, 0, 1.0/60.0);  // Remove after 0.05 seconds
+    ks.cleanup(0.05f, 0, 1.0 / 60.0);  // Remove after 0.05 seconds
 
     // Should be removed now
     EXPECT_EQ(ks.allPresses().size(), 0);
@@ -122,7 +122,7 @@ TEST_F(KeyStateTest, CleanupPreservesRecent) {
     ks.keyReleasedHandler(60);
 
     // Cleanup immediately with high TTL
-    ks.cleanup(10.0f, 0, 1.0/60.0);  // Keep for 10 seconds
+    ks.cleanup(10.0f, 0, 1.0 / 60.0);  // Keep for 10 seconds
 
     // Should still be there
     EXPECT_EQ(ks.allPresses().size(), 1);
@@ -132,7 +132,7 @@ TEST_F(KeyStateTest, CleanupPreservesActive) {
     ks.newKeyPressedHandler(60, 0.8f, 1);
 
     // Cleanup should never remove active presses
-    ks.cleanup(0.0f, 0, 1.0/60.0);
+    ks.cleanup(0.0f, 0, 1.0 / 60.0);
 
     EXPECT_EQ(ks.allPresses().size(), 1);
     EXPECT_TRUE(ks.isActivelyPressed(60));
@@ -177,7 +177,7 @@ TEST_F(KeyStateTest, SustainAffectsNewPresses) {
     boost::optional<Press> p = ks.getActivePress(60);
     if (!p.is_initialized()) {
         // The press is in the list but getReleaseTime returns none (sustained)
-        for (const auto& press : ks.allPresses()) {
+        for (const auto & press : ks.allPresses()) {
             if (press.note == 60) {
                 EXPECT_FALSE(press.getReleaseTime().is_initialized());
             }
@@ -198,7 +198,7 @@ TEST_F(KeyStateTest, SustainReleasesAll) {
     ks.sustainOffHandler(getSystemTimeSecondsPrecise());
 
     // All should now show as released
-    for (const auto& press : ks.allPresses()) {
+    for (const auto & press : ks.allPresses()) {
         EXPECT_TRUE(press.getReleaseTime().is_initialized());
     }
 }
@@ -249,7 +249,7 @@ TEST_F(KeyStateTest, EphemeralPressDecay) {
     ks.ephemeralKeyPressedHandler(60, 1.0f, 1);
 
     // Decay should reduce velocity over time
-    ks.decayEphemeralKeypressAmplitudes(1.0/60.0);
+    ks.decayEphemeralKeypressAmplitudes(1.0 / 60.0);
 
     EXPECT_LT(ks.ephemeralPresses.at(60).velocityPct, 1.0f);
 }

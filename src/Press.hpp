@@ -42,13 +42,13 @@ class Press {
     // Percent across A-G#
     float noteChromaticPct() const;
 
-    bool operator<(const Press& other) const { return id < other.id; }
+    bool operator<(const Press & other) const { return id < other.id; }
 
-    friend std::ostream& operator<<(std::ostream& os, const Press& p);
+    friend std::ostream & operator<<(std::ostream & os, const Press & p);
 
     // Allows using the Press as a key in a unordered_map (also see defined hash below)
     // https://stackoverflow.com/a/17017281
-    bool operator==(const Press& other) const { return (id == other.id); }
+    bool operator==(const Press & other) const { return (id == other.id); }
 
    private:
     boost::optional<double> sustainReleasedTimeS;
@@ -63,7 +63,7 @@ class Press {
 namespace std {
 template <>
 struct less<Press> {
-    bool operator()(const Press& lhs, const Press& rhs) const { return lhs.id < rhs.id; }
+    bool operator()(const Press & lhs, const Press & rhs) const { return lhs.id < rhs.id; }
 };
 
 // https://stackoverflow.com/a/17017281
@@ -71,7 +71,7 @@ struct less<Press> {
 
 template <>
 struct hash<Press> {
-    std::size_t operator()(const Press& k) const {
+    std::size_t operator()(const Press & k) const {
         return (std::hash<unsigned int>()(k.id));  // Note, this depends on press ID being unique.
     }
 };

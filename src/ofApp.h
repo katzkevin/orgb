@@ -4,9 +4,9 @@
 #include "ofxOsc.h"
 
 // NDI
+#include "ofxNDIFinder.h"
 #include "ofxNDIReceiver.h"
 #include "ofxNDIRecvStream.h"
-#include "ofxNDIFinder.h"
 
 #ifdef TARGET_RASPBERRY_PI
 #include "ofxRpiLED.h"
@@ -15,7 +15,9 @@
 #include "BaseWaves.hpp"
 #include "ColorUtilities.hpp"
 #include "DrawManager.hpp"
+#include "EdgeLasers.hpp"
 #include "EdgeParticles.hpp"
+#include "Effects/AllEffects.hpp"
 #include "FatGlowShape.hpp"
 #include "Field.hpp"
 #include "GlowLinePlayground.hpp"
@@ -24,23 +26,20 @@
 #include "ImageSprocket.hpp"
 #include "KeyState.hpp"
 #include "LaserWaves.hpp"
-#include "EdgeLasers.hpp"
+#include "MeshGrid.hpp"
+#include "NoiseGrid.hpp"
 #include "Orbit.hpp"
 #include "PointWaves.hpp"
 #include "Press.hpp"
 #include "RadialParticles.hpp"
 #include "RandomParticles.hpp"
 #include "RapidThunder.hpp"
+#include "ShaderPipeline.hpp"
 #include "Shape.hpp"
-#include "MeshGrid.hpp"
-#include "NoiseGrid.hpp"
 #include "Thunder.hpp"
 #include "Utilities.hpp"
 #include "VisualForm.hpp"
 #include "ofxOscParameterSync.h"
-#include "ShaderPipeline.hpp"
-#include "Effects/AllEffects.hpp"
-
 
 // #include "FieldWithTrails.hpp"
 #include "Lotus.hpp"
@@ -90,7 +89,7 @@ class ofApp : public ofBaseApp {
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     void exit();
-    
+
     // Utility for AppIO
     ofParameterGroup * getParameterGroup(std::string groupName);
 
@@ -101,7 +100,7 @@ class ofApp : public ofBaseApp {
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
     void pollForMQTTMessages();
-    void mqttOnMessage(ofxMQTTMessage &msg);
+    void mqttOnMessage(ofxMQTTMessage & msg);
     void mqttOnOnline();
     void mqttOnOffline();
 
@@ -111,7 +110,7 @@ class ofApp : public ofBaseApp {
     bool enableMQTT;
     bool requireMQTT;
     bool enableNDI;
-    
+
     /*
      * OSC Comms
      */
@@ -121,14 +120,14 @@ class ofApp : public ofBaseApp {
     /*
      * Root IO
      */
-    void jsonHandlerEphemeralNote(nlohmann::basic_json<> &j, unsigned int messageId);
-    void jsonHandlerMidiMessage(nlohmann::basic_json<> &j);
-    void jsonHandlerParamMessage(nlohmann::basic_json<> &j);
-    void jsonHandlerOfParamMessage(nlohmann::basic_json<> &j);
-    void jsonHandlerClassification(nlohmann::basic_json<> &j);
+    void jsonHandlerEphemeralNote(nlohmann::basic_json<> & j, unsigned int messageId);
+    void jsonHandlerMidiMessage(nlohmann::basic_json<> & j);
+    void jsonHandlerParamMessage(nlohmann::basic_json<> & j);
+    void jsonHandlerOfParamMessage(nlohmann::basic_json<> & j);
+    void jsonHandlerClassification(nlohmann::basic_json<> & j);
     std::string dumpSettingsToJsonFile();
     void loadSettingsFromJsonString(std::string payloadString);
-    void noteOnHandler(int key, float velocityPct,  unsigned int messageId, bool ephemeral = false);
+    void noteOnHandler(int key, float velocityPct, unsigned int messageId, bool ephemeral = false);
     void noteOffHandler(int key);
 
     /*
@@ -153,13 +152,13 @@ class ofApp : public ofBaseApp {
     ofTrueTypeFont helveticaNeue;
     ofTrueTypeFont helveticaNeueSmall;
     ofTrueTypeFont helveticaNeueTiny;
-    
+
     void applicationLogoHandler();
     void applicationLogoAndWebsiteHandler();
-    
+
     void drawLogo(uint8_t alpha, float verticalOffsetFromCenter);
     void drawWebsite(uint8_t alpha, float verticalOffsetFromCenter, std::string s);
-    
+
     ofRectangle userApparentDimensions();  // TODO incorporate into logo
     int fontSize;
 
@@ -191,27 +190,26 @@ class ofApp : public ofBaseApp {
      * Moments
      */
     bool monitorFrameRateMode;
-    
+
     // Self-destruct (useful for monitoring)
     boost::optional<int> exitAfterFrames;
     void exitAfterFramesHandler();
-    
+
     uint64_t amperageTestModeMoment;  // Used for voltage test
     void amperageTestHandler();
-    
+
     uint64_t debugModeMoment;
     void debugModeHandler();
-    
+
     void startupTimeHandler();  // Used to reset elapsedTimeTimer in case setup takes a while.
     void noteDebugHandler();
-    
+
     double lastInteractionMoment;  // Used for screensaver
     void updateLastInteractionMoment();
     bool applicationIsIdle();
-    
+
     boost::optional<double> lastNdiReconnectAttempt;
-    
-    
+
     /*
      * NDI
      */
@@ -219,13 +217,13 @@ class ofApp : public ofBaseApp {
     ofxNDIReceiver receiver_;
     ofxNDIRecvVideoFrameSync video_;
     ofPixels pixels_;
-    
+
     bool ndiUpdateHandler();
     bool ndiDrawHandler();
     bool ndiScanForVideoSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
-    
+
     bool guiShow;
     bool debugShow;
     bool enableShader;

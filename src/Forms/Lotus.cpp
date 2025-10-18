@@ -15,9 +15,9 @@ struct {
 
 Lotus::Lotus() : VisualForm("Lotus") {}
 
-void Lotus::update(KeyState& ks, ColorProvider& clr) {}
+void Lotus::update(KeyState & ks, ColorProvider & clr) {}
 
-void Lotus::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) { rotatingPastelLotus(); }
+void Lotus::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) { rotatingPastelLotus(); }
 
 void Lotus::drawLeaf(float scale, ofColor color, float salt) {
     float x2 = 0.294;

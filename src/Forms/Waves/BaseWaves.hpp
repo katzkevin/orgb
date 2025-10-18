@@ -10,22 +10,20 @@
 
 #include <stdio.h>
 
+#include "ColorProvider.hpp"
 #include "KeyState.hpp"
 #include "Press.hpp"
 #include "Utilities.hpp"
-#include "ColorProvider.hpp"
 #include "VisualForm.hpp"
 
 class BaseWaves : public VisualForm {
    public:
     BaseWaves(std::string name);
-    virtual ~BaseWaves(){};
-    
+    virtual ~BaseWaves() {};
 
     void update(KeyState & ks, ColorProvider & clr);
-    
-        
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm);
+
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
 
     float maxWaveWidth;
 
@@ -33,9 +31,9 @@ class BaseWaves : public VisualForm {
     ofParameter<float> intensityAtEighthWidth;
     ofParameter<int> blendMode;
     ofParameter<bool> toneMap;
-    
-protected:
-    virtual void drawUnit(ColorProvider &clr, KeyState &ks, DrawManager &dm, const Press &p, float alpha);
+
+   protected:
+    virtual void drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, const Press & p, float alpha);
 };
 
 #endif /* BaseWaves_hpp */

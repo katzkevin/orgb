@@ -19,8 +19,8 @@ using namespace boost::filesystem;
 
 class ImageWrapper {
    public:
-    ImageWrapper(path p, ofImage& i);
-    virtual ~ImageWrapper(){};
+    ImageWrapper(path p, ofImage & i);
+    virtual ~ImageWrapper() {};
     path imagePath;
     ofImage image;
     float scale;

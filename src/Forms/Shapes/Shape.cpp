@@ -22,28 +22,28 @@ Shape::Shape(std::string name) : VisualForm(name) {
     parameters.add(toneMap.set("toneMap", false));
 }
 
-void Shape::drawUnit(const ofColor &color, KeyState & ks, DrawManager &dm, Press &press) {
+void Shape::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press) {
     ofPath shapeVertices;
     shapeVertices = getOrCreatePath(press);
     if (drawMode == 0) {
-        
         shapeVertices.setColor(color);
         shapeVertices.draw();
     } else {
         auto v = shapeVertices.getOutline()[0].getVertices();
         float functionalGlowIntensity = glowIntensity * ks.arousalGain();
-        float computedDampenRadius = getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
-        
+        float computedDampenRadius =
+            getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
+
         for (int i = 0; i < v.size(); i++) {
             ofVec2f from(v[i].x, v[i].y);
             ofVec2f to(v[(i + 1) % v.size()].x, v[(i + 1) % v.size()].y);
-            
+
             dm.shadeGlowLine(from, to, color, functionalGlowIntensity, computedDampenRadius, blendMode, toneMap);
         }
     }
 }
 
-void Shape::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
+void Shape::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     for (auto press : ks.allPresses()) {
         double amplitude =
             press.audibleAmplitudePct(ks.attackTimeS, ks.decayTimeS, ks.sustainLevelPct, ks.releaseTimeS);
@@ -52,7 +52,7 @@ void Shape::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
             continue;
         }
         drawUnit(color, ks, dm, press);
-        //shapeVertices.draw();
+        // shapeVertices.draw();
     }
 
     for (auto press : ks.allEphemeralPresses()) {
@@ -69,10 +69,10 @@ void Shape::draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) {
     }
 }
 
-ofPath Shape::getOrCreatePath(Press& p) {
+ofPath Shape::getOrCreatePath(Press & p) {
     // This used to cache shapes. Now it doesn't we want them to expand over time.
     float radius = calculateRadius(p);
-    
+
     int numSides = floor(ofMap(deterministicRandomPct(p.id % SHAPE_PRIME + 0), 0, 1, 3,
                                MAX_SIDES + 1));  // [3,MAX_SIDES] sides (MAX_SIDES + 1 technically possible)
     float dx = ofMap(deterministicRandomPct(p.id % SHAPE_PRIME + 1), 0, 1, 0, ofGetWidth());
@@ -84,7 +84,7 @@ ofPath Shape::getOrCreatePath(Press& p) {
     //        dx = 8;
     //        dy = 8;
     //        rotate = 0;
-    
+
     // ofLogNotice() << p.note << " " << p.velocityPct << " " << p.id << " " << dx;
     ofPath computedShape = shape(numSides, radius);
     computedShape.rotateRad(rotate, rotateAxis);
@@ -95,7 +95,7 @@ ofPath Shape::getOrCreatePath(Press& p) {
 }
 
 // Expanding radius
-float Shape::calculateRadius(Press& p) {
+float Shape::calculateRadius(Press & p) {
     float dt;
     if (p.getReleaseTime().is_initialized()) {
         // Key is released (from sustain or just plain released)

@@ -16,14 +16,14 @@ EdgeParticles::EdgeParticles(std::string name) : GravityParticles(name) {
     baseGravity.set(820);
 }
 
-ofVec3f EdgeParticles::startPositionForPress(const Press &p) {
+ofVec3f EdgeParticles::startPositionForPress(const Press & p) {
     int xPos = ofRandomWidth();
     // Subtly pertub to avoid initial streak
     int yPos = ofRandom(-2.0, 0.0);
     return ofVec3f(xPos, yPos, 0);
 }
 
-static void wallBounce(Particle &particle) {
+static void wallBounce(Particle & particle) {
     glm::vec3 pos = particle.position;
     glm::vec3 vel = particle.velocity;
 
@@ -41,4 +41,3 @@ static void wallBounce(Particle &particle) {
         particle.position = glm::vec3(ofGetWidth() - xOver, pos.y, pos.z);
     }
 }
-

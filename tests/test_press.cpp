@@ -5,13 +5,15 @@
  */
 
 #include <gtest/gtest.h>
-#include <thread>
+
 #include <chrono>
+#include <thread>
+
 #include "Press.hpp"
 #include "Utilities.hpp"
 
 class PressTest : public ::testing::Test {
-protected:
+   protected:
     const float EPSILON = 0.001f;
     const unsigned int TEST_MESSAGE_ID = 12345;
 };
@@ -208,9 +210,9 @@ TEST_F(PressTest, NoteOverallPctGuitar) {
 
 TEST_F(PressTest, NoteChromaticPct) {
     // C should be 0, B should be close to 1
-    Press pC(60, 0.5f, 0.0, Press::PressType::PIANO, 1);   // C
-    Press pCSharp(61, 0.5f, 0.0, Press::PressType::PIANO, 2); // C#
-    Press pB(71, 0.5f, 0.0, Press::PressType::PIANO, 3);   // B
+    Press pC(60, 0.5f, 0.0, Press::PressType::PIANO, 1);       // C
+    Press pCSharp(61, 0.5f, 0.0, Press::PressType::PIANO, 2);  // C#
+    Press pB(71, 0.5f, 0.0, Press::PressType::PIANO, 3);       // B
 
     EXPECT_NEAR(pC.noteChromaticPct(), 0.0f, EPSILON);
     EXPECT_NEAR(pCSharp.noteChromaticPct(), 1.0f / 12.0f, EPSILON);
@@ -355,8 +357,8 @@ TEST_F(PressTest, EqualityOperator) {
     Press p2(60, 0.8f, 1.0, Press::PressType::PIANO, 123);
     Press p3(60, 0.8f, 1.0, Press::PressType::PIANO, 456);
 
-    EXPECT_TRUE(p1 == p2);  // Same ID
-    EXPECT_FALSE(p1 == p3); // Different ID
+    EXPECT_TRUE(p1 == p2);   // Same ID
+    EXPECT_FALSE(p1 == p3);  // Different ID
 }
 
 TEST_F(PressTest, LessThanOperator) {

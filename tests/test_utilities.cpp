@@ -5,12 +5,14 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <cmath>
+
 #include "Utilities.hpp"
 
 // Test fixture for Utilities
 class UtilitiesTest : public ::testing::Test {
-protected:
+   protected:
     const float EPSILON = 0.0001f;
 };
 
@@ -105,8 +107,8 @@ TEST_F(UtilitiesTest, MidiToHzOctaveRelationship) {
 
 TEST_F(UtilitiesTest, NoteRelativeFrequency) {
     // Test chromatic relationships
-    EXPECT_NEAR(noteRelativeFrequency(0), 1.0f, EPSILON);  // C
-    EXPECT_NEAR(noteRelativeFrequency(12), 1.0f, EPSILON); // C (next octave, same ratio)
+    EXPECT_NEAR(noteRelativeFrequency(0), 1.0f, EPSILON);   // C
+    EXPECT_NEAR(noteRelativeFrequency(12), 1.0f, EPSILON);  // C (next octave, same ratio)
 
     // Perfect fifth (7 semitones) should be ~1.5x frequency
     EXPECT_NEAR(noteRelativeFrequency(7), 1.498f, 0.01f);

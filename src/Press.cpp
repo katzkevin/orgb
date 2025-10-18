@@ -16,7 +16,7 @@
 #include "boost/functional/hash.hpp"
 #include "core/MathUtils.hpp"
 
-std::ostream& operator<<(std::ostream& os, const Press& p) {
+std::ostream & operator<<(std::ostream & os, const Press & p) {
     os << "(" << p.note << ", " << p.velocityPct << ", " << p.tSystemTimeSeconds << ")";
     //    if (p.sustainTimeS.is_initialized()) {
     //        os << " (sustained @ " << ;
@@ -119,10 +119,12 @@ float Press::noteOverallPct() const {
     // Return the [0,1) interval note value
     switch (pressType) {
         case PressType::GUITAR:
-            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(GUITAR_MIDI_MIN), static_cast<float>(GUITAR_MIDI_MAX), 0.0f, 1.0f, true);
+            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(GUITAR_MIDI_MIN),
+                                              static_cast<float>(GUITAR_MIDI_MAX), 0.0f, 1.0f, true);
         case PressType::PIANO:
         default:
-            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(PIANO_MIDI_MIN), static_cast<float>(PIANO_MIDI_MAX), 0.0f, 1.0f, true);
+            return orgb::core::MathUtils::map(static_cast<float>(note), static_cast<float>(PIANO_MIDI_MIN),
+                                              static_cast<float>(PIANO_MIDI_MAX), 0.0f, 1.0f, true);
     }
 }
 

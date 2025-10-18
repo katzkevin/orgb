@@ -19,10 +19,10 @@
 class Lotus : public VisualForm {
    public:
     Lotus();
-    virtual ~Lotus(){};
+    virtual ~Lotus() {};
 
-    void update(KeyState& ks, ColorProvider& clr);
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm);
+    void update(KeyState & ks, ColorProvider & clr);
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
 
     void drawLeaf(float scale, ofColor color, float salt);
     void rotatingPastelLotus();

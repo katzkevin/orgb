@@ -60,7 +60,7 @@ void DrawManager::endAndDrawFbo() {
     activeCanvas = boost::none;
 }
 
-void DrawManager::shaderEpilogue(ShaderPackage& sp) {
+void DrawManager::shaderEpilogue(ShaderPackage & sp) {
     // Extremely stateful, see existing examples
     if (activeCanvas.get().getId() != fboFront.getId()) {
         throw std::runtime_error("Canvas must be front canvas.");

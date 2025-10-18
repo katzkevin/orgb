@@ -27,35 +27,35 @@ void ofApp::amperageTestHandler() {
     }
 }
 
-
 void ofApp::debugModeHandler() {
     bool debugTestMode = getSystemTimeSecondsPrecise() < debugModeMoment + DEBUG_MODE_DURATION_S;
     if (!debugTestMode) {
         return;
     }
-    
+
     ofPushStyle();
 
     ofSetColor(ofColor::fromHsb(255 / 4.0 * 0, 255, 255));
     ofDrawRectangle(0, 0, ofGetWidth(), 2);
-    
+
     ofSetColor(ofColor::fromHsb(255 / 4.0 * 1, 255, 255));
     ofDrawRectangle(ofGetWidth() - 2, 0, 2, ofGetHeight());
-    
+
     ofSetColor(ofColor::fromHsb(255 / 4.0 * 2, 255, 255));
     ofDrawRectangle(0, ofGetHeight() - 2, ofGetWidth(), 2);
-    
+
     ofSetColor(ofColor::fromHsb(255 / 4.0 * 3, 255, 255));
     ofDrawRectangle(0, 2, 2, ofGetHeight());
-    
+
     if (ofGetWidth() < ofGetHeight()) {
         ofRotateDeg(90);
         ofTranslate(0, -ofGetWidth());
     }
     std::string hostname = getEnv("SYSTEM_HOSTNAME", "N/A");
     ofSetColor(255);
-    helveticaNeueSmall.drawString(getEnv("SYSTEM_HOSTNAME", "N/A"), 2, helveticaNeueSmall.getStringBoundingBox(hostname, 0, 0).getHeight() + 2);
-            
+    helveticaNeueSmall.drawString(getEnv("SYSTEM_HOSTNAME", "N/A"), 2,
+                                  helveticaNeueSmall.getStringBoundingBox(hostname, 0, 0).getHeight() + 2);
+
     ofPopStyle();
 }
 

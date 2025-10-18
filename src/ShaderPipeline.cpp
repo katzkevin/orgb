@@ -36,7 +36,7 @@ void ShaderPipeline::addEffect(std::shared_ptr<ShaderEffect> effect) {
     }
 
     // Check for duplicate names
-    for (const auto& existing : effects) {
+    for (const auto & existing : effects) {
         if (existing->getName() == effect->getName()) {
             ofLogWarning("ShaderPipeline::addEffect") << "Effect '" << effect->getName() << "' already exists";
             return;
@@ -47,9 +47,10 @@ void ShaderPipeline::addEffect(std::shared_ptr<ShaderEffect> effect) {
     ofLogNotice("ShaderPipeline::addEffect") << "Added effect: " << effect->getName();
 }
 
-void ShaderPipeline::removeEffect(const std::string& name) {
-    auto it = std::remove_if(effects.begin(), effects.end(),
-                             [&name](const std::shared_ptr<ShaderEffect>& effect) { return effect->getName() == name; });
+void ShaderPipeline::removeEffect(const std::string & name) {
+    auto it = std::remove_if(effects.begin(), effects.end(), [&name](const std::shared_ptr<ShaderEffect> & effect) {
+        return effect->getName() == name;
+    });
 
     if (it != effects.end()) {
         ofLogNotice("ShaderPipeline::removeEffect") << "Removed effect: " << name;
@@ -86,8 +87,8 @@ void ShaderPipeline::moveEffect(size_t fromIndex, size_t toIndex) {
     effects.erase(effects.begin() + fromIndex);
     effects.insert(effects.begin() + toIndex, effect);
 
-    ofLogNotice("ShaderPipeline::moveEffect") << "Moved '" << effect->getName() << "' from " << fromIndex << " to "
-                                               << toIndex;
+    ofLogNotice("ShaderPipeline::moveEffect")
+        << "Moved '" << effect->getName() << "' from " << fromIndex << " to " << toIndex;
 }
 
 void ShaderPipeline::moveEffectUp(size_t index) {
@@ -102,8 +103,8 @@ void ShaderPipeline::moveEffectDown(size_t index) {
     }
 }
 
-std::shared_ptr<ShaderEffect> ShaderPipeline::getEffect(const std::string& name) {
-    for (auto& effect : effects) {
+std::shared_ptr<ShaderEffect> ShaderPipeline::getEffect(const std::string & name) {
+    for (auto & effect : effects) {
         if (effect->getName() == name) {
             return effect;
         }
@@ -119,31 +120,31 @@ std::shared_ptr<ShaderEffect> ShaderPipeline::getEffectAt(size_t index) {
 }
 
 void ShaderPipeline::enableAll() {
-    for (auto& effect : effects) {
+    for (auto & effect : effects) {
         effect->setEnabled(true);
     }
     ofLogNotice("ShaderPipeline::enableAll") << "Enabled all effects";
 }
 
 void ShaderPipeline::disableAll() {
-    for (auto& effect : effects) {
+    for (auto & effect : effects) {
         effect->setEnabled(false);
     }
     ofLogNotice("ShaderPipeline::disableAll") << "Disabled all effects";
 }
 
 void ShaderPipeline::toggleAll() {
-    for (auto& effect : effects) {
+    for (auto & effect : effects) {
         effect->toggle();
     }
     ofLogNotice("ShaderPipeline::toggleAll") << "Toggled all effects";
 }
 
-ofFbo& ShaderPipeline::getCurrentFbo(int index) { return (index % 2 == 0) ? processingFbo1 : processingFbo2; }
+ofFbo & ShaderPipeline::getCurrentFbo(int index) { return (index % 2 == 0) ? processingFbo1 : processingFbo2; }
 
-ofFbo& ShaderPipeline::getNextFbo(int index) { return (index % 2 == 0) ? processingFbo2 : processingFbo1; }
+ofFbo & ShaderPipeline::getNextFbo(int index) { return (index % 2 == 0) ? processingFbo2 : processingFbo1; }
 
-ofFbo& ShaderPipeline::process(ofFbo& input) {
+ofFbo & ShaderPipeline::process(ofFbo & input) {
     if (effects.empty()) {
         return input;  // No effects - return input unchanged
     }
@@ -163,14 +164,14 @@ ofFbo& ShaderPipeline::process(ofFbo& input) {
     // Apply effects in sequence, ping-ponging between FBOs
     int appliedCount = 0;
     for (size_t i = 0; i < effects.size(); i++) {
-        auto& effect = effects[i];
+        auto & effect = effects[i];
 
         if (!effect->isEnabled()) {
             continue;  // Skip disabled effects
         }
 
-        ofFbo& currentFbo = getCurrentFbo(appliedCount);
-        ofFbo& nextFbo = getNextFbo(appliedCount);
+        ofFbo & currentFbo = getCurrentFbo(appliedCount);
+        ofFbo & nextFbo = getNextFbo(appliedCount);
 
         effect->apply(currentFbo, nextFbo);
         appliedCount++;
@@ -182,8 +183,8 @@ ofFbo& ShaderPipeline::process(ofFbo& input) {
     return getCurrentFbo(appliedCount);
 }
 
-void ShaderPipeline::processAndDraw(ofFbo& input, float x, float y) {
-    ofFbo& result = process(input);
+void ShaderPipeline::processAndDraw(ofFbo & input, float x, float y) {
+    ofFbo & result = process(input);
     ofPushStyle();
     ofSetColor(255, 255, 255, 255);
     result.draw(x, y);
@@ -206,12 +207,12 @@ void ShaderPipeline::resize(int newWidth, int newHeight) {
 void ShaderPipeline::printPipeline() const {
     ofLogNotice("ShaderPipeline") << "========================================";
     ofLogNotice("ShaderPipeline") << "Pipeline: " << effects.size() << " effects total, " << getEnabledEffectCount()
-                                   << " enabled";
+                                  << " enabled";
     ofLogNotice("ShaderPipeline") << "Resolution: " << width << "x" << height;
     ofLogNotice("ShaderPipeline") << "========================================";
 
     for (size_t i = 0; i < effects.size(); i++) {
-        auto& effect = effects[i];
+        auto & effect = effects[i];
         std::string status = effect->isEnabled() ? "[ENABLED]" : "[DISABLED]";
         std::string valid = effect->isValid() ? "VALID" : "INVALID";
 
@@ -240,7 +241,7 @@ std::string ShaderPipeline::getPipelineSummary() const {
 
 int ShaderPipeline::getEnabledEffectCount() const {
     int count = 0;
-    for (const auto& effect : effects) {
+    for (const auto & effect : effects) {
         if (effect->isEnabled()) count++;
     }
     return count;

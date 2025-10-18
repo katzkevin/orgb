@@ -9,17 +9,18 @@
 #define RadialParticles_hpp
 
 #include <stdio.h>
+
 #include "BaseParticles.hpp"
 #include "ColorProvider.hpp"
 
 class RadialParticles : public BaseParticles {
-public:
+   public:
     RadialParticles(std::string name);
-    virtual ~RadialParticles(){};
-    
-protected:
-    void createParticlesForPress(Press &press, int numberOfParticlesToCreate, ofColor c, float arousalPct) override;
-    ofVec3f startPositionForPress(const Press &p) override;
+    virtual ~RadialParticles() {};
+
+   protected:
+    void createParticlesForPress(Press & press, int numberOfParticlesToCreate, ofColor c, float arousalPct) override;
+    ofVec3f startPositionForPress(const Press & p) override;
 };
 
 #endif /* RadialParticles_hpp */

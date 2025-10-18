@@ -9,23 +9,24 @@
 #define Thunder_hpp
 
 #include <stdio.h>
+
 #include <random>
 
-#include "KeyState.hpp"
-#include "Press.hpp"
-#include "VisualForm.hpp"
-#include "LightningBolt.hpp"
-#include "Utilities.hpp"
 #include "ColorProvider.hpp"
+#include "KeyState.hpp"
+#include "LightningBolt.hpp"
+#include "Press.hpp"
+#include "Utilities.hpp"
+#include "VisualForm.hpp"
 #include "ofMain.h"
 
 class Thunder : public VisualForm {
    protected:
-    LightningBolt createBolt(const Press &p, float arousalGain, unsigned int randomSeed);
-    virtual LightningBolt getOrCreateBolt(const Press &p, float arousalGain, unsigned int randomSeed);
+    LightningBolt createBolt(const Press & p, float arousalGain, unsigned int randomSeed);
+    virtual LightningBolt getOrCreateBolt(const Press & p, float arousalGain, unsigned int randomSeed);
 
     std::map<unsigned int, LightningBolt> bolts;
-    
+
     ofParameter<int> recursionDepth;
     ofParameter<float> branchingFactor;
     ofParameter<float> jitterUnit;
@@ -34,9 +35,9 @@ class Thunder : public VisualForm {
    public:
     Thunder(std::string _name);
     virtual ~Thunder();
-    
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm);
-    void update(KeyState &ks, ColorProvider &clr);
+
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+    void update(KeyState & ks, ColorProvider & clr);
 };
 
 #endif /* Thunder_hpp */

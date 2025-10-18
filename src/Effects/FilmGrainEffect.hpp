@@ -22,14 +22,14 @@ class FilmGrainEffect : public ShaderEffect {
     float getGrainSize() const { return grainSize; }
 
     // GUI integration
-    ofParameterGroup& getParameterGroup() { return parameterGroup; }
+    ofParameterGroup & getParameterGroup() { return parameterGroup; }
 
    protected:
-    void configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) override;
+    void configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) override;
 
    private:
-    float intensity;   // 0.0 - 1.0
-    float grainSize;   // 1.0 - 4.0
+    float intensity;  // 0.0 - 1.0
+    float grainSize;  // 1.0 - 4.0
 
     // ofParameter integration for GUI
     ofParameterGroup parameterGroup;
@@ -37,9 +37,9 @@ class FilmGrainEffect : public ShaderEffect {
     ofParameter<float> intensityParam;
     ofParameter<float> grainSizeParam;
 
-    void onEnableChanged(bool& value);
-    void onIntensityChanged(float& value);
-    void onGrainSizeChanged(float& value);
+    void onEnableChanged(bool & value);
+    void onIntensityChanged(float & value);
+    void onGrainSizeChanged(float & value);
 };
 
 #endif /* FilmGrainEffect_hpp */

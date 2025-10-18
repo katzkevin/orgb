@@ -22,18 +22,18 @@
 class Shape : public VisualForm {
    private:
     std::map<Press, ofPath> shapes;
-    ofPath getOrCreatePath(Press& p);
+    ofPath getOrCreatePath(Press & p);
 
    public:
     Shape(std::string name);
-    virtual ~Shape(){};
-    
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm);
+    virtual ~Shape() {};
+
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
     ofPath shape(int sideCount, float radius);
-    float calculateRadius(Press& p);
-    
-    virtual void drawUnit(const ofColor &color, KeyState & ks, DrawManager &dm, Press &press);
-    
+    float calculateRadius(Press & p);
+
+    virtual void drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press);
+
     ofParameter<int> drawMode;
     ofParameter<float> blurOffset;
     ofParameter<float> blurGain;

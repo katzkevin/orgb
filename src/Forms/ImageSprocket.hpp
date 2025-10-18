@@ -23,28 +23,28 @@
 class ImageSprocket : public VisualForm {
    public:
     ImageSprocket();
-    virtual ~ImageSprocket(){};
+    virtual ~ImageSprocket() {};
 
     void setup();
-    void update(KeyState &ks, ColorProvider &clr);
-    void draw(KeyState &ks, ColorProvider &clr, DrawManager &dm);
+    void update(KeyState & ks, ColorProvider & clr);
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
 
-    void newPressHandler(ColorProvider &clr, Press &p);
-    void pressHandler(Press &p);
+    void newPressHandler(ColorProvider & clr, Press & p);
+    void pressHandler(Press & p);
 
     void updateUi();
     void loadPhotos(int count);
 
-    void drawCenteredAndScaled(ImageWrapper &imageWrapper, bool fillScreen,
+    void drawCenteredAndScaled(ImageWrapper & imageWrapper, bool fillScreen,
                                ofVec4f mixFactors = ofVec4f(1.0, 1.0, 1.0, 1.0), float alphaPct = 1.0);
 
-    void maxPhotosChanged(int &count);
-    void offsetXForegroundChanged(float &offsetX);
-    void offsetYForegroundChanged(float &offsetY);
-    void scaleForegroundChanged(float &scale);
-    void offsetXBackgroundChanged(float &offsetX);
-    void offsetYBackgroundChanged(float &offsetY);
-    void scaleBackgroundChanged(float &scale);
+    void maxPhotosChanged(int & count);
+    void offsetXForegroundChanged(float & offsetX);
+    void offsetYForegroundChanged(float & offsetY);
+    void scaleForegroundChanged(float & scale);
+    void offsetXBackgroundChanged(float & offsetX);
+    void offsetYBackgroundChanged(float & offsetY);
+    void scaleBackgroundChanged(float & scale);
 
     std::vector<ImageWrapper> images;
 

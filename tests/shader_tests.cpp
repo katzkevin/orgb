@@ -30,14 +30,14 @@ class ShaderTest {
     static int passedTests;
     static int failedTests;
 
-    static void runTest(const std::string& testName, std::function<bool()> testFunc) {
+    static void runTest(const std::string & testName, std::function<bool()> testFunc) {
         totalTests++;
         std::cout << "Running test: " << testName << " ... ";
 
         bool result = false;
         try {
             result = testFunc();
-        } catch (const std::exception& e) {
+        } catch (const std::exception & e) {
             std::cout << "EXCEPTION: " << e.what() << std::endl;
             result = false;
         }

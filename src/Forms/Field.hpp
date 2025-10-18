@@ -29,25 +29,25 @@ class Field : public VisualForm {
     Flock flock;
 
     Field(std::string name);
-    virtual ~Field(){};
+    virtual ~Field() {};
     void setup() override;
 
-    void update(KeyState& ks, ColorProvider& clr) override;
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm) override;
-    void newPressHandler(ColorProvider& clr, Press& p) override;
+    void update(KeyState & ks, ColorProvider & clr) override;
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
+    void newPressHandler(ColorProvider & clr, Press & p) override;
 
     void adjustFlockPopulation();
     void rotateFlockHueOverTime();
-    ofVec3f steerAccordingToKeyPresses(KeyState& ks);
+    ofVec3f steerAccordingToKeyPresses(KeyState & ks);
 
     float generateNoisySpriteSize(float salt);
     ofColor generateNoisySpriteColor(float salt);
 
-    void backgroundChanged(ofColor& c);
-    void spriteColorChanged(ofColor& c);
-    void spriteColorChangedFloatParam(float& f);
-    void spriteSizeChanged(float& s);
-    void spriteVariationChanged(float& v);
+    void backgroundChanged(ofColor & c);
+    void spriteColorChanged(ofColor & c);
+    void spriteColorChangedFloatParam(float & f);
+    void spriteSizeChanged(float & s);
+    void spriteVariationChanged(float & v);
 
     void seedSingleSprite(float salt);
 

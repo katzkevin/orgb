@@ -13,7 +13,8 @@ LightningBolt::LightningBolt(ofVec3f from, ofVec3f to, int depth, float jitterUn
     trunk = singleLightningBolt(from, to, depth, jitterUnit, branchingFactor, seed);
 }
 
-void LightningBolt::singleLightningBoltR(vector<ofPoint>& ls, int lo, int hi, float jitterUnit, float branchingFactor, float seed) {
+void LightningBolt::singleLightningBoltR(vector<ofPoint> & ls, int lo, int hi, float jitterUnit, float branchingFactor,
+                                         float seed) {
     if (hi - lo <= 1) {
         return;
     }
@@ -24,28 +25,29 @@ void LightningBolt::singleLightningBoltR(vector<ofPoint>& ls, int lo, int hi, fl
     ofPoint hiVector = ls.at(hi);
     ofPoint delta = hiVector - loVector;
     ofPoint halfDelta = delta * 0.5;
-    
+
     float jitterRotation = ofRandom(jitterUnit * PI / 8, jitterUnit * PI / 4);
     // ofPoint perturbed = rotated * perturbation / ofMap(ofGetMouseX(), 0, ofGetScreenWidth(), 0, 5.0);
     // ls[target] = loVector + getRandomlyRotatedVectorRad(halfDelta, jitterRotation);;
     ofVec3f perturbation = getRandomlyRotatedVectorRad(halfDelta, jitterRotation);
     ls[target] = loVector + perturbation;
-    
+
     singleLightningBoltR(ls, lo, target, jitterUnit, branchingFactor, seed * jitterRotation);
     singleLightningBoltR(ls, target, hi, jitterUnit, branchingFactor, seed / jitterRotation);
-    
-    // We express that higher in the chain is more likely to branch (because the ancestor bolt would be more likely to ionize air)
-    // float branchLikelihood = exponentialMap(hi - lo, 0, ls.size(), 0, branchingFactor, true, 2);
-    
+
+    // We express that higher in the chain is more likely to branch (because the ancestor bolt would be more likely to
+    // ionize air) float branchLikelihood = exponentialMap(hi - lo, 0, ls.size(), 0, branchingFactor, true, 2);
+
     if (ofRandomuf() < branchingFactor) {
         float ttl = std::floor(std::log2(hi - lo));
         // Multiplying delta by 1.25 makes the branches a bit more aggressive
-        branches.push_back(LightningBolt(hiVector, hiVector + delta * 1.25, ttl, jitterUnit, branchingFactor, ofRandomuf()));
+        branches.push_back(
+            LightningBolt(hiVector, hiVector + delta * 1.25, ttl, jitterUnit, branchingFactor, ofRandomuf()));
     }
-    
 }
 
-vector<ofPoint> LightningBolt::singleLightningBolt(ofPoint from, ofPoint to, int depth, float jitterUnit, float branchingFactor, float seed) {
+vector<ofPoint> LightningBolt::singleLightningBolt(ofPoint from, ofPoint to, int depth, float jitterUnit,
+                                                   float branchingFactor, float seed) {
     // BranchingFactor := likelihood of branch per joint
     vector<ofPoint> ls(pow(2, depth) + 1, ofPoint(0, 0, 0));
     ls[0] = from;
@@ -65,7 +67,7 @@ void LightningBolt::draw(ofColor color) {
     }
     mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
     mesh.draw();
-    for (auto & branch: branches) {
+    for (auto & branch : branches) {
         branch.draw(color);
     }
 }

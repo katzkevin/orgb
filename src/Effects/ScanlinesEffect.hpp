@@ -28,17 +28,17 @@ class ScanlinesEffect : public ShaderEffect {
     float getRGBShift() const { return rgbShift; }
 
     // GUI integration
-    ofParameterGroup& getParameterGroup() { return parameterGroup; }
+    ofParameterGroup & getParameterGroup() { return parameterGroup; }
 
    protected:
-    void configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) override;
+    void configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) override;
 
    private:
-    float intensity;       // 0.0 - 1.0
-    float scanlineCount;   // Lines per screen
-    float speed;           // Animation speed
-    float vignette;        // Edge darkening
-    float rgbShift;        // Chromatic aberration
+    float intensity;      // 0.0 - 1.0
+    float scanlineCount;  // Lines per screen
+    float speed;          // Animation speed
+    float vignette;       // Edge darkening
+    float rgbShift;       // Chromatic aberration
 
     // ofParameter integration for GUI
     ofParameterGroup parameterGroup;
@@ -49,12 +49,12 @@ class ScanlinesEffect : public ShaderEffect {
     ofParameter<float> vignetteParam;
     ofParameter<float> rgbShiftParam;
 
-    void onEnableChanged(bool& value);
-    void onIntensityChanged(float& value);
-    void onScanlineCountChanged(float& value);
-    void onSpeedChanged(float& value);
-    void onVignetteChanged(float& value);
-    void onRGBShiftChanged(float& value);
+    void onEnableChanged(bool & value);
+    void onIntensityChanged(float & value);
+    void onScanlineCountChanged(float & value);
+    void onSpeedChanged(float & value);
+    void onVignetteChanged(float & value);
+    void onRGBShiftChanged(float & value);
 };
 
 #endif /* ScanlinesEffect_hpp */

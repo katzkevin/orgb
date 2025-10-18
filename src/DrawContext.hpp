@@ -15,8 +15,8 @@
 
 ofFbo getConfiguredFrameBuffer(int width, int height);
 ofShader createShader(std::string shaderName);
-void applyShaderToCurrentFbo(ofFbo& sourceFrameBuffer, ofShader& shader,
-                             std::function<void(ofShader&)>& configureShader);  // Write to active frame buffer
-void drawFboAtZeroZero(ofFbo& sourceFrameBuffer);
+void applyShaderToCurrentFbo(ofFbo & sourceFrameBuffer, ofShader & shader,
+                             std::function<void(ofShader &)> & configureShader);  // Write to active frame buffer
+void drawFboAtZeroZero(ofFbo & sourceFrameBuffer);
 
 #endif /* DrawContext_hpp */

@@ -9,7 +9,7 @@
 
 using namespace boost::filesystem;
 
-ImageWrapper::ImageWrapper(path p, ofImage& i) {
+ImageWrapper::ImageWrapper(path p, ofImage & i) {
     imagePath = p;
     image = i;
     scale = 1.0;

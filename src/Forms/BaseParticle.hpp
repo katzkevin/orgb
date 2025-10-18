@@ -11,12 +11,13 @@
 #include <stdio.h>
 
 #include <glm/glm.hpp>
+
 #include "ofMain.h"
 
 class BaseParticle {
    public:
     BaseParticle(glm::vec3 pos, glm::vec3 vel);
-    virtual ~BaseParticle(){};
+    virtual ~BaseParticle() {};
 
     glm::vec3 position;
     glm::vec3 velocity;

@@ -5,12 +5,13 @@
  */
 
 #include <gtest/gtest.h>
+
 #include "ColorProvider.hpp"
 #include "Press.hpp"
 #include "Utilities.hpp"
 
 class ColorProviderTest : public ::testing::Test {
-protected:
+   protected:
     ColorProvider cp;
     const float EPSILON = 0.01f;
     const int TOLERANCE = 5;  // Tolerance for HSV color values (out of 255)
@@ -174,7 +175,7 @@ TEST_F(ColorProviderTest, ColorMappingChromaticScale) {
 
     // Check that we have 12 distinct hues (with some tolerance)
     std::set<int> uniqueHues;
-    for (const auto& color : colors) {
+    for (const auto & color : colors) {
         float h, s, v;
         color.getHsb(h, s, v);
         uniqueHues.insert(static_cast<int>(h / 10.0f));  // Group into 10-degree buckets
@@ -314,8 +315,8 @@ TEST_F(ColorProviderTest, ExtremeMIDINotes) {
     cp.setPalette(0.0f, 255.0f, 255.0f, 85.0f, 255.0f, 255.0f, true);
 
     // Test with MIDI note 0 and 127 (different chromatic positions)
-    Press pMin(0, 0.8f, 0.0, Press::PressType::PIANO, 1);   // Note 0 % 12 = 0 (C)
-    Press pMax(127, 0.8f, 0.0, Press::PressType::PIANO, 2); // Note 127 % 12 = 7 (G)
+    Press pMin(0, 0.8f, 0.0, Press::PressType::PIANO, 1);    // Note 0 % 12 = 0 (C)
+    Press pMax(127, 0.8f, 0.0, Press::PressType::PIANO, 2);  // Note 127 % 12 = 7 (G)
 
     ofColor cMin = cp.color(pMin);
     ofColor cMax = cp.color(pMax);
@@ -378,20 +379,10 @@ TEST_F(ColorProviderTest, CyclicalParameterToggle) {
 // ============================================================================
 
 TEST_F(ColorProviderTest, SetCustomPalette) {
-    std::vector<ofColor> customColors = {
-        ofColor::red,
-        ofColor::green,
-        ofColor::blue,
-        ofColor::yellow,
-        ofColor::cyan,
-        ofColor::magenta,
-        ofColor::white,
-        ofColor::black,
-        ofColor::red,  // Back to red
-        ofColor::green,
-        ofColor::blue,
-        ofColor::yellow
-    };
+    std::vector<ofColor> customColors = {ofColor::red,   ofColor::green,   ofColor::blue,  ofColor::yellow,
+                                         ofColor::cyan,  ofColor::magenta, ofColor::white, ofColor::black,
+                                         ofColor::red,  // Back to red
+                                         ofColor::green, ofColor::blue,    ofColor::yellow};
 
     cp.setPalette(customColors);
 

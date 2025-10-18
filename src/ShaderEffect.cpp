@@ -13,14 +13,14 @@
 // ShaderEffect Implementation
 // ============================================================================
 
-ShaderEffect::ShaderEffect(const std::string& name, const std::string& shaderName)
+ShaderEffect::ShaderEffect(const std::string & name, const std::string & shaderName)
     : effectName(name), shaderFileName(shaderName), enabled(true), shaderLoaded(false), shaderCompiled(false) {
     if (!shaderName.empty()) {
         loadShader();
     }
 }
 
-void ShaderEffect::apply(ofFbo& input, ofFbo& output) {
+void ShaderEffect::apply(ofFbo & input, ofFbo & output) {
     if (!enabled) {
         // Effect disabled - just copy input to output
         output.begin();
@@ -65,12 +65,12 @@ void ShaderEffect::apply(ofFbo& input, ofFbo& output) {
     output.end();
 }
 
-void ShaderEffect::configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) {
+void ShaderEffect::configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) {
     // Base implementation does nothing - subclasses override
 }
 
-void ShaderEffect::applyParametersToShader(ofShader& shader) {
-    for (const auto& param : parameters) {
+void ShaderEffect::applyParametersToShader(ofShader & shader) {
+    for (const auto & param : parameters) {
         switch (param.type) {
             case ParameterType::FLOAT:
                 shader.setUniform1f(param.uniformName, param.floatValue);
@@ -104,7 +104,7 @@ bool ShaderEffect::loadShader() {
         // Validate compilation
         return validateShader();
 
-    } catch (const std::exception& e) {
+    } catch (const std::exception & e) {
         errorMessage = std::string("Failed to load shader: ") + e.what();
         ofLogError("ShaderEffect::loadShader") << effectName << ": " << errorMessage;
         shaderLoaded = false;
@@ -132,7 +132,7 @@ bool ShaderEffect::validateShader() {
     try {
         shader.begin();
         shader.end();
-    } catch (const std::exception& e) {
+    } catch (const std::exception & e) {
         validationPassed = false;
         validationErrors = std::string("Shader begin/end failed: ") + e.what();
     }
@@ -160,7 +160,7 @@ bool ShaderEffect::validateShader() {
 // PassthroughEffect Implementation
 // ============================================================================
 
-void PassthroughEffect::apply(ofFbo& input, ofFbo& output) {
+void PassthroughEffect::apply(ofFbo & input, ofFbo & output) {
     // Simple copy - no shader processing
     output.begin();
     ofClear(0, 0, 0, 0);

@@ -17,24 +17,24 @@
 class ColorProvider {
    public:
     ColorProvider();
-    virtual ~ColorProvider(){};
-    ofColor color(const Press& p) const;
-    ofColor color(const Press& p, double opacityPct) const;
+    virtual ~ColorProvider() {};
+    ofColor color(const Press & p) const;
+    ofColor color(const Press & p, double opacityPct) const;
 
-    void setPalette(std::vector<ofColor>& colors);
-    void setPalette(float baseHue, float baseSaturation, float baseValue, float maxHue, float maxSaturation, float maxValue, bool clockwise);
-    void floatParamChanged(float& v);
-    void boolParamChanged(bool& v);
-    
+    void setPalette(std::vector<ofColor> & colors);
+    void setPalette(float baseHue, float baseSaturation, float baseValue, float maxHue, float maxSaturation,
+                    float maxValue, bool clockwise);
+    void floatParamChanged(float & v);
+    void boolParamChanged(bool & v);
 
-    ofParameter<float> baseHue;     // 0-255
+    ofParameter<float> baseHue;         // 0-255
     ofParameter<float> baseSaturation;  // 0-255
-    ofParameter<float> baseValue;  // 0-255
-    ofParameter<float> maxHue;      // 0-255
-    ofParameter<float> maxSaturation;      // 0-255
-    ofParameter<float> maxValue;      // 0-255
+    ofParameter<float> baseValue;       // 0-255
+    ofParameter<float> maxHue;          // 0-255
+    ofParameter<float> maxSaturation;   // 0-255
+    ofParameter<float> maxValue;        // 0-255
     ofParameter<bool> clockwise;
-    ofParameter<bool> cyclical;     // if True, cycle per octave
+    ofParameter<bool> cyclical;  // if True, cycle per octave
 
    private:
     std::vector<ofColor> palette;

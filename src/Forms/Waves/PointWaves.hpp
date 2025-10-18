@@ -9,15 +9,16 @@
 #define PointWaves_hpp
 
 #include <stdio.h>
+
 #include "BaseWaves.hpp"
 
 class PointWaves : public BaseWaves {
-public:
+   public:
     PointWaves(std::string name);
-    virtual ~PointWaves(){};
+    virtual ~PointWaves() {};
 
-protected:
-    void drawUnit(ColorProvider &clr, KeyState & ks, DrawManager &dm, const Press &p, float alpha) override;
+   protected:
+    void drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, const Press & p, float alpha) override;
 };
 
 #endif /* PointWaves_hpp */

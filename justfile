@@ -107,3 +107,17 @@ shader-clean:
     @rm -f tests/shader_tests
     @rm -rf tests/test_output tests/diff_images
     @echo "Cleaned shader test artifacts"
+
+# Format all C++ source files with clang-format
+format:
+    @echo "Formatting C++ files..."
+    @find src -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format -i
+    @find tests -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format -i
+    @echo "✓ Formatting complete"
+
+# Check formatting without modifying files
+format-check:
+    @echo "Checking C++ formatting..."
+    @find src -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
+    @find tests -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
+    @echo "✓ All files properly formatted"

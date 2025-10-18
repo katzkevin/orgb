@@ -67,14 +67,14 @@ void ImageSprocket::setup() {
     drawFbo = getConfiguredFrameBuffer(ofGetWidth(), ofGetHeight());
 }
 
-void ImageSprocket::offsetXForegroundChanged(float &offsetX) { images[index0].offset[0] = offsetX; }
-void ImageSprocket::offsetYForegroundChanged(float &offsetY) { images[index0].offset[1] = offsetY; }
-void ImageSprocket::scaleForegroundChanged(float &scale) { images[index0].scale = scale; }
-void ImageSprocket::offsetXBackgroundChanged(float &offsetX) { images[index1].offset[0] = offsetX; }
-void ImageSprocket::offsetYBackgroundChanged(float &offsetY) { images[index1].offset[1] = offsetY; }
-void ImageSprocket::scaleBackgroundChanged(float &scale) { images[index1].scale = scale; }
+void ImageSprocket::offsetXForegroundChanged(float & offsetX) { images[index0].offset[0] = offsetX; }
+void ImageSprocket::offsetYForegroundChanged(float & offsetY) { images[index0].offset[1] = offsetY; }
+void ImageSprocket::scaleForegroundChanged(float & scale) { images[index0].scale = scale; }
+void ImageSprocket::offsetXBackgroundChanged(float & offsetX) { images[index1].offset[0] = offsetX; }
+void ImageSprocket::offsetYBackgroundChanged(float & offsetY) { images[index1].offset[1] = offsetY; }
+void ImageSprocket::scaleBackgroundChanged(float & scale) { images[index1].scale = scale; }
 
-void ImageSprocket::maxPhotosChanged(int &count) {
+void ImageSprocket::maxPhotosChanged(int & count) {
     if (count > images.size()) {
         loadPhotos(count);
     }
@@ -105,9 +105,9 @@ void ImageSprocket::loadPhotos(int count) {
     images.insert(images.end(), descartes.begin(), descartes.end());
 }
 
-void ImageSprocket::update(KeyState &ks, ColorProvider &clr) {}
+void ImageSprocket::update(KeyState & ks, ColorProvider & clr) {}
 
-void ImageSprocket::draw(KeyState &ks, ColorProvider &clr, DrawManager &dm) {
+void ImageSprocket::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     // Because we use screen blending to double expose, using alpha is not effective for crossfade, control.
     // Instead, splash with white by a certain amount to wash out the the photo before blending.
     //    ofBackground(255,255,255);
@@ -126,7 +126,7 @@ void ImageSprocket::draw(KeyState &ks, ColorProvider &clr, DrawManager &dm) {
     ofPopStyle();
 }
 
-void ImageSprocket::pressHandler(Press &p) {
+void ImageSprocket::pressHandler(Press & p) {
     switch (p.note) {
         case '-':
             backgroundAlphaBlendPct = ofClamp(backgroundAlphaBlendPct - 0.05, 0.0, 1.0);
@@ -139,7 +139,7 @@ void ImageSprocket::pressHandler(Press &p) {
     }
 }
 
-void ImageSprocket::newPressHandler(ColorProvider &clr, Press &p) {
+void ImageSprocket::newPressHandler(ColorProvider & clr, Press & p) {
     switch (p.note) {
         case 'i':
             index0 = positive_modulo(index0 - 1, static_cast<int>(images.size()));
@@ -171,7 +171,7 @@ void ImageSprocket::newPressHandler(ColorProvider &clr, Press &p) {
     updateUi();
 }
 
-void ImageSprocket::drawCenteredAndScaled(ImageWrapper &imageWrapper, bool fillScreen, ofVec4f mixFactors,
+void ImageSprocket::drawCenteredAndScaled(ImageWrapper & imageWrapper, bool fillScreen, ofVec4f mixFactors,
                                           float alphaPct) {
     ofImage image = imageWrapper.image;
 
@@ -214,7 +214,7 @@ void ImageSprocket::drawCenteredAndScaled(ImageWrapper &imageWrapper, bool fillS
 
     rgbMixFbo.end();
 
-    std::function<void(ofShader &)> configureShader = [mixFactors](ofShader &shader) {
+    std::function<void(ofShader &)> configureShader = [mixFactors](ofShader & shader) {
         shader.setUniform4f("mixFactors", mixFactors);
     };
 

@@ -26,7 +26,7 @@ FilmGrainEffect::FilmGrainEffect()
 void FilmGrainEffect::setIntensity(float value) {
     intensity = ofClamp(value, 0.0f, 1.0f);
     // Update parameter
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Intensity") {
             param.floatValue = intensity;
             break;
@@ -37,7 +37,7 @@ void FilmGrainEffect::setIntensity(float value) {
 void FilmGrainEffect::setGrainSize(float value) {
     grainSize = ofClamp(value, 1.0f, 4.0f);
     // Update parameter
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Grain Size") {
             param.floatValue = grainSize;
             break;
@@ -45,19 +45,13 @@ void FilmGrainEffect::setGrainSize(float value) {
     }
 }
 
-void FilmGrainEffect::configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) {
+void FilmGrainEffect::configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) {
     shader.setUniform1f("grainIntensity", intensity);
     shader.setUniform1f("grainSize", grainSize);
 }
 
-void FilmGrainEffect::onEnableChanged(bool& value) {
-    setEnabled(value);
-}
+void FilmGrainEffect::onEnableChanged(bool & value) { setEnabled(value); }
 
-void FilmGrainEffect::onIntensityChanged(float& value) {
-    setIntensity(value);
-}
+void FilmGrainEffect::onIntensityChanged(float & value) { setIntensity(value); }
 
-void FilmGrainEffect::onGrainSizeChanged(float& value) {
-    setGrainSize(value);
-}
+void FilmGrainEffect::onGrainSizeChanged(float & value) { setGrainSize(value); }

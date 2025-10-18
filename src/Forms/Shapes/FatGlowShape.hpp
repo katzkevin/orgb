@@ -9,12 +9,13 @@
 #define FatGlowShape_hpp
 
 #include <stdio.h>
+
 #include "Shape.hpp"
 
 class FatGlowShape : public Shape {
-public:
+   public:
     FatGlowShape(std::string name);
-    virtual ~FatGlowShape(){};
+    virtual ~FatGlowShape() {};
 };
 
 #endif /* FatGlowShape_hpp */

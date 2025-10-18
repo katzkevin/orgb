@@ -39,7 +39,7 @@ ScanlinesEffect::ScanlinesEffect()
 
 void ScanlinesEffect::setIntensity(float value) {
     intensity = ofClamp(value, 0.0f, 1.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Intensity") {
             param.floatValue = intensity;
             break;
@@ -49,7 +49,7 @@ void ScanlinesEffect::setIntensity(float value) {
 
 void ScanlinesEffect::setScanlineCount(float value) {
     scanlineCount = ofClamp(value, 50.0f, 500.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Line Count") {
             param.floatValue = scanlineCount;
             break;
@@ -59,7 +59,7 @@ void ScanlinesEffect::setScanlineCount(float value) {
 
 void ScanlinesEffect::setSpeed(float value) {
     speed = ofClamp(value, 0.0f, 1.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Speed") {
             param.floatValue = speed;
             break;
@@ -69,7 +69,7 @@ void ScanlinesEffect::setSpeed(float value) {
 
 void ScanlinesEffect::setVignette(float value) {
     vignette = ofClamp(value, 0.0f, 1.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Vignette") {
             param.floatValue = vignette;
             break;
@@ -79,7 +79,7 @@ void ScanlinesEffect::setVignette(float value) {
 
 void ScanlinesEffect::setRGBShift(float value) {
     rgbShift = ofClamp(value, 0.0f, 5.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "RGB Shift") {
             param.floatValue = rgbShift;
             break;
@@ -87,7 +87,7 @@ void ScanlinesEffect::setRGBShift(float value) {
     }
 }
 
-void ScanlinesEffect::configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) {
+void ScanlinesEffect::configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) {
     shader.setUniform1f("scanlineIntensity", intensity);
     shader.setUniform1f("scanlineCount", scanlineCount);
     shader.setUniform1f("scanlineSpeed", speed);
@@ -95,26 +95,14 @@ void ScanlinesEffect::configureShaderUniforms(ofShader& shader, const glm::vec2&
     shader.setUniform1f("rgbShift", rgbShift);
 }
 
-void ScanlinesEffect::onEnableChanged(bool& value) {
-    setEnabled(value);
-}
+void ScanlinesEffect::onEnableChanged(bool & value) { setEnabled(value); }
 
-void ScanlinesEffect::onIntensityChanged(float& value) {
-    setIntensity(value);
-}
+void ScanlinesEffect::onIntensityChanged(float & value) { setIntensity(value); }
 
-void ScanlinesEffect::onScanlineCountChanged(float& value) {
-    setScanlineCount(value);
-}
+void ScanlinesEffect::onScanlineCountChanged(float & value) { setScanlineCount(value); }
 
-void ScanlinesEffect::onSpeedChanged(float& value) {
-    setSpeed(value);
-}
+void ScanlinesEffect::onSpeedChanged(float & value) { setSpeed(value); }
 
-void ScanlinesEffect::onVignetteChanged(float& value) {
-    setVignette(value);
-}
+void ScanlinesEffect::onVignetteChanged(float & value) { setVignette(value); }
 
-void ScanlinesEffect::onRGBShiftChanged(float& value) {
-    setRGBShift(value);
-}
+void ScanlinesEffect::onRGBShiftChanged(float & value) { setRGBShift(value); }

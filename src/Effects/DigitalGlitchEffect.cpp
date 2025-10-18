@@ -39,7 +39,7 @@ DigitalGlitchEffect::DigitalGlitchEffect()
 
 void DigitalGlitchEffect::setIntensity(float value) {
     intensity = ofClamp(value, 0.0f, 1.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Intensity") {
             param.floatValue = intensity;
             break;
@@ -49,7 +49,7 @@ void DigitalGlitchEffect::setIntensity(float value) {
 
 void DigitalGlitchEffect::setBlockSize(float value) {
     blockSize = ofClamp(value, 8.0f, 64.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Block Size") {
             param.floatValue = blockSize;
             break;
@@ -59,7 +59,7 @@ void DigitalGlitchEffect::setBlockSize(float value) {
 
 void DigitalGlitchEffect::setColorShift(float value) {
     colorShift = ofClamp(value, 0.0f, 20.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Color Shift") {
             param.floatValue = colorShift;
             break;
@@ -69,7 +69,7 @@ void DigitalGlitchEffect::setColorShift(float value) {
 
 void DigitalGlitchEffect::setNoiseAmount(float value) {
     noiseAmount = ofClamp(value, 0.0f, 1.0f);
-    for (auto& param : parameters) {
+    for (auto & param : parameters) {
         if (param.name == "Noise") {
             param.floatValue = noiseAmount;
             break;
@@ -77,29 +77,19 @@ void DigitalGlitchEffect::setNoiseAmount(float value) {
     }
 }
 
-void DigitalGlitchEffect::configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) {
+void DigitalGlitchEffect::configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) {
     shader.setUniform1f("glitchIntensity", intensity);
     shader.setUniform1f("blockSize", blockSize);
     shader.setUniform1f("colorShiftAmount", colorShift);
     shader.setUniform1f("noiseAmount", noiseAmount);
 }
 
-void DigitalGlitchEffect::onEnableChanged(bool& value) {
-    setEnabled(value);
-}
+void DigitalGlitchEffect::onEnableChanged(bool & value) { setEnabled(value); }
 
-void DigitalGlitchEffect::onIntensityChanged(float& value) {
-    setIntensity(value);
-}
+void DigitalGlitchEffect::onIntensityChanged(float & value) { setIntensity(value); }
 
-void DigitalGlitchEffect::onBlockSizeChanged(float& value) {
-    setBlockSize(value);
-}
+void DigitalGlitchEffect::onBlockSizeChanged(float & value) { setBlockSize(value); }
 
-void DigitalGlitchEffect::onColorShiftChanged(float& value) {
-    setColorShift(value);
-}
+void DigitalGlitchEffect::onColorShiftChanged(float & value) { setColorShift(value); }
 
-void DigitalGlitchEffect::onNoiseAmountChanged(float& value) {
-    setNoiseAmount(value);
-}
+void DigitalGlitchEffect::onNoiseAmountChanged(float & value) { setNoiseAmount(value); }

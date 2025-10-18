@@ -44,7 +44,8 @@ ofShader createShader(std::string shaderName) {
     return shader;
 }
 
-void applyShaderToCurrentFbo(ofFbo& sourceFrameBuffer, ofShader& shader, std::function<void(ofShader&)>& configureShader) {
+void applyShaderToCurrentFbo(ofFbo & sourceFrameBuffer, ofShader & shader,
+                             std::function<void(ofShader &)> & configureShader) {
     shader.begin();
     {
         configureShader(shader);
@@ -53,7 +54,7 @@ void applyShaderToCurrentFbo(ofFbo& sourceFrameBuffer, ofShader& shader, std::fu
     shader.end();
 }
 
-void drawFboAtZeroZero(ofFbo& sourceFrameBuffer) {
+void drawFboAtZeroZero(ofFbo & sourceFrameBuffer) {
     ofPushStyle();
     {
         ofSetColor(255, 255, 255, 255);

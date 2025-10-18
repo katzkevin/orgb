@@ -26,16 +26,16 @@ class DigitalGlitchEffect : public ShaderEffect {
     float getNoiseAmount() const { return noiseAmount; }
 
     // GUI integration
-    ofParameterGroup& getParameterGroup() { return parameterGroup; }
+    ofParameterGroup & getParameterGroup() { return parameterGroup; }
 
    protected:
-    void configureShaderUniforms(ofShader& shader, const glm::vec2& resolution) override;
+    void configureShaderUniforms(ofShader & shader, const glm::vec2 & resolution) override;
 
    private:
-    float intensity;      // 0.0 - 1.0
-    float blockSize;      // 8.0 - 64.0
-    float colorShift;     // 0.0 - 20.0
-    float noiseAmount;    // 0.0 - 1.0
+    float intensity;    // 0.0 - 1.0
+    float blockSize;    // 8.0 - 64.0
+    float colorShift;   // 0.0 - 20.0
+    float noiseAmount;  // 0.0 - 1.0
 
     // ofParameter integration for GUI
     ofParameterGroup parameterGroup;
@@ -45,11 +45,11 @@ class DigitalGlitchEffect : public ShaderEffect {
     ofParameter<float> colorShiftParam;
     ofParameter<float> noiseAmountParam;
 
-    void onEnableChanged(bool& value);
-    void onIntensityChanged(float& value);
-    void onBlockSizeChanged(float& value);
-    void onColorShiftChanged(float& value);
-    void onNoiseAmountChanged(float& value);
+    void onEnableChanged(bool & value);
+    void onIntensityChanged(float & value);
+    void onBlockSizeChanged(float & value);
+    void onColorShiftChanged(float & value);
+    void onNoiseAmountChanged(float & value);
 };
 
 #endif /* DigitalGlitchEffect_hpp */

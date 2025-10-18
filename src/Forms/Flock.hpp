@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 #include <glm/glm.hpp>
+
 #include "SizedSprite.hpp"
 #include "Utilities.hpp"
 #include "ofMain.h"
@@ -18,7 +19,7 @@
 class Flock {
    public:
     Flock();
-    virtual ~Flock(){};
+    virtual ~Flock() {};
 
     void update(float dt, float elapsedTimeF);
 

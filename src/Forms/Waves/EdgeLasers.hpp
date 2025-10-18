@@ -9,17 +9,18 @@
 #define EdgeLasers_hpp
 
 #include <stdio.h>
+
 #include "BaseWaves.hpp"
 
 class EdgeLasers : public BaseWaves {
-public:
+   public:
     EdgeLasers(std::string name);
-    virtual ~EdgeLasers(){};
-    
+    virtual ~EdgeLasers() {};
+
     ofParameter<bool> lineSegmentDeterministic;
 
-protected:
-    void drawUnit(ColorProvider &clr, KeyState & ks, DrawManager &dm, const Press &p, float alpha) override;
+   protected:
+    void drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, const Press & p, float alpha) override;
 };
 
 #endif /* EdgeLasers_hpp */

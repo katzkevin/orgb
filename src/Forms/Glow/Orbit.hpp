@@ -10,20 +10,20 @@
 
 #include <stdio.h>
 
-#include "KeyState.hpp"
 #include "BaseParticle.hpp"
+#include "ColorProvider.hpp"
+#include "KeyState.hpp"
 #include "Press.hpp"
 #include "Utilities.hpp"
-#include "ColorProvider.hpp"
 #include "VisualForm.hpp"
 
 class Orbit : public VisualForm {
    public:
     Orbit(std::string name);
-    virtual ~Orbit(){};
+    virtual ~Orbit() {};
 
     void update(KeyState & ks, ColorProvider & clr);
-    void draw(KeyState& ks, ColorProvider& clr, DrawManager& dm);
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
 
     std::unordered_map<int, BaseParticle> particles;
 

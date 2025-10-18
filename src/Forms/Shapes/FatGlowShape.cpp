@@ -5,8 +5,9 @@
 //  Created by Kevin Katz on 6/14/22.
 //
 
-#include <stdio.h>
 #include "FatGlowShape.hpp"
+
+#include <stdio.h>
 
 FatGlowShape::FatGlowShape(std::string name) : Shape(name) {
     glowIntensity.set(2.59);

@@ -18,21 +18,22 @@
 class KeyState {
    public:
     KeyState();
-    virtual ~KeyState(){};
+    virtual ~KeyState() {};
 
     void cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime);
     void keyReleasedHandler(int key);
 
     bool isActivelyPressed(int key);
     Press newKeyPressedHandler(int key, float velocityPct, unsigned int messageId);
-    void ephemeralKeyPressMapHandler(std::unordered_map<int, float> incomingPresses, std::unordered_map<int, unsigned int> messageIds);
+    void ephemeralKeyPressMapHandler(std::unordered_map<int, float> incomingPresses,
+                                     std::unordered_map<int, unsigned int> messageIds);
     void ephemeralKeyPressedHandler(int key, float velocityPct, unsigned int messageId);
 
     boost::optional<Press> getActivePress(int key);
     boost::optional<Press> getMostRecentPress();
 
     std::list<Press> presses;
-    const std::list<Press>& allPresses();
+    const std::list<Press> & allPresses();
     const std::multimap<int, Press> allPressesChromaticGrouped();
     std::list<Press> activePresses();
 
@@ -57,7 +58,7 @@ class KeyState {
 
     float arousalGain() const;
     float valenceGain() const;
-    
+
     unsigned int randomSeed;
 
     ofParameter<double> attackTimeS;

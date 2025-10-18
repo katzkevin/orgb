@@ -15,7 +15,8 @@
 
 double getSystemTimeSecondsPrecise() { return ofGetSystemTimeMicros() / 1000000.0; }
 
-void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS, int perNFrames, float warmupTimeS) {
+void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned int frameNum, float elapsedTimeS,
+                int perNFrames, float warmupTimeS) {
     if (frameNum % perNFrames != 0 || elapsedTimeS < warmupTimeS) {
         return;
     }
@@ -24,14 +25,15 @@ void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned i
 
     if (dt > thresholdSeconds) {
         ofLogWarning("warnOnSlow") << label << " runnng slowly: " << (t1 - t0) * 1000.0
-                       << "ms (Target: " << thresholdSeconds * 1000.0 << "ms)";
+                                   << "ms (Target: " << thresholdSeconds * 1000.0 << "ms)";
     } else if (dt > thresholdSeconds / 2.0) {
         ofLogNotice("warnOnSlow") << label << " runnng slowly: " << (t1 - t0) * 1000.0
-                       << "ms (Target: " << thresholdSeconds * 1000.0 << "ms)";
+                                  << "ms (Target: " << thresholdSeconds * 1000.0 << "ms)";
     }
 }
 
-void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate, int perNFrames, float warmupTimeS) {
+void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate,
+                      int perNFrames, float warmupTimeS) {
     if (frameNum % perNFrames != 0 || elapsedTimeS < warmupTimeS) {
         return;
     }
@@ -68,9 +70,7 @@ float exponentialMap(float value, float inputMin, float inputMax, float outputMi
     return MathUtils::map(shaped, 0.0f, 1.0f, outputMin, outputMax, clamp);
 }
 
-float transitionEaseIn(float pct) {
-    return pow(orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), 3);
-}
+float transitionEaseIn(float pct) { return pow(orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), 3); }
 
 float transitionEaseInReverse(float pct) {
     // Return 0 if pct >= 1.0
@@ -91,7 +91,7 @@ boost::optional<std::string> getEnvOptional(std::string key) {
 }
 
 std::string getEnv(std::string key) {
-    if (const char* env_p = std::getenv(key.c_str())) {
+    if (const char * env_p = std::getenv(key.c_str())) {
         return std::string(env_p);
     } else {
         throw std::invalid_argument("Could not find key in environment");
@@ -107,13 +107,10 @@ std::string getEnv(std::string key, std::string defaultValue) {
 }
 
 std::unordered_map<std::string, ofLogLevel> static const logLevels = {
-    {"OF_LOG_VERBOSE", OF_LOG_VERBOSE},         {"OF_LOG_NOTICE", OF_LOG_NOTICE},
-    {"OF_LOG_WARNING", OF_LOG_WARNING},         {"OF_LOG_ERROR", OF_LOG_ERROR},
-    {"OF_LOG_FATAL_ERROR", OF_LOG_FATAL_ERROR}, {"OF_LOG_SILENT", OF_LOG_SILENT}};
+    {"OF_LOG_VERBOSE", OF_LOG_VERBOSE}, {"OF_LOG_NOTICE", OF_LOG_NOTICE},           {"OF_LOG_WARNING", OF_LOG_WARNING},
+    {"OF_LOG_ERROR", OF_LOG_ERROR},     {"OF_LOG_FATAL_ERROR", OF_LOG_FATAL_ERROR}, {"OF_LOG_SILENT", OF_LOG_SILENT}};
 
-ofLogLevel getLogLevelEnum(std::string s) {
-    return logLevels.at(s);
-}
+ofLogLevel getLogLevelEnum(std::string s) { return logLevels.at(s); }
 
 std::random_device rd;   // Will be used to obtain a seed for the random number engine
 std::mt19937 gen(rd());  // Standard mersenne_twister_engine seeded with rd()
@@ -172,14 +169,18 @@ glm::vec3 randomUnitVector2D() {
     return glm::vec3(cos(angle), sin(angle), 0);
 }
 
-std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned int seed) {
+std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press & p, unsigned int seed) {
     using orgb::core::MathUtils;
-    float x0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 1), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetWidth()));
-    float y0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 2), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetHeight()));
+    float x0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 1), 0.0f, 1.0f, 0.0f,
+                              static_cast<float>(ofGetWidth()));
+    float y0 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 2), 0.0f, 1.0f, 0.0f,
+                              static_cast<float>(ofGetHeight()));
     float z0 = 0;
 
-    float x1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 4), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetWidth()));
-    float y1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 5), 0.0f, 1.0f, 0.0f, static_cast<float>(ofGetHeight()));
+    float x1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 4), 0.0f, 1.0f, 0.0f,
+                              static_cast<float>(ofGetWidth()));
+    float y1 = MathUtils::map(deterministicRandomPct(seed % GEOMETRY_PRIME + 5), 0.0f, 1.0f, 0.0f,
+                              static_cast<float>(ofGetHeight()));
     float z1 = 0;
 
     float t = -0.05 * ofGetWidth();
@@ -191,7 +192,7 @@ std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned i
 
     glm::vec3 from;
     glm::vec3 to;
-        
+
     switch (c) {
             // Top to
         case 0:
@@ -250,7 +251,6 @@ std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press &p, unsigned i
             break;
     }
     return std::pair<glm::vec3, glm::vec3>(from, to);
-    
 }
 
 float getGaussian() { return disGaussian(gen); }
@@ -346,7 +346,7 @@ void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseS
 
 namespace ColorUtilities {
 
-ofColor withSaturation(const ofColor& c, uint8_t newSaturation) {
+ofColor withSaturation(const ofColor & c, uint8_t newSaturation) {
     float hue;
     float saturation;
     float value;
@@ -354,7 +354,7 @@ ofColor withSaturation(const ofColor& c, uint8_t newSaturation) {
     return ofColor::fromHsb(hue, newSaturation, value);
 }
 
-ofColor withValue(const ofColor& c, uint8_t newValue) {
+ofColor withValue(const ofColor & c, uint8_t newValue) {
     float hue;
     float saturation;
     float value;
@@ -404,13 +404,13 @@ static std::unordered_map<std::string, MIDITYPE> const midiTypeTable = {
     {"program_change", MIDITYPE::PROGRAMCHANGE}};
 
 MIDITYPE stringToMidiType(std::string str) {
-   auto it = midiTypeTable.find(str);
-   if (it != midiTypeTable.end()) {
-       return it->second;
-   } else {
-       ofLogError() << "Invalid Midi type string: " << str;
-       return MIDITYPE::MIDITYPE_UNKNOWN;
-   }
+    auto it = midiTypeTable.find(str);
+    if (it != midiTypeTable.end()) {
+        return it->second;
+    } else {
+        ofLogError() << "Invalid Midi type string: " << str;
+        return MIDITYPE::MIDITYPE_UNKNOWN;
+    }
 }
 static std::unordered_map<std::string, CLASSIFICATIONTYPE> const classificationTypeTable = {
     {"arousal", CLASSIFICATIONTYPE::AROUSAL}};

@@ -27,10 +27,10 @@
 
 KeyState::KeyState() : arousal(0.5), valence(0.5) {
     randomSeed = orgb::core::Random::generateSeed();
-//    attackTimeS.set("Attack Time S", 0, 0, 0.2);
-//    decayTimeS.set("Decay Time S", 3.0, 0, 5);
-//    sustainLevelPct.set("Sustain Level Percent", 1, 0, 1);
-//    releaseTimeS.set("Release Time S", 0.17, 0, 2.0);
+    //    attackTimeS.set("Attack Time S", 0, 0, 0.2);
+    //    decayTimeS.set("Decay Time S", 3.0, 0, 5);
+    //    sustainLevelPct.set("Sustain Level Percent", 1, 0, 1);
+    //    releaseTimeS.set("Release Time S", 0.17, 0, 2.0);
     // Olga Piano
     attackTimeS.set("Attack Time S", 0, 0, 0.2);
     decayTimeS.set("Decay Time S", 0.22, 0, 5);
@@ -64,9 +64,10 @@ boost::optional<Press> KeyState::getMostRecentPress() {
 
 bool KeyState::isActivelyPressed(int key) { return KeyState::getActivePress(key).is_initialized(); }
 
-void KeyState::ephemeralKeyPressMapHandler(std::unordered_map<int, float> incomingPresses, std::unordered_map<int, unsigned int> messageIds) {
+void KeyState::ephemeralKeyPressMapHandler(std::unordered_map<int, float> incomingPresses,
+                                           std::unordered_map<int, unsigned int> messageIds) {
     std::set<int> pressQueue;
-    for (auto& pair : incomingPresses) {
+    for (auto & pair : incomingPresses) {
         pressQueue.insert(pair.first);
     }
     for (const auto pair : incomingPresses) {
@@ -109,7 +110,7 @@ void KeyState::ephemeralKeyPressedHandler(int key, float velocityPct, unsigned i
 // e.g. if C6, C#6, D6, D#6, E6 enabled, return 84.
 boost::optional<int> KeyState::getMetaInput() {
     std::vector<int> allPressedKeys;
-    for (const auto& press : activePresses()) {
+    for (const auto & press : activePresses()) {
         allPressedKeys.push_back(press.note);
     }
     std::sort(allPressedKeys.begin(), allPressedKeys.end());
@@ -146,7 +147,7 @@ Press KeyState::newKeyPressedHandler(int key, float velocityPct, unsigned int me
 }
 
 void KeyState::keyReleasedHandler(int key) {
-    for (auto& press : presses) {
+    for (auto & press : presses) {
         // Why check getReleaseTime? Because the keyreleasehandler is multiply invoked while held down for multiple
         // frames.
         if (press.note == key && !press.getReleaseTime().is_initialized()) {
@@ -158,11 +159,11 @@ void KeyState::keyReleasedHandler(int key) {
     }
 }
 
-const std::list<Press>& KeyState::allPresses() { return presses; }
+const std::list<Press> & KeyState::allPresses() { return presses; }
 
 const std::multimap<int, Press> KeyState::allPressesChromaticGrouped() {
     std::multimap<int, Press> grouped;
-    for (const auto& press : allPresses()) {
+    for (const auto & press : allPresses()) {
         grouped.emplace(press.note % NUM_NOTES, press);
     }
     return grouped;
@@ -183,7 +184,7 @@ void KeyState::cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, 
     decayEphemeralKeypressAmplitudes(deltaTime);
 
     if (currentFrame % 100 == 0 && (presses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE ||
-                                       ephemeralPresses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE)) {
+                                    ephemeralPresses.size() > WARN_IF_PRESS_LIST_LARGER_THAN_SIZE)) {
         ofLogVerbose("KeyState") << "Presses overload: presses.size()=" << presses.size()
                                  << " / ephemeralPresses.size()=" << ephemeralPresses.size();
     }
@@ -217,7 +218,7 @@ void KeyState::decayEphemeralKeypressAmplitudes(double deltaTime) {
     // 0.8 ^ (2s) = 0.64,   0.64 ^ 1/2 = 0.8
     double decay = pow((1 - ephemeralDecayPerS), dt);
 
-    for (auto& pair : ephemeralPresses) {
+    for (auto & pair : ephemeralPresses) {
         double decayedVelocity = decay * pair.second.velocityPct;
 
         pair.second.velocityPct = decayedVelocity;
@@ -235,7 +236,7 @@ void KeyState::decayEphemeralKeypressAmplitudes(double deltaTime) {
 
 const std::multimap<int, Press> KeyState::allEphemeralPressesChromaticGrouped() {
     std::multimap<int, Press> grouped;
-    for (const auto& press : allEphemeralPresses()) {
+    for (const auto & press : allEphemeralPresses()) {
         grouped.emplace(press.note % NUM_NOTES, press);
     }
     return grouped;
@@ -244,7 +245,7 @@ const std::multimap<int, Press> KeyState::allEphemeralPressesChromaticGrouped() 
 const std::list<Press> KeyState::allEphemeralPresses() {
     std::list<Press> presses;
 
-    for (auto const& pair : ephemeralPresses) {
+    for (auto const & pair : ephemeralPresses) {
         presses.push_back(pair.second);
     }
 
@@ -253,7 +254,7 @@ const std::list<Press> KeyState::allEphemeralPresses() {
 
 void KeyState::sustainOnHandler(double timeSeconds) {
     sustainTimeS = boost::optional<double>(timeSeconds);
-    for (auto& press : presses) {
+    for (auto & press : presses) {
         // Press will ignore this if it is released
         press.setSustained(timeSeconds);
     }
@@ -261,7 +262,7 @@ void KeyState::sustainOnHandler(double timeSeconds) {
 
 void KeyState::sustainOffHandler(double timeSeconds) {
     sustainTimeS = boost::none;
-    for (auto& press : presses) {
+    for (auto & press : presses) {
         press.releaseSustain(timeSeconds);
     }
 }
