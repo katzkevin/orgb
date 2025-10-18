@@ -121,3 +121,15 @@ format-check:
     @find src -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
     @find tests -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
     @echo "✓ All files properly formatted"
+
+# Run clang-tidy linter on all source files
+lint:
+    @echo "Running clang-tidy linter..."
+    @/opt/homebrew/opt/llvm/bin/clang-tidy src/**/*.cpp -- -std=c++17 -I/opt/homebrew/include
+    @echo "✓ Linting complete"
+
+# Run clang-tidy with auto-fix on simple issues
+lint-fix:
+    @echo "Running clang-tidy with auto-fix..."
+    @/opt/homebrew/opt/llvm/bin/clang-tidy -fix src/**/*.cpp -- -std=c++17 -I/opt/homebrew/include
+    @echo "✓ Auto-fixes applied"
