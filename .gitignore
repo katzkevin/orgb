@@ -16,3 +16,4 @@ orgb.xcodeproj/project.xcworkspace/xcuserdata/katz.xcuserdatad/UserInterfaceStat
 orgb.xcodeproj/xcuserdata/katz.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
 
 .env
+compile_commands.json

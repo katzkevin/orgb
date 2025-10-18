@@ -122,14 +122,33 @@ format-check:
     @find tests -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
     @echo "✓ All files properly formatted"
 
+# Generate compilation database (required for linting)
+compile-db:
+    @echo "Generating compilation database..."
+    @bear -- make clean && bear -- make Release
+    @echo "✓ compile_commands.json generated"
+
 # Run clang-tidy linter on all source files
 lint:
     @echo "Running clang-tidy linter..."
-    @/opt/homebrew/opt/llvm/bin/clang-tidy src/**/*.cpp -- -std=c++17 -I/opt/homebrew/include
+    @if [ ! -f compile_commands.json ]; then \
+        echo "compile_commands.json not found. Run 'just compile-db' first."; \
+        exit 1; \
+    fi
+    @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
+        --header-filter='src/.*' \
+        --quiet
     @echo "✓ Linting complete"
 
 # Run clang-tidy with auto-fix on simple issues
 lint-fix:
     @echo "Running clang-tidy with auto-fix..."
-    @/opt/homebrew/opt/llvm/bin/clang-tidy -fix src/**/*.cpp -- -std=c++17 -I/opt/homebrew/include
+    @if [ ! -f compile_commands.json ]; then \
+        echo "compile_commands.json not found. Run 'just compile-db' first."; \
+        exit 1; \
+    fi
+    @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
+        --header-filter='src/.*' \
+        --fix-errors \
+        --quiet
     @echo "✓ Auto-fixes applied"
