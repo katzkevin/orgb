@@ -1,0 +1,24 @@
+2022-09-08T20:19:41-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 127, "channel": 0, "midi_read_time": "2022-09-09 03:19:41.168939", "id": 1234895171}
+2022-09-08T20:19:41-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 1, "midi_read_time": "2022-09-09 03:19:41.170412", "id": 1666516293}
+2022-09-08T20:19:41-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 127, "channel": 2, "midi_read_time": "2022-09-09 03:19:41.171698", "id": 1270485986}
+2022-09-08T20:19:41-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 0, 127], "midi_read_time": "2022-09-09 03:19:41.173098", "id": 1110354799}
+2022-09-08T20:19:41-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 1, 127], "midi_read_time": "2022-09-09 03:19:41.174397", "id": 3604537809}
+2022-09-08T20:19:41-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 2, 127], "midi_read_time": "2022-09-09 03:19:41.176007", "id": 3992133037}
+2022-09-08T20:19:42-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 0, "midi_read_time": "2022-09-09 03:19:42.790997", "id": 3961449792}
+2022-09-08T20:19:42-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 1, "midi_read_time": "2022-09-09 03:19:42.791667", "id": 3640989214}
+2022-09-08T20:19:42-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 2, "midi_read_time": "2022-09-09 03:19:42.792246", "id": 4212184297}
+2022-09-08T20:19:42-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 0, 0], "midi_read_time": "2022-09-09 03:19:42.792846", "id": 1906287987}
+2022-09-08T20:19:42-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 1, 0], "midi_read_time": "2022-09-09 03:19:42.793478", "id": 1155979843}
+2022-09-08T20:19:42-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 2, 0], "midi_read_time": "2022-09-09 03:19:42.794103", "id": 1334121324}
+2022-09-08T20:19:45-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 127, "channel": 0, "midi_read_time": "2022-09-09 03:19:45.434725", "id": 2095147861}
+2022-09-08T20:19:45-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 1, "midi_read_time": "2022-09-09 03:19:45.435363", "id": 3138177198}
+2022-09-08T20:19:45-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 127, "channel": 2, "midi_read_time": "2022-09-09 03:19:45.436036", "id": 2720968829}
+2022-09-08T20:19:45-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 0, 127], "midi_read_time": "2022-09-09 03:19:45.436850", "id": 612062180}
+2022-09-08T20:19:45-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 1, 127], "midi_read_time": "2022-09-09 03:19:45.438793", "id": 3458509533}
+2022-09-08T20:19:45-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 2, 127], "midi_read_time": "2022-09-09 03:19:45.439523", "id": 1062179815}
+2022-09-08T20:19:46-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 0, "midi_read_time": "2022-09-09 03:19:46.849880", "id": 302635910}
+2022-09-08T20:19:46-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 1, "midi_read_time": "2022-09-09 03:19:46.852429", "id": 2330639280}
+2022-09-08T20:19:46-0700 midi {"type": "control_change", "time": 0, "control": 64, "value": 0, "channel": 2, "midi_read_time": "2022-09-09 03:19:46.853779", "id": 816073835}
+2022-09-08T20:19:46-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 0, 0], "midi_read_time": "2022-09-09 03:19:46.855862", "id": 3706533509}
+2022-09-08T20:19:46-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 1, 0], "midi_read_time": "2022-09-09 03:19:46.857218", "id": 1209484871}
+2022-09-08T20:19:46-0700 midi {"type": "sysex", "time": 0, "data": [0, 32, 84, 38, 9, 2, 0], "midi_read_time": "2022-09-09 03:19:46.859330", "id": 2375421254}

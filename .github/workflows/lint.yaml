@@ -1,0 +1,74 @@
+name: Lint
+
+on:
+  pull_request:
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
+      - '.clang-format'
+      - 'lefthook.yml'
+      - 'justfile'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
+      - '.clang-format'
+      - 'lefthook.yml'
+      - 'justfile'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    name: C++ Linting and Formatting
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          brew install llvm@19 just
+
+      - name: Show Versions
+        run: |
+          /opt/homebrew/opt/llvm@19/bin/clang-format --version
+          just --version
+
+      - name: Run Lint Checks
+        run: |
+          echo "Running lint checks..."
+          just lint-check
+
+      - name: Run Format Checks
+        run: |
+          echo "Checking C++ formatting..."
+          # Run format check and capture output
+          if ! just format-check 2>&1 | tee format-check.log; then
+            echo "❌ Formatting issues found!"
+            echo ""
+            echo "To see what would change, run locally:"
+            echo "  just format-diff"
+            echo ""
+            echo "To fix automatically, run locally:"
+            echo "  just format-fix"
+            echo "  git add ."
+            echo ""
+            exit 1
+          fi
+          echo "✅ All formatting checks passed"
+
+      - name: Upload Format Check Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: format-check-results-${{ github.run_id }}
+          path: format-check.log
+          retention-days: 7
+          if-no-files-found: ignore

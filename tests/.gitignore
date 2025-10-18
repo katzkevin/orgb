@@ -1,0 +1,22 @@
+# Build directory
+build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Test binaries
+orgb_tests
+
+# Test output
+*.xml
+test_results.xml
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          brew install llvm@19 just
+
+      - name: Run Lint Checks
+        run: just lint-check
+
+      - name: Run Format Checks
+        run: |
+          if ! just format-check 2>&1 | tee format-check.log; then
+            echo "❌ Formatting issues found!"
+            echo "Run locally: just format-diff (to preview) or just format-fix (to fix)"
+            exit 1
+          fi
+
+      - name: Upload Format Check Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: format-check-results-${{ github.run_id }}
+          path: format-check.log
+          retention-days: 7
+          if-no-files-found: ignore
+
+  test:
+    name: Unit Tests
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          brew install boost just cmake
+
+      - name: Cache GoogleTest
+        uses: actions/cache@v4
+        with:
+          path: tests/build/_deps
+          key: ${{ runner.os }}-googletest-${{ hashFiles('tests/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-googletest-
+
+      - name: Build and Run Tests
+        run: |
+          cd tests
+          mkdir -p build && cd build
+          cmake ..
+          make
+          ./orgb_tests --gtest_output=xml:test_results.xml
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: tests/build/test_results.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+  status-check:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: always()
+    steps:
+      - name: Check Status
+        run: |
+          if [ "${{ needs.lint.result }}" = "success" ] && [ "${{ needs.test.result }}" = "success" ]; then
+            echo "✅ All CI checks passed!"
+            exit 0
+          else
+            echo "❌ CI checks failed:"
+            echo "  Lint: ${{ needs.lint.result }}"
+            echo "  Test: ${{ needs.test.result }}"
+            exit 1
+          fi

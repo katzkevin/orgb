@@ -1,0 +1,82 @@
+name: Tests
+
+on:
+  pull_request:
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
+      - 'tests/**'
+      - 'justfile'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
+      - 'tests/**'
+      - 'justfile'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          brew install boost just cmake
+
+      - name: Show Versions
+        run: |
+          cmake --version
+          just --version
+          c++ --version
+
+      - name: Cache GoogleTest
+        uses: actions/cache@v4
+        with:
+          path: tests/build/_deps
+          key: ${{ runner.os }}-googletest-${{ hashFiles('tests/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-googletest-
+
+      - name: Build Tests
+        run: |
+          echo "Building unit tests..."
+          cd tests
+          mkdir -p build && cd build
+          cmake ..
+          make
+
+      - name: Run Tests
+        run: |
+          echo "Running unit tests..."
+          cd tests/build
+          ./orgb_tests --gtest_output=xml:test_results.xml
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: tests/build/test_results.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Report Results
+        if: always()
+        run: |
+          if [ -f tests/build/test_results.xml ]; then
+            echo "✅ Tests completed - see artifacts for detailed results"
+          else
+            echo "❌ Tests failed or did not complete"
+            exit 1
+          fi
