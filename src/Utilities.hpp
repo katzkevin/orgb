@@ -10,14 +10,13 @@
 
 #include <stdio.h>
 
-#include <boost/optional.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <optional>
 #include <random>
 #include <unordered_map>
 
 #include "Press.hpp"
-#include "boost/functional/hash.hpp"
 #include "core/MathUtils.hpp"
 #include "core/Random.hpp"
 #include "ofMain.h"  // Still needed for logging, drawing, etc.
@@ -82,7 +81,7 @@ std::pair<glm::vec3, glm::vec3> edgeToEdgeLineSegment(const Press & p, unsigned 
 float getGaussian();
 float getGaussian(float mu, float sigma);
 
-boost::optional<std::string> getEnvOptional(std::string key);
+std::optional<std::string> getEnvOptional(std::string key);
 std::string getEnv(std::string key);
 std::string getEnv(std::string key, std::string defaultValue);
 

@@ -9,8 +9,6 @@
 
 #include <math.h>
 
-#include <boost/optional.hpp>
-
 #include "Utilities.hpp"
 #include "core/Random.hpp"
 
@@ -41,28 +39,28 @@ KeyState::KeyState() : arousal(0.5), valence(0.5) {
     valenceKurtosis.set("Arousal Kurtosis", 1, 0, 4);
 }
 
-boost::optional<Press> KeyState::getActivePress(int key) {
+std::optional<Press> KeyState::getActivePress(int key) {
     // TODO Potential consideration If a sustain is invoked, we would want two ? Perhaps not
     for (auto press : presses) {
-        if (press.note == key && !press.getReleaseTime().is_initialized()) {
+        if (press.note == key && !press.getReleaseTime().has_value()) {
             // There is already a press, not released.
-            return boost::optional<Press>(press);
+            return std::optional<Press>(press);
         }
     }
-    return boost::none;
+    return std::nullopt;
 }
 
-boost::optional<Press> KeyState::getMostRecentPress() {
-    boost::optional<Press> mostRecent = boost::none;
+std::optional<Press> KeyState::getMostRecentPress() {
+    std::optional<Press> mostRecent = std::nullopt;
     for (auto press : presses) {
-        if (!mostRecent.is_initialized() || press.tSystemTimeSeconds > mostRecent.value().tSystemTimeSeconds) {
-            mostRecent = boost::optional<Press>(press);
+        if (!mostRecent.has_value() || press.tSystemTimeSeconds > mostRecent.value().tSystemTimeSeconds) {
+            mostRecent = std::optional<Press>(press);
         }
     }
     return mostRecent;
 }
 
-bool KeyState::isActivelyPressed(int key) { return KeyState::getActivePress(key).is_initialized(); }
+bool KeyState::isActivelyPressed(int key) { return KeyState::getActivePress(key).has_value(); }
 
 void KeyState::ephemeralKeyPressMapHandler(std::unordered_map<int, float> incomingPresses,
                                            std::unordered_map<int, unsigned int> messageIds) {
@@ -108,7 +106,7 @@ void KeyState::ephemeralKeyPressedHandler(int key, float velocityPct, unsigned i
 // If metaInputMode, return the note of the fundamental C.
 // e.g. if C4, C#4, D4, D#4, E4 enabled, return 60.
 // e.g. if C6, C#6, D6, D#6, E6 enabled, return 84.
-boost::optional<int> KeyState::getMetaInput() {
+std::optional<int> KeyState::getMetaInput() {
     std::vector<int> allPressedKeys;
     for (const auto & press : activePresses()) {
         allPressedKeys.push_back(press.note);
@@ -125,19 +123,19 @@ boost::optional<int> KeyState::getMetaInput() {
             allPressedKeys[i + 2] == thisNote + 2 &&  // Next is D
             allPressedKeys[i + 3] == thisNote + 3 &&  // Next is D#
             allPressedKeys[i + 4] == thisNote + 4) {  // Next is E
-            return boost::optional<int>(thisNote);
+            return std::optional<int>(thisNote);
         }
     }
-    return boost::none;
+    return std::nullopt;
 }
 
 Press KeyState::newKeyPressedHandler(int key, float velocityPct, unsigned int messageId) {
-    if (getActivePress(key).is_initialized()) {
+    if (getActivePress(key).has_value()) {
         // This should not have been invoked.
         ofLogWarning() << key << " already pressed.";
     }
     Press p = Press(key, velocityPct, getSystemTimeSecondsPrecise(), Press::PressType::PIANO, messageId);
-    if (sustainTimeS.is_initialized()) {
+    if (sustainTimeS.has_value()) {
         // Pressed while sustain pedal held.
         p.setSustained(sustainTimeS.value());
     }
@@ -150,7 +148,7 @@ void KeyState::keyReleasedHandler(int key) {
     for (auto & press : presses) {
         // Why check getReleaseTime? Because the keyreleasehandler is multiply invoked while held down for multiple
         // frames.
-        if (press.note == key && !press.getReleaseTime().is_initialized()) {
+        if (press.note == key && !press.getReleaseTime().has_value()) {
             // if (press.note == key) {
             // This continues in order to catch the potential (and ideally impossible) case
             // of multiple unreleased presses of the same key.g
@@ -172,7 +170,7 @@ const std::multimap<int, Press> KeyState::allPressesChromaticGrouped() {
 std::list<Press> KeyState::activePresses() {
     std::list<Press> emit;
     for (auto elt : presses) {
-        if (!elt.getReleaseTime().is_initialized()) {
+        if (!elt.getReleaseTime().has_value()) {
             // If this is sustained, getReleaseTime returns none and we skip
             emit.push_back(elt);
         }
@@ -192,7 +190,7 @@ void KeyState::cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, 
     double now = getSystemTimeSecondsPrecise();
 
     for (auto it = presses.begin(); it != presses.end();) {
-        if (!it->getReleaseTime().is_initialized() && now - it->tSystemTimeSeconds > MAX_SECONDS_PRESSED) {
+        if (!it->getReleaseTime().has_value() && now - it->tSystemTimeSeconds > MAX_SECONDS_PRESSED) {
             // If the press has been held (and not released), it's possible we never received a key-released message
             // from our midi element.
             ofLogNotice("KeyState") << it->note << " has been enabled for more than " << MAX_SECONDS_PRESSED
@@ -200,7 +198,7 @@ void KeyState::cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, 
             it->setReleased(getSystemTimeSecondsPrecise());
         }
 
-        if (it->getReleaseTime().is_initialized() && now - it->getReleaseTime().value() > ttlSecondsAfterRelease) {
+        if (it->getReleaseTime().has_value() && now - it->getReleaseTime().value() > ttlSecondsAfterRelease) {
             it = presses.erase(it);
         } else {
             ++it;
@@ -253,7 +251,7 @@ const std::list<Press> KeyState::allEphemeralPresses() {
 }
 
 void KeyState::sustainOnHandler(double timeSeconds) {
-    sustainTimeS = boost::optional<double>(timeSeconds);
+    sustainTimeS = std::optional<double>(timeSeconds);
     for (auto & press : presses) {
         // Press will ignore this if it is released
         press.setSustained(timeSeconds);
@@ -261,7 +259,7 @@ void KeyState::sustainOnHandler(double timeSeconds) {
 }
 
 void KeyState::sustainOffHandler(double timeSeconds) {
-    sustainTimeS = boost::none;
+    sustainTimeS = std::nullopt;
     for (auto & press : presses) {
         press.releaseSustain(timeSeconds);
     }
@@ -271,7 +269,7 @@ void KeyState::sustainOffHandler(double timeSeconds) {
 
 void KeyState::circumplexHomeostasis() {
     double now = getSystemTimeSecondsPrecise();
-    if (arousalLastUpdateS.is_initialized() && abs(arousal - 0.5) > 0.0001) {
+    if (arousalLastUpdateS.has_value() && abs(arousal - 0.5) > 0.0001) {
         // arousal is already level
         float arousalDt = now - arousalLastUpdateS.value();
         if (arousal > 0.5) {
@@ -279,16 +277,16 @@ void KeyState::circumplexHomeostasis() {
         } else {
             arousal = std::min(0.5, arousal + arousalDt * CIRCUMPLEX_HOMEOSTASIS_PER_SECOND);
         }
-        arousalLastUpdateS = boost::optional<float>(now);
+        arousalLastUpdateS = std::optional<float>(now);
     }
-    if (valenceLastUpdateS.is_initialized() && abs(valence - 0.5) > 0.0001) {
+    if (valenceLastUpdateS.has_value() && abs(valence - 0.5) > 0.0001) {
         float valenceDt = now - valenceLastUpdateS.value();
         if (valence > 0.5) {
             valence = std::max(0.5, valence - valenceDt * CIRCUMPLEX_HOMEOSTASIS_PER_SECOND);
         } else {
             valence = std::min(0.5, valence + valenceDt * CIRCUMPLEX_HOMEOSTASIS_PER_SECOND);
         }
-        valenceLastUpdateS = boost::optional<float>(now);
+        valenceLastUpdateS = std::optional<float>(now);
     }
 
     // 0.98^300 = 0.0023. 300 frames is 5 seconds at 60fps
@@ -305,7 +303,7 @@ void KeyState::circumplexHomeostasis() {
 void KeyState::setArousalPct(float arousalPct) {
     arousal = arousalPct;
     ofLogVerbose("KeyState") << "Arousal set to " << arousal;
-    arousalLastUpdateS = boost::optional<float>(getSystemTimeSecondsPrecise());
+    arousalLastUpdateS = std::optional<float>(getSystemTimeSecondsPrecise());
 }
 
 float KeyState::arousalPct() const { return arousal; }
@@ -313,7 +311,7 @@ float KeyState::arousalPct() const { return arousal; }
 void KeyState::setValencePct(float valencePct) {
     valence = valencePct;
     ofLogVerbose("KeyState") << "Valence set to " << valence;
-    valenceLastUpdateS = boost::optional<float>(getSystemTimeSecondsPrecise());
+    valenceLastUpdateS = std::optional<float>(getSystemTimeSecondsPrecise());
 }
 
 float KeyState::valencePct() const { return valence; }

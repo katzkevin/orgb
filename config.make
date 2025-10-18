@@ -14,8 +14,8 @@ OF_ROOT = /Users/katz/workspace/of_v0.12.1_osx_release
 # EMSCRIPTEN SPECIFIC CONFIGURATION
 #   Settings for compiling to WebAssembly for browser deployment
 ################################################################################
-# Use the emscripten platform
-PLATFORM_OS = Emscripten
+# Use the emscripten platform (must be lowercase)
+PLATFORM_OS = emscripten
 
 # Set the binary name
 BIN_NAME = orgb

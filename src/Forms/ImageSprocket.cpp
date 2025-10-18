@@ -17,7 +17,7 @@
 // This also defined in DrawContext
 #define MULTISAMPLE_COUNT 0
 
-using namespace boost::filesystem;
+using namespace std::filesystem;
 
 ImageSprocket::ImageSprocket() : VisualForm("ImageSprocket") {
     index0 = 0;
@@ -225,7 +225,7 @@ void ImageSprocket::drawCenteredAndScaled(ImageWrapper & imageWrapper, bool fill
 }
 namespace ImageUtilities {
 
-std::vector<ImageWrapper> getImages(boost::filesystem::path directory, unsigned int maxCount) {
+std::vector<ImageWrapper> getImages(std::filesystem::path directory, unsigned int maxCount) {
     ofImageLoadSettings settings;
     settings.exifRotate = true;
 

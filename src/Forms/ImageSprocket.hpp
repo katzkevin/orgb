@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 #include "ImageWrapper.hpp"
@@ -78,7 +78,7 @@ class ImageSprocket : public VisualForm {
 };
 
 namespace ImageUtilities {
-std::vector<ImageWrapper> getImages(boost::filesystem::path directory, unsigned int maxCount = 999999);
+std::vector<ImageWrapper> getImages(std::filesystem::path directory, unsigned int maxCount = 999999);
 
 }
 

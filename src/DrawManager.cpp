@@ -15,7 +15,7 @@
 DrawManager::DrawManager()
     : fboFront(getConfiguredFrameBuffer(ofGetWidth(), ofGetHeight())),
       fboBack(getConfiguredFrameBuffer(ofGetWidth(), ofGetHeight())),
-      activeCanvas(boost::none),
+      activeCanvas(std::nullopt),
 
       shaderPackageBlurX("shaderBlurX"),
       shaderPackageBlurY("shaderBlurY"),
@@ -28,11 +28,11 @@ DrawManager::DrawManager()
 
 void DrawManager::beginDraw() {
     // Extremely stateful, see existing examples
-    if (activeCanvas.is_initialized()) {
+    if (activeCanvas.has_value()) {
         throw std::runtime_error("Can't begin draw with an already active canvas");
     }
     fboFront.begin();
-    activeCanvas = boost::optional<ofFbo>(fboFront);
+    activeCanvas = std::optional<ofFbo>(fboFront);
 }
 
 void DrawManager::endDraw() {
@@ -52,12 +52,12 @@ void DrawManager::endAndDrawFbo() {
     if (activeCanvas.get().getId() != fboFront.getId()) {
         throw std::runtime_error("Canvas must be front canvas.");
     }
-    if (!activeCanvas.is_initialized()) {
+    if (!activeCanvas.has_value()) {
         throw std::runtime_error("Can't end draw without an active canvas");
     }
     activeCanvas.get().end();
     drawFboAtZeroZero(activeCanvas.get());
-    activeCanvas = boost::none;
+    activeCanvas = std::nullopt;
 }
 
 void DrawManager::shaderEpilogue(ShaderPackage & sp) {
@@ -65,7 +65,7 @@ void DrawManager::shaderEpilogue(ShaderPackage & sp) {
     if (activeCanvas.get().getId() != fboFront.getId()) {
         throw std::runtime_error("Canvas must be front canvas.");
     }
-    if (!activeCanvas.is_initialized()) {
+    if (!activeCanvas.has_value()) {
         throw std::runtime_error("Can't end shader without an active canvas");
     }
 
@@ -78,7 +78,7 @@ void DrawManager::shaderEpilogue(ShaderPackage & sp) {
     sp.shader.end();
 
     std::swap(fboFront, fboBack);
-    activeCanvas = boost::optional<ofFbo>(fboFront);
+    activeCanvas = std::optional<ofFbo>(fboFront);
 }
 
 void DrawManager::shadeBlurX(float delta, float gain) {

@@ -1,5 +1,7 @@
 #pragma once
 
+// Browser build - disable native networking addons
+#ifndef __EMSCRIPTEN__
 #include "ofxMQTT.h"
 #include "ofxOsc.h"
 
@@ -7,6 +9,7 @@
 #include "ofxNDIFinder.h"
 #include "ofxNDIReceiver.h"
 #include "ofxNDIRecvStream.h"
+#endif
 
 #ifdef TARGET_RASPBERRY_PI
 #include "ofxRpiLED.h"
@@ -39,7 +42,9 @@
 #include "Thunder.hpp"
 #include "Utilities.hpp"
 #include "VisualForm.hpp"
+#ifndef __EMSCRIPTEN__
 #include "ofxOscParameterSync.h"
+#endif
 
 // #include "FieldWithTrails.hpp"
 #include "Lotus.hpp"

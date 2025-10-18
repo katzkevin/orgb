@@ -82,11 +82,11 @@ float transitionEaseOutExponential(float pct, float exponent) {
     return 1 - pow(1 - orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), exponent);
 }
 
-boost::optional<std::string> getEnvOptional(std::string key) {
+std::optional<std::string> getEnvOptional(std::string key) {
     try {
-        return boost::optional<std::string>(getEnv(key));
+        return std::optional<std::string>(getEnv(key));
     } catch (...) {
-        return boost::none;
+        return std::nullopt;
     }
 }
 
