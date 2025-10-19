@@ -3,6 +3,50 @@
 
 pre-commit:
   commands:
+    clang-format:
+      glob: "*.{cpp,hpp,h}"
+      run: |
+        # Run clang-format on staged C++ files
+        STAGED_CPP_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|h)$' || true)
+
+        if [ -z "$STAGED_CPP_FILES" ]; then
+          echo "No C++ files to format"
+          exit 0
+        fi
+
+        # Check if clang-format is available
+        if ! command -v clang-format &> /dev/null; then
+          echo "Warning: clang-format not found"
+          echo "Install with: brew install clang-format"
+          echo "Skipping formatting check"
+          exit 0
+        fi
+
+        echo "Checking code formatting with clang-format..."
+
+        NEEDS_FORMATTING=""
+        for file in $STAGED_CPP_FILES; do
+          if ! clang-format --dry-run --Werror "$file" &> /dev/null; then
+            NEEDS_FORMATTING="$NEEDS_FORMATTING $file"
+          fi
+        done
+
+        if [ -n "$NEEDS_FORMATTING" ]; then
+          echo "❌ The following files need formatting:"
+          for file in $NEEDS_FORMATTING; do
+            echo "   - $file"
+          done
+          echo ""
+          echo "To fix formatting, run:"
+          echo "  clang-format -i $NEEDS_FORMATTING"
+          echo ""
+          echo "Or to auto-format all staged files:"
+          echo "  git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|hpp|h)$' | xargs clang-format -i"
+          exit 1
+        fi
+
+        echo "✅ All files are properly formatted"
+
     clang-tidy:
       glob: "*.{cpp,hpp}"
       run: |
