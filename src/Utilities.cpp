@@ -43,12 +43,12 @@ void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapse
     }
 }
 
-int positive_modulo(int x, int y) {
+int positiveModulo(int x, int y) {
     // Wrapping modulus. As in python.
     return (x % y + y) % y;
 }
 
-float positive_modulo(float x, float y) {
+float positiveModulo(float x, float y) {
     // Wrapping modulus. As in python.
     return fmod(fmod(x, y) + y, y);
 }
@@ -375,7 +375,7 @@ ofColor generateNoisyColor(ofColor baseColor, float baseAlphaPct, float hueNoise
 
     float identity0 = deterministicRandomPct(salt + 0.0);
     float huePreModulus = ofMap(identity0, 0, 1.0, hue - hueNoiseMaximumOutOf255, hue + hueNoiseMaximumOutOf255);
-    int h = static_cast<int>(positive_modulo(huePreModulus, 255.0));
+    int h = static_cast<int>(positiveModulo(huePreModulus, 255.0));
 
     float identity1 = deterministicRandomPct(salt + 1.0);
     int s = ofMap(identity1, 0, 1.0, ofClamp(saturation - saturationNoiseMaximumOutOf255, 0, 255),

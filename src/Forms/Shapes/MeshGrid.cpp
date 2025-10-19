@@ -52,7 +52,7 @@ void MeshGrid::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, 
 
     ofRotateRad(deterministicRandomPct(press.id) * TWO_PI);
     // Translate up by offset
-    float offsetPct = positive_modulo(static_cast<float>(dt), period) / period;
+    float offsetPct = positiveModulo(static_cast<float>(dt), period) / period;
     ofTranslate(0, offsetPct * waveLength);
     // ofLogNotice() << "note:" << press.note << " pressOveallPct" << press.noteOverallPct() << " minPeriodSeconds:" <<
     // minPeriodSeconds << " maxPeriodSeconds:" << (minPeriodSeconds * topToBottomPeriodRatio) << " period:" << period

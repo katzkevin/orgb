@@ -406,6 +406,6 @@ void ofApp::exit() {
     ofLogNotice("ofApp") << "Cleanly exiting.";
 }
 
-void ofApp::previousForm() { switchToForm(positive_modulo(currentFormIndex - 1, static_cast<int>(forms.size()))); }
+void ofApp::previousForm() { switchToForm(positiveModulo(currentFormIndex - 1, static_cast<int>(forms.size()))); }
 
-void ofApp::nextForm() { switchToForm(positive_modulo(currentFormIndex + 1, static_cast<int>(forms.size()))); }
+void ofApp::nextForm() { switchToForm(positiveModulo(currentFormIndex + 1, static_cast<int>(forms.size()))); }

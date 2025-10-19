@@ -21,9 +21,9 @@ class BaseWaves : public VisualForm {
     BaseWaves(std::string name);
     virtual ~BaseWaves() {};
 
-    void update(KeyState & ks, ColorProvider & clr);
+    void update(KeyState & ks, ColorProvider & clr) override;
 
-    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
 
     float maxWaveWidth;
 
