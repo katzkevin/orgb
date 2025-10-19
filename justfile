@@ -4,17 +4,50 @@
 default:
     @just --list
 
-# Build the project in Release mode
-build:
+# Helper: Set up config files for a specific platform
+_setup-platform PLATFORM:
+    @echo "Setting up build for {{PLATFORM}}..."
+    @cp -f config.make.{{PLATFORM}} config.make
+    @cp -f addons.make.{{PLATFORM}} addons.make
+    @echo "✓ Configured for {{PLATFORM}} build"
+
+# Build for macOS (native)
+build-macos:
+    @just _setup-platform macos
     make Release
 
-# Build the project in Debug mode
-build-debug:
+# Build for macOS in Debug mode
+build-macos-debug:
+    @just _setup-platform macos
     make Debug
 
-# Clean all build artifacts
+# Build for Emscripten/WebAssembly (browser)
+build-emscripten:
+    @just _setup-platform emscripten
+    make Release
+
+# Build for Emscripten in Debug mode
+build-emscripten-debug:
+    @just _setup-platform emscripten
+    make Debug
+
+# Build the project in Release mode (defaults to macOS)
+build:
+    @just build-macos
+
+# Build the project in Debug mode (defaults to macOS)
+build-debug:
+    @just build-macos-debug
+
+# Clean all build artifacts (both platforms)
 clean:
     make clean
+
+# Clean and rebuild for macOS
+rebuild-macos: clean build-macos
+
+# Clean and rebuild for Emscripten
+rebuild-emscripten: clean build-emscripten
 
 # Clean only Release build
 clean-release:
@@ -31,15 +64,21 @@ _prepare-ndi:
         cp libndi.4.dylib bin/orgb.app/Contents/MacOS/; \
     fi
 
-# Build and run the application
-run: build _prepare-ndi
+# Build and run the application (macOS)
+run: build-macos _prepare-ndi
     @echo "Starting orgb..."
     @./bin/orgb.app/Contents/MacOS/orgb
 
-# Build and run in Debug mode
-run-debug: build-debug _prepare-ndi
+# Build and run in Debug mode (macOS)
+run-debug: build-macos-debug _prepare-ndi
     @echo "Starting orgb (debug)..."
     @./bin/orgb_debug.app/Contents/MacOS/orgb_debug
+
+# Build and serve Emscripten build in browser
+run-emscripten: build-emscripten
+    @echo "Starting web server for Emscripten build..."
+    @echo "Open http://localhost:8000/bin/em/orgb/ in your browser"
+    @cd bin/em && python3 -m http.server 8000
 
 # Clean and rebuild
 rebuild: clean build
