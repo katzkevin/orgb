@@ -8,8 +8,6 @@
 #ifndef ImageWrapper_hpp
 #define ImageWrapper_hpp
 
-#include <stdio.h>
-
 #include <filesystem>
 #include <string>
 
@@ -20,7 +18,7 @@ using namespace std::filesystem;
 class ImageWrapper {
    public:
     ImageWrapper(path p, ofImage & i);
-    virtual ~ImageWrapper() {};
+    ~ImageWrapper() override {};
     path imagePath;
     ofImage image;
     float scale;

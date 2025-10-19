@@ -7,7 +7,7 @@
 
 #include "VisualForm.hpp"
 
-VisualForm::VisualForm(std::string _name) {
-    name = _name;
+VisualForm::VisualForm(std::string name) {
+    this->name = name;
     parameters.setName(name);
 }

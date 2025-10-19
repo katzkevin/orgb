@@ -5,7 +5,7 @@
 //  Created by Kevin Katz on 3/23/22.
 //
 
-#ifndef __EMSCRIPTEN__
+#ifdef HAS_MQTT
 
 #include <ofApp.h>
 
@@ -123,4 +123,4 @@ void ofApp::mqttOnOnline() {
 
 void ofApp::mqttOnOffline() { ofLogNotice("MIDI") << "Offline."; }
 
-#endif  // __EMSCRIPTEN__
+#endif  // HAS_MQTT

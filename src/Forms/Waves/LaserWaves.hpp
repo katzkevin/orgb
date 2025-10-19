@@ -13,7 +13,7 @@
 class LaserWaves : public BaseWaves {
    public:
     LaserWaves(std::string name);
-    virtual ~LaserWaves() {};
+    ~LaserWaves() override {};
 };
 
 #endif /* LaserWaves_hpp */

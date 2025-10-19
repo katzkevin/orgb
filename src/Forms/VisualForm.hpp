@@ -8,8 +8,6 @@
 #ifndef VisualForm_hpp
 #define VisualForm_hpp
 
-#include <stdio.h>
-
 #include "ColorProvider.hpp"
 #include "DrawManager.hpp"
 #include "KeyState.hpp"

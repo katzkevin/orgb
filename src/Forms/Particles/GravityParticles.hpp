@@ -8,15 +8,13 @@
 #ifndef GravityParticles_hpp
 #define GravityParticles_hpp
 
-#include <stdio.h>
-
 #include "BaseParticles.hpp"
 #include "ColorProvider.hpp"
 
 class GravityParticles : public BaseParticles {
    public:
     GravityParticles(std::string name);
-    ~GravityParticles() override  = default;
+    ~GravityParticles() override = default;
 
     void update(KeyState & ks, ColorProvider & clr) override;
 

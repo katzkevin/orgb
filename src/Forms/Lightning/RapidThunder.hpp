@@ -8,16 +8,14 @@
 #ifndef StableThunder_hpp
 #define StableThunder_hpp
 
-#include <stdio.h>
-
 #include "Press.hpp"
 #include "Thunder.hpp"
 #include "ofMain.h"
 
 class RapidThunder : public Thunder {
    public:
-    RapidThunder(std::string _name);
-    virtual ~RapidThunder() {};
+    RapidThunder(std::string name);
+    ~RapidThunder() override {};
 
     ofParameter<float> boltHz;
 

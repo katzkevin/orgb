@@ -8,14 +8,12 @@
 #ifndef FatGlowShape_hpp
 #define FatGlowShape_hpp
 
-#include <stdio.h>
-
 #include "Shape.hpp"
 
 class FatGlowShape : public Shape {
    public:
     FatGlowShape(std::string name);
-    virtual ~FatGlowShape() {};
+    ~FatGlowShape() override {};
 };
 
 #endif /* FatGlowShape_hpp */

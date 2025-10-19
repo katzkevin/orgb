@@ -8,8 +8,6 @@
 #ifndef Shape_hpp
 #define Shape_hpp
 
-#include <stdio.h>
-
 #include <random>
 
 #include "ColorProvider.hpp"
@@ -26,7 +24,7 @@ class Shape : public VisualForm {
 
    public:
     Shape(std::string name);
-    virtual ~Shape() {};
+    ~Shape() override {};
 
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
     ofPath shape(int sideCount, float radius);

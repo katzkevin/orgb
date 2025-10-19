@@ -8,8 +8,6 @@
 #ifndef ColorUtilities_hpp
 #define ColorUtilities_hpp
 
-#include <stdio.h>
-
 #include "ofMain.h"
 
 namespace ColorUtilities {

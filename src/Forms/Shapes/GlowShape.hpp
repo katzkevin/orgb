@@ -8,8 +8,6 @@
 #ifndef GlowShape_hpp
 #define GlowShape_hpp
 
-#include <stdio.h>
-
 #include "Shape.hpp"
 
 class GlowShape : public Shape {

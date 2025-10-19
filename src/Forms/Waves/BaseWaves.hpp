@@ -8,8 +8,6 @@
 #ifndef BaseWaves_hpp
 #define BaseWaves_hpp
 
-#include <stdio.h>
-
 #include "ColorProvider.hpp"
 #include "KeyState.hpp"
 #include "Press.hpp"
@@ -19,7 +17,7 @@
 class BaseWaves : public VisualForm {
    public:
     BaseWaves(std::string name);
-    virtual ~BaseWaves() {};
+    ~BaseWaves() override {};
 
     void update(KeyState & ks, ColorProvider & clr) override;
 

@@ -8,8 +8,6 @@
 #ifndef Orbit_hpp
 #define Orbit_hpp
 
-#include <stdio.h>
-
 #include "BaseParticle.hpp"
 #include "ColorProvider.hpp"
 #include "KeyState.hpp"
@@ -20,7 +18,7 @@
 class Orbit : public VisualForm {
    public:
     Orbit(std::string name);
-    virtual ~Orbit() {};
+    ~Orbit() override {};
 
     void update(KeyState & ks, ColorProvider & clr);
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);

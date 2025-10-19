@@ -8,8 +8,6 @@
 #ifndef Field_hpp
 #define Field_hpp
 
-#include <stdio.h>
-
 #include "BaseWaves.hpp"
 #include "Field.hpp"
 #include "Flock.hpp"

@@ -8,8 +8,6 @@
 #ifndef Flock_hpp
 #define Flock_hpp
 
-#include <stdio.h>
-
 #include <glm/glm.hpp>
 
 #include "SizedSprite.hpp"
@@ -19,7 +17,7 @@
 class Flock {
    public:
     Flock();
-    virtual ~Flock() {};
+    ~Flock() override {};
 
     void update(float dt, float elapsedTimeF);
 

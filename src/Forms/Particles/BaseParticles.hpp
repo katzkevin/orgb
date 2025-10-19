@@ -8,8 +8,6 @@
 #ifndef BaseParticles_hpp
 #define BaseParticles_hpp
 
-#include <stdio.h>
-
 #include "ColorProvider.hpp"
 #include "KeyState.hpp"
 #include "Particle.h"

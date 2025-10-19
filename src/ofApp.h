@@ -2,9 +2,15 @@
 
 #include <optional>
 
+// TODO: MQTT addon has C++23 compatibility issues - temporarily disabled
+// Uncomment the line below to enable MQTT support when the addon is fixed
+// #define HAS_MQTT
+
 // Browser build - disable native networking addons
 #ifndef __EMSCRIPTEN__
+#ifdef HAS_MQTT
 #include "ofxMQTT.h"
+#endif
 #include "ofxOsc.h"
 
 // NDI
@@ -103,7 +109,7 @@ class ofApp : public ofBaseApp {
     /*
      * MQTT Comms
      */
-#ifndef __EMSCRIPTEN__
+#ifdef HAS_MQTT
     ofxMQTT client;
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
@@ -113,10 +119,10 @@ class ofApp : public ofBaseApp {
     void mqttOnOffline();
     void dumpSettingsToMqtt();
     bool mqttMessageEncountered;  // TODO Document. This was one message per frame before this for some reason.
-#endif  // __EMSCRIPTEN__
 
     bool enableMQTT;
     bool requireMQTT;
+#endif  // HAS_MQTT
     bool enableNDI;
 
     /*

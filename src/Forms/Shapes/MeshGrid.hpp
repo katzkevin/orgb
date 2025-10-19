@@ -8,14 +8,12 @@
 #ifndef MeshGrid_hpp
 #define MeshGrid_hpp
 
-#include <stdio.h>
-
 #include "Shape.hpp"
 
 class MeshGrid : public Shape {
    public:
     MeshGrid(std::string name);
-    virtual ~MeshGrid() {};
+    ~MeshGrid() override {};
 
    protected:
     void drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press) override;

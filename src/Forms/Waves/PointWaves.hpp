@@ -8,14 +8,12 @@
 #ifndef PointWaves_hpp
 #define PointWaves_hpp
 
-#include <stdio.h>
-
 #include "BaseWaves.hpp"
 
 class PointWaves : public BaseWaves {
    public:
     PointWaves(std::string name);
-    virtual ~PointWaves() {};
+    ~PointWaves() override {};
 
    protected:
     void drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, const Press & p, float alpha) override;

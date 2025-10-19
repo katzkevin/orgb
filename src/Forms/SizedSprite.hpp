@@ -8,8 +8,6 @@
 #ifndef FieldSprite_hpp
 #define FieldSprite_hpp
 
-#include <stdio.h>
-
 #include <glm/glm.hpp>
 
 #include "Particle.h"

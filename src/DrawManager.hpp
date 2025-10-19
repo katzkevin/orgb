@@ -8,8 +8,6 @@
 #ifndef DrawManager_hpp
 #define DrawManager_hpp
 
-#include <stdio.h>
-
 #include <optional>
 
 #include "DrawContext.hpp"
@@ -32,7 +30,7 @@ class DrawManager {
     ofFbo fboBack;
 
     DrawManager();
-    virtual ~DrawManager() {};
+    ~DrawManager() override {};
 
     void beginDraw();
     void endDraw();  // End drawing without drawing to screen

@@ -45,12 +45,12 @@ TEST_F(KeyStateTest, ActivePressTracking) {
 }
 
 TEST_F(KeyStateTest, GetActivePress) {
-    EXPECT_FALSE(ks.getActivePress(60).is_initialized());
+    EXPECT_FALSE(ks.getActivePress(60).has_value());
 
     Press p = ks.newKeyPressedHandler(60, 0.8f, 1);
-    boost::optional<Press> retrieved = ks.getActivePress(60);
+    std::optional<Press> retrieved = ks.getActivePress(60);
 
-    EXPECT_TRUE(retrieved.is_initialized());
+    EXPECT_TRUE(retrieved.has_value());
     EXPECT_EQ(retrieved.value().note, 60);
 }
 
@@ -58,7 +58,7 @@ TEST_F(KeyStateTest, GetActivePressAfterRelease) {
     ks.newKeyPressedHandler(60, 0.8f, 1);
     ks.keyReleasedHandler(60);
 
-    EXPECT_FALSE(ks.getActivePress(60).is_initialized());
+    EXPECT_FALSE(ks.getActivePress(60).has_value());
 }
 
 TEST_F(KeyStateTest, MultiplePresses) {
@@ -93,8 +93,8 @@ TEST_F(KeyStateTest, GetMostRecentPress) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
     Press p2 = ks.newKeyPressedHandler(64, 0.8f, 2);
 
-    boost::optional<Press> recent = ks.getMostRecentPress();
-    EXPECT_TRUE(recent.is_initialized());
+    std::optional<Press> recent = ks.getMostRecentPress();
+    EXPECT_TRUE(recent.has_value());
     EXPECT_EQ(recent.value().note, 64);
 }
 
@@ -148,7 +148,7 @@ TEST_F(KeyStateTest, SustainOnHandler) {
     double sustainTime = getSystemTimeSecondsPrecise();
     ks.sustainOnHandler(sustainTime);
 
-    EXPECT_TRUE(ks.sustainTimeS.is_initialized());
+    EXPECT_TRUE(ks.sustainTimeS.has_value());
     EXPECT_DOUBLE_EQ(ks.sustainTimeS.value(), sustainTime);
 }
 
@@ -156,11 +156,11 @@ TEST_F(KeyStateTest, SustainOffHandler) {
     double sustainTime = getSystemTimeSecondsPrecise();
     ks.sustainOnHandler(sustainTime);
 
-    EXPECT_TRUE(ks.sustainTimeS.is_initialized());
+    EXPECT_TRUE(ks.sustainTimeS.has_value());
 
     ks.sustainOffHandler(getSystemTimeSecondsPrecise());
 
-    EXPECT_FALSE(ks.sustainTimeS.is_initialized());
+    EXPECT_FALSE(ks.sustainTimeS.has_value());
 }
 
 TEST_F(KeyStateTest, SustainAffectsNewPresses) {
@@ -174,12 +174,12 @@ TEST_F(KeyStateTest, SustainAffectsNewPresses) {
     ks.keyReleasedHandler(60);
 
     // Should still be "active" due to sustain
-    boost::optional<Press> p = ks.getActivePress(60);
-    if (!p.is_initialized()) {
+    std::optional<Press> p = ks.getActivePress(60);
+    if (!p.has_value()) {
         // The press is in the list but getReleaseTime returns none (sustained)
         for (const auto & press : ks.allPresses()) {
             if (press.note == 60) {
-                EXPECT_FALSE(press.getReleaseTime().is_initialized());
+                EXPECT_FALSE(press.getReleaseTime().has_value());
             }
         }
     }
@@ -199,7 +199,7 @@ TEST_F(KeyStateTest, SustainReleasesAll) {
 
     // All should now show as released
     for (const auto & press : ks.allPresses()) {
-        EXPECT_TRUE(press.getReleaseTime().is_initialized());
+        EXPECT_TRUE(press.getReleaseTime().has_value());
     }
 }
 
@@ -315,8 +315,8 @@ TEST_F(KeyStateTest, GetMetaInputNoPattern) {
     ks.newKeyPressedHandler(60, 0.8f, 1);
     ks.newKeyPressedHandler(64, 0.8f, 2);
 
-    boost::optional<int> meta = ks.getMetaInput();
-    EXPECT_FALSE(meta.is_initialized());
+    std::optional<int> meta = ks.getMetaInput();
+    EXPECT_FALSE(meta.has_value());
 }
 
 TEST_F(KeyStateTest, GetMetaInputValidPattern) {
@@ -327,8 +327,8 @@ TEST_F(KeyStateTest, GetMetaInputValidPattern) {
     ks.newKeyPressedHandler(63, 0.8f, 4);  // D#
     ks.newKeyPressedHandler(64, 0.8f, 5);  // E
 
-    boost::optional<int> meta = ks.getMetaInput();
-    EXPECT_TRUE(meta.is_initialized());
+    std::optional<int> meta = ks.getMetaInput();
+    EXPECT_TRUE(meta.has_value());
     EXPECT_EQ(meta.value(), 60);  // Returns the C
 }
 
@@ -340,8 +340,8 @@ TEST_F(KeyStateTest, GetMetaInputHigherOctave) {
     ks.newKeyPressedHandler(87, 0.8f, 4);  // D#6
     ks.newKeyPressedHandler(88, 0.8f, 5);  // E6
 
-    boost::optional<int> meta = ks.getMetaInput();
-    EXPECT_TRUE(meta.is_initialized());
+    std::optional<int> meta = ks.getMetaInput();
+    EXPECT_TRUE(meta.has_value());
     EXPECT_EQ(meta.value(), 84);  // Returns the C6
 }
 

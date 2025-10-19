@@ -8,7 +8,6 @@
 #ifndef LightningBolt_hpp
 #define LightningBolt_hpp
 
-#include <stdio.h>
 #include <list>
 
 #include "Utilities.hpp"
@@ -29,8 +28,7 @@ class LightningBolt {
                                         float seed);
 
     vector<ofPoint> trunk{};
-    std::list<LightningBolt> branches {}
-    ;
+    std::list<LightningBolt> branches{};
 };
 
 #endif /* LightningBolt_hpp */

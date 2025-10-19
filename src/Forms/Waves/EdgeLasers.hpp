@@ -8,14 +8,12 @@
 #ifndef EdgeLasers_hpp
 #define EdgeLasers_hpp
 
-#include <stdio.h>
-
 #include "BaseWaves.hpp"
 
 class EdgeLasers : public BaseWaves {
    public:
     EdgeLasers(std::string name);
-    virtual ~EdgeLasers() {};
+    ~EdgeLasers() override {};
 
     ofParameter<bool> lineSegmentDeterministic;
 

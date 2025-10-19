@@ -8,8 +8,6 @@
 #ifndef ImageSprocket_hpp
 #define ImageSprocket_hpp
 
-#include <stdio.h>
-
 #include <filesystem>
 #include <string>
 

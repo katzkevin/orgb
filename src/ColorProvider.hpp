@@ -8,8 +8,6 @@
 #ifndef ColorProvider_hpp
 #define ColorProvider_hpp
 
-#include <stdio.h>
-
 #include "Press.hpp"
 #include "Utilities.hpp"
 #include "ofParameter.h"
@@ -17,7 +15,7 @@
 class ColorProvider {
    public:
     ColorProvider();
-    virtual ~ColorProvider() {};
+    ~ColorProvider() override {};
     ofColor color(const Press & p) const;
     ofColor color(const Press & p, double opacityPct) const;
 

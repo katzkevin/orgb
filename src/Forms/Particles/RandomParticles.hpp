@@ -8,15 +8,13 @@
 #ifndef RandomParticles_hpp
 #define RandomParticles_hpp
 
-#include <stdio.h>
-
 #include "BaseParticles.hpp"
 #include "ColorProvider.hpp"
 
 class RandomParticles : public BaseParticles {
    public:
     RandomParticles(std::string name);
-    virtual ~RandomParticles() {};
+    ~RandomParticles() override {};
 
     ofParameter<float> baseRandom;
 

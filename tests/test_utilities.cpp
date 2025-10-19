@@ -21,33 +21,33 @@ class UtilitiesTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(UtilitiesTest, PositiveModuloIntPositive) {
-    EXPECT_EQ(positive_modulo(7, 3), 1);
-    EXPECT_EQ(positive_modulo(9, 3), 0);
-    EXPECT_EQ(positive_modulo(10, 3), 1);
+    EXPECT_EQ(positiveModulo(7, 3), 1);
+    EXPECT_EQ(positiveModulo(9, 3), 0);
+    EXPECT_EQ(positiveModulo(10, 3), 1);
 }
 
 TEST_F(UtilitiesTest, PositiveModuloIntNegative) {
     // Python-style wrapping modulo
-    EXPECT_EQ(positive_modulo(-1, 3), 2);
-    EXPECT_EQ(positive_modulo(-2, 3), 1);
-    EXPECT_EQ(positive_modulo(-3, 3), 0);
-    EXPECT_EQ(positive_modulo(-4, 3), 2);
+    EXPECT_EQ(positiveModulo(-1, 3), 2);
+    EXPECT_EQ(positiveModulo(-2, 3), 1);
+    EXPECT_EQ(positiveModulo(-3, 3), 0);
+    EXPECT_EQ(positiveModulo(-4, 3), 2);
 }
 
 TEST_F(UtilitiesTest, PositiveModuloFloatPositive) {
-    EXPECT_NEAR(positive_modulo(7.5f, 3.0f), 1.5f, EPSILON);
-    EXPECT_NEAR(positive_modulo(9.0f, 3.0f), 0.0f, EPSILON);
+    EXPECT_NEAR(positiveModulo(7.5f, 3.0f), 1.5f, EPSILON);
+    EXPECT_NEAR(positiveModulo(9.0f, 3.0f), 0.0f, EPSILON);
 }
 
 TEST_F(UtilitiesTest, PositiveModuloFloatNegative) {
-    EXPECT_NEAR(positive_modulo(-1.5f, 3.0f), 1.5f, EPSILON);
-    EXPECT_NEAR(positive_modulo(-2.0f, 3.0f), 1.0f, EPSILON);
+    EXPECT_NEAR(positiveModulo(-1.5f, 3.0f), 1.5f, EPSILON);
+    EXPECT_NEAR(positiveModulo(-2.0f, 3.0f), 1.0f, EPSILON);
 }
 
 TEST_F(UtilitiesTest, PositiveModuloHueWrapping) {
     // Common use case: wrapping hue values [0-255]
-    EXPECT_NEAR(positive_modulo(256.0f, 255.0f), 1.0f, EPSILON);
-    EXPECT_NEAR(positive_modulo(-1.0f, 255.0f), 254.0f, EPSILON);
+    EXPECT_NEAR(positiveModulo(256.0f, 255.0f), 1.0f, EPSILON);
+    EXPECT_NEAR(positiveModulo(-1.0f, 255.0f), 254.0f, EPSILON);
 }
 
 // ============================================================================
@@ -279,6 +279,6 @@ TEST_F(UtilitiesTest, GetEnvWithDefault) {
 }
 
 TEST_F(UtilitiesTest, GetEnvOptionalMissing) {
-    boost::optional<std::string> result = getEnvOptional("NONEXISTENT_KEY_12345");
-    EXPECT_FALSE(result.is_initialized());
+    std::optional<std::string> result = getEnvOptional("NONEXISTENT_KEY_12345");
+    EXPECT_FALSE(result.has_value());
 }

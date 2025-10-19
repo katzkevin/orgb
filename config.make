@@ -1,6 +1,6 @@
 ################################################################################
-# CONFIGURE PROJECT MAKEFILE (macOS)
-#   This file is for macOS native builds
+# CONFIGURE PROJECT MAKEFILE (Emscripten)
+#   This file is for Emscripten/WebAssembly browser builds
 ################################################################################
 
 ################################################################################
@@ -11,12 +11,17 @@
 OF_ROOT = /Users/katz/workspace/of_v0.12.1_osx_release
 
 ################################################################################
-# MACOS CONFIGURATION
-#   Settings for native macOS builds
+# EMSCRIPTEN SPECIFIC CONFIGURATION
+#   Settings for compiling to WebAssembly for browser deployment
 ################################################################################
+# Use the emscripten platform (must be lowercase)
+PLATFORM_OS = emscripten
 
 # Set the binary name
 BIN_NAME = orgb
+
+# Memory configuration (128MB default, can be increased if needed)
+# PROJECT_EMSCRIPTEN_TOTAL_MEMORY = 268435456  # 256MB if needed
 
 ################################################################################
 # PROJECT ROOT
@@ -85,6 +90,7 @@ BIN_NAME = orgb
 # add a runtime path to search for those shared libraries, since they aren't
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
+# NOTE: Disabled for Emscripten - macOS-specific flags and boost not available in browser
 # PROJECT_LDFLAGS=-Wl,-rpath,@executable_path -L/opt/homebrew/opt/boost/lib -lboost_filesystem
 
 ################################################################################
@@ -113,7 +119,8 @@ BIN_NAME = orgb
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = -I/opt/homebrew/opt/boost/include
+# Stricter warning flags for industry-standard code quality
+PROJECT_CFLAGS = -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wcast-align -Wunused -Woverloaded-virtual
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

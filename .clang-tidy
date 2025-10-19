@@ -1,33 +1,46 @@
 ---
-# Conservative clang-tidy configuration for openFrameworks projects
-# Focus on safety and correctness, avoid aggressive auto-fixes
+# Comprehensive clang-tidy configuration for openFrameworks projects
+# Industry-standard checks: cppcoreguidelines, google, hicpp
+# Focus on safety, correctness, and modern C++ best practices
 
 Checks: >
   -*,
-  readability-identifier-naming,
-  readability-inconsistent-declaration-parameter-name,
-  bugprone-bool-pointer-implicit-conversion,
-  bugprone-dangling-handle,
-  bugprone-integer-division,
-  bugprone-misplaced-widening-cast,
-  bugprone-undefined-memory-manipulation,
-  bugprone-use-after-move,
-  cert-dcl50-cpp,
-  cert-err34-c,
-  cert-err52-cpp,
-  modernize-use-nullptr,
-  modernize-use-override,
-  performance-faster-string-find,
-  performance-for-range-copy,
-  performance-implicit-conversion-in-loop,
-  performance-inefficient-vector-operation,
-  performance-unnecessary-copy-initialization
+  bugprone-*,
+  cert-*,
+  cppcoreguidelines-*,
+  google-*,
+  hicpp-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -readability-convert-member-functions-to-static,
+  -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-uppercase-literal-suffix,
+  -hicpp-uppercase-literal-suffix,
+  -modernize-use-nodiscard,
+  -cppcoreguidelines-avoid-c-arrays,
+  -hicpp-avoid-c-arrays,
+  -modernize-avoid-c-arrays,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -hicpp-no-array-decay,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory,
+  -google-runtime-references,
+  -hicpp-named-parameter,
+  -readability-named-parameter
 
-# Disabled checks that caused corruption:
-# - readability-convert-member-functions-to-static (DANGEROUS - added incorrect 'static')
-# - modernize-use-nodiscard (caused formatting issues)
-# - readability-uppercase-literal-suffix (cosmetic, not worth it)
-# - modernize-* (most are too aggressive for openFrameworks)
+# Disabled checks and reasons:
+# - readability-convert-member-functions-to-static: DANGEROUS - causes corruption
+# - *magic-numbers: Too noisy for graphics/creative coding
+# - *uppercase-literal-suffix: Cosmetic, not worth it
+# - modernize-use-nodiscard: Can cause formatting issues
+# - *c-arrays: openFrameworks uses C-style arrays extensively
+# - *array-to-pointer-decay: Common in openFrameworks/OpenGL code
+# - *pointer-arithmetic: Necessary for some low-level graphics operations
+# - cppcoreguidelines-owning-memory: Would require GSL library
+# - google-runtime-references: Conflicts with openFrameworks API style
+# - *named-parameter: Too strict for simple getters/setters
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

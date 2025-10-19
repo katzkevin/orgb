@@ -8,10 +8,8 @@
 #ifndef press_hpp
 #define press_hpp
 
-#include <stdio.h>
-
-#include <optional>
 #include <iostream>
+#include <optional>
 #include <string>
 
 #include "ofMain.h"

@@ -131,8 +131,10 @@ void ofApp::setup() {
     monitorFrameRateMode = getEnv("MONITOR_FRAME_RATE", "false") == "true";
 
     enableNDI = getEnv("ENABLE_NDI", "true") == "true";
+#ifdef HAS_MQTT
     enableMQTT = getEnv("ENABLE_MQTT", "true") == "true";
     requireMQTT = getEnv("REQUIRE_MQTT", "true") == "true";
+#endif
 
     try {
         exitAfterFrames = std::optional<int>(stoi(getEnv("EXIT_AFTER_FRAMES")));
@@ -183,14 +185,14 @@ void ofApp::setup() {
     ofLogNotice("OSC") << "Online. Port: " << OSC_PORT;
 #endif
 
-#ifndef __EMSCRIPTEN__
+#ifdef HAS_MQTT
     if (enableMQTT) {
         // MQTT
         ofLogNotice("MQTT") << "Setting up MQTT receiver.";
         mqttConnectHandler();
         ofLogNotice("MQTT") << "Set up.";
     }
-#endif  // __EMSCRIPTEN__
+#endif  // HAS_MQTT
 
 #ifndef __EMSCRIPTEN__
     if (enableNDI) {
@@ -270,11 +272,13 @@ void ofApp::update() {
 #ifndef __EMSCRIPTEN__
     // check for waiting messages
     pollForOSCMessages();
+#endif  // __EMSCRIPTEN__
 
+#ifdef HAS_MQTT
     if (enableMQTT) {
         pollForMQTTMessages();
     }
-#endif  // __EMSCRIPTEN__
+#endif  // HAS_MQTT
 }
 
 //--------------------------------------------------------------
@@ -395,7 +399,7 @@ void ofApp::switchToForm(int formIndex) {
 }
 
 void ofApp::exit() {
-#ifndef __EMSCRIPTEN__
+#ifdef HAS_MQTT
     if (enableMQTT && mqttClientConnectedSuccessfully) {
         ofLogVerbose() << "MQTT disconnecting...";
         client.disconnect();

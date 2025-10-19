@@ -8,8 +8,6 @@
 #ifndef KeyState_hpp
 #define KeyState_hpp
 
-#include <stdio.h>
-
 #include <list>
 #include <unordered_map>
 
@@ -19,7 +17,7 @@
 class KeyState {
    public:
     KeyState();
-    virtual ~KeyState() {};
+    ~KeyState() override {};
 
     void cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime);
     void keyReleasedHandler(int key);

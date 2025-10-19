@@ -8,8 +8,6 @@
 #ifndef Sprite_hpp
 #define Sprite_hpp
 
-#include <stdio.h>
-
 #include <glm/glm.hpp>
 
 #include "ofMain.h"
@@ -17,7 +15,7 @@
 class BaseParticle {
    public:
     BaseParticle(glm::vec3 pos, glm::vec3 vel);
-    virtual ~BaseParticle() {};
+    ~BaseParticle() override {};
 
     glm::vec3 position;
     glm::vec3 velocity;

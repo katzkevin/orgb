@@ -13,7 +13,7 @@
 #define MAX_BRANCHES_PER_UNIT_LENGTH 1.0 / 32.0
 #define THUNDER_DECAY_TIME_S 0.25
 
-Thunder::Thunder(std::string _name) : VisualForm(_name) {
+Thunder::Thunder(std::string name) : VisualForm(name) {
     int maxSide = std::max(ofGetWidth(), ofGetHeight());
     int defaultRecursionDepth = int(floor(std::log2(maxSide)));
     parameters.add(recursionDepth.set("recursionDepth", defaultRecursionDepth, 0, defaultRecursionDepth * 1.5));

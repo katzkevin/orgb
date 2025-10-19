@@ -8,8 +8,6 @@
 #ifndef Utilities_hpp
 #define Utilities_hpp
 
-#include <stdio.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <optional>

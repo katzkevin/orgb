@@ -8,14 +8,12 @@
 #ifndef NoiseGrid_hpp
 #define NoiseGrid_hpp
 
-#include <stdio.h>
-
 #include "Shape.hpp"
 
 class NoiseGrid : public Shape {
    public:
     NoiseGrid(std::string name);
-    virtual ~NoiseGrid() {};
+    ~NoiseGrid() override {};
 
    protected:
     void drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press) override;

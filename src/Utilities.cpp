@@ -139,8 +139,8 @@ float deterministicRandomPct(float salt) {
 
 glm::vec3 deterministicRandomUnitVector(float salt) {
     float theta = deterministicRandomPct(salt * 33.3) * 2 * PI;
-    float phi = deterministicRandomPct(salt * 44.4) * 2 * PI;
-    return glm::vec3(sin(theta) * cos(phi), sin(phi) * cos(theta), cos(theta));
+    float phi = deterministicRandomPct(salt * 44.4) * PI;  // phi should be in [0, π] for uniform sphere distribution
+    return sphericalToRectangular(1.0f, theta, phi);
 }
 
 glm::vec3 getRandomlyRotatedVectorRad(glm::vec3 inVector, float radians) {

@@ -8,8 +8,6 @@
 #ifndef DrawContext_hpp
 #define DrawContext_hpp
 
-#include <stdio.h>
-
 #include "Utilities.hpp"
 #include "ofMain.h"
 

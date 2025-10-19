@@ -31,7 +31,7 @@ TEST_F(PressTest, ConstructorInitialization) {
     EXPECT_DOUBLE_EQ(p.tSystemTimeSeconds, pressTime);
     EXPECT_EQ(p.pressType, Press::PressType::PIANO);
     EXPECT_EQ(p.id, TEST_MESSAGE_ID);
-    EXPECT_FALSE(p.getReleaseTime().is_initialized());
+    EXPECT_FALSE(p.getReleaseTime().has_value());
 }
 
 TEST_F(PressTest, GuitarPressType) {
@@ -50,14 +50,14 @@ TEST_F(PressTest, SimpleRelease) {
     Press p(60, 0.8f, pressTime, Press::PressType::PIANO, TEST_MESSAGE_ID);
 
     // Initially not released
-    EXPECT_FALSE(p.getReleaseTime().is_initialized());
+    EXPECT_FALSE(p.getReleaseTime().has_value());
 
     // Release after 0.1 seconds
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     double releaseTime = getSystemTimeSecondsPrecise();
     p.setReleased(releaseTime);
 
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), releaseTime);
 }
 
@@ -91,14 +91,14 @@ TEST_F(PressTest, SustainBeforeRelease) {
     p.setReleased(keyReleaseTime);
 
     // Press should still be sustained (not released yet)
-    EXPECT_FALSE(p.getReleaseTime().is_initialized());
+    EXPECT_FALSE(p.getReleaseTime().has_value());
 
     // Release sustain pedal
     double sustainReleaseTime = pressTime + 0.3;
     p.releaseSustain(sustainReleaseTime);
 
     // Now the press should be released at the sustain release time
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), sustainReleaseTime);
 }
 
@@ -115,13 +115,13 @@ TEST_F(PressTest, SustainAfterKeyRelease) {
     p.setReleased(keyReleaseTime);
 
     // Should not be released yet (sustained)
-    EXPECT_FALSE(p.getReleaseTime().is_initialized());
+    EXPECT_FALSE(p.getReleaseTime().has_value());
 
     // Release sustain pedal
     double sustainReleaseTime = pressTime + 0.2;
     p.releaseSustain(sustainReleaseTime);
 
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), sustainReleaseTime);
 }
 
@@ -141,7 +141,7 @@ TEST_F(PressTest, SustainReleasedBeforeKeyRelease) {
     p.setReleased(keyReleaseTime);
 
     // Should use key release time (sustain had no effect)
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), keyReleaseTime);
 }
 
@@ -157,7 +157,7 @@ TEST_F(PressTest, SustainAfterAlreadyReleased) {
     p.setSustained(pressTime + 0.2);
 
     // Should still be released at original time
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), keyReleaseTime);
 }
 
@@ -176,12 +176,12 @@ TEST_F(PressTest, MultipleSustainCycles) {
     p.setReleased(pressTime + 0.4);
 
     // Should still be sustained
-    EXPECT_FALSE(p.getReleaseTime().is_initialized());
+    EXPECT_FALSE(p.getReleaseTime().has_value());
 
     // Release second sustain
     p.releaseSustain(pressTime + 0.5);
 
-    EXPECT_TRUE(p.getReleaseTime().is_initialized());
+    EXPECT_TRUE(p.getReleaseTime().has_value());
     EXPECT_DOUBLE_EQ(p.getReleaseTime().value(), pressTime + 0.5);
 }
 

@@ -8,8 +8,6 @@
 #ifndef Thunder_hpp
 #define Thunder_hpp
 
-#include <stdio.h>
-
 #include <random>
 
 #include "ColorProvider.hpp"
@@ -33,11 +31,14 @@ class Thunder : public VisualForm {
     ofParameter<bool> lineSegmentDeterministic;
 
    public:
-    Thunder(std::string _name);
-    virtual ~Thunder();
+    Thunder(std::string name);
+    ~Thunder() override;
 
-    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
-    void update(KeyState & ks, ColorProvider & clr);
+    void draw(KeyState void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+              ks, ColorProvider void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+              clr, DrawManager void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm); dm) override;
+    void update(KeyState void update(KeyState & ks, ColorProvider & clr);
+                ks, ColorProvider void update(KeyState & ks, ColorProvider & clr); clr) override;
 };
 
 #endif /* Thunder_hpp */
