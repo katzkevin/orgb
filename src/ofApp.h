@@ -105,18 +105,15 @@ class ofApp : public ofBaseApp {
      */
 #ifndef __EMSCRIPTEN__
     ofxMQTT client;
-#endif
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
     void pollForMQTTMessages();
-#ifndef __EMSCRIPTEN__
     void mqttOnMessage(ofxMQTTMessage & msg);
-#endif
     void mqttOnOnline();
     void mqttOnOffline();
-
     void dumpSettingsToMqtt();
     bool mqttMessageEncountered;  // TODO Document. This was one message per frame before this for some reason.
+#endif  // __EMSCRIPTEN__
 
     bool enableMQTT;
     bool requireMQTT;
@@ -127,8 +124,8 @@ class ofApp : public ofBaseApp {
      */
 #ifndef __EMSCRIPTEN__
     ofxOscReceiver receiver;
-#endif
     void pollForOSCMessages();
+#endif  // __EMSCRIPTEN__
 
     /*
      * Root IO

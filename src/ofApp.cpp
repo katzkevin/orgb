@@ -183,12 +183,14 @@ void ofApp::setup() {
     ofLogNotice("OSC") << "Online. Port: " << OSC_PORT;
 #endif
 
+#ifndef __EMSCRIPTEN__
     if (enableMQTT) {
         // MQTT
         ofLogNotice("MQTT") << "Setting up MQTT receiver.";
         mqttConnectHandler();
         ofLogNotice("MQTT") << "Set up.";
     }
+#endif  // __EMSCRIPTEN__
 
 #ifndef __EMSCRIPTEN__
     if (enableNDI) {
@@ -265,12 +267,14 @@ void ofApp::update() {
     // NOTE: Disable homeostasis
     // ks.circumplexHomeostasis();
 
+#ifndef __EMSCRIPTEN__
     // check for waiting messages
     pollForOSCMessages();
 
     if (enableMQTT) {
         pollForMQTTMessages();
     }
+#endif  // __EMSCRIPTEN__
 }
 
 //--------------------------------------------------------------

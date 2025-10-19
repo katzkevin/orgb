@@ -31,9 +31,11 @@ void ofApp::keyPressed(int key) {
             break;
         case '`':
             dumpSettingsToJsonFile();
+#ifndef __EMSCRIPTEN__
             if (enableMQTT) {
                 dumpSettingsToMqtt();
             }
+#endif  // __EMSCRIPTEN__
             break;
         case 'q':
             ofSetWindowShape(160, 32);

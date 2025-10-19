@@ -104,7 +104,7 @@ bool ofApp::ndiUpdateHandler() {
             pixels_.clear();
         }
         double scheduledAttemptDue =
-            (lastNdiReconnectAttempt.is_initialized() ? lastNdiReconnectAttempt.is_initialized() : 0) +
+            (lastNdiReconnectAttempt.has_value() ? lastNdiReconnectAttempt.value() : 0) +
             stoi(getEnv("NDI_SCAN_INTERVAL_SECONDS", "10"));
         if (scheduledAttemptDue < getSystemTimeSecondsPrecise()) {
             ofLogVerbose("NDI")
