@@ -39,7 +39,7 @@ class ShaderPipeline {
     // Effect access
     std::shared_ptr<ShaderEffect> getEffect(const std::string & name);
     std::shared_ptr<ShaderEffect> getEffectAt(size_t index);
-    size_t getEffectCount() const { return effects.size(); }
+     [[nodiscard]] size_t getEffectCount() const { return effects.size(); }
     std::vector<std::shared_ptr<ShaderEffect>> & getEffects() { return effects; }
 
     // Bulk enable/disable
@@ -57,16 +57,16 @@ class ShaderPipeline {
 
     // FBO management
     void resize(int width, int height);
-    int getWidth() const { return width; }
-    int getHeight() const { return height; }
+    [[nodiscard]] int getWidth() const { return width; }
+    [[nodiscard]] int getHeight() const { return height; }
 
     // Debug/Info
     void printPipeline() const;
-    std::string getPipelineSummary() const;
+    [[nodiscard]] std::string getPipelineSummary() const;
 
     // Statistics
-    int getEnabledEffectCount() const;
-    bool hasEnabledEffects() const;
+    [[nodiscard]] int getEnabledEffectCount() const;
+    [[nodiscard]] bool hasEnabledEffects() const;
 
    private:
     // Effect stack (applied in order)

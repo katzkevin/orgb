@@ -20,10 +20,10 @@
 class BaseParticles : public VisualForm {
    public:
     BaseParticles(std::string name);
-    virtual ~BaseParticles() {};
+    virtual ~BaseParticles() = default;
 
-    void update(KeyState & ks, ColorProvider & clr);
-    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+    void update(KeyState & ks, ColorProvider & clr) override;
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
 
    protected:
     ofParameter<float> particleRate;
@@ -44,7 +44,7 @@ class BaseParticles : public VisualForm {
     // WARNING: Do not treat particles' keys as up to date. They're saved at the moment they're inserted, so they never
     // see, for example, the invocation of a t_released. This is why shapes' release ADSR worked but particles' did not.
     // New: Use press id.
-    std::unordered_multimap<unsigned int, Particle> particles;
+    std::unordered_multimap<unsigned int, Particle> particles{};
 
     void renderPixelsForPress(ColorProvider & clr, KeyState & ks, const Press & p);
 

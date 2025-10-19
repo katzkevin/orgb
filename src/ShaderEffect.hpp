@@ -40,7 +40,7 @@ struct ShaderParameter {
 
     // Factory methods
     static ShaderParameter Float(const std::string & name, const std::string & uniformName, float defaultValue,
-                                 float min = 0.0f, float max = 1.0f) {
+                                 float min = 0.0F, float max = 1.0F) {
         ShaderParameter p;
         p.name = name;
         p.uniformName = uniformName;
@@ -72,7 +72,7 @@ struct ShaderParameter {
         return p;
     }
 
-    static ShaderParameter Color(const std::string & name, const std::string & uniformName, ofFloatColor defaultValue) {
+    static ShaderParameter color(const std::string & name, const std::string & uniformName, ofFloatColor defaultValue) {
         ShaderParameter p;
         p.name = name;
         p.uniformName = uniformName;
@@ -95,21 +95,21 @@ class ShaderEffect {
     virtual void apply(ofFbo & input, ofFbo & output);
 
     // Effect state
-    bool isEnabled() const { return enabled; }
+    [[nodiscard]] bool isEnabled() const { return enabled; }
     void setEnabled(bool state) { enabled = state; }
     void toggle() { enabled = !enabled; }
 
     // Metadata
-    std::string getName() const { return effectName; }
-    std::string getShaderName() const { return shaderFileName; }
+    [[nodiscard]] std::string getName() const { return effectName; }
+    [[nodiscard]] std::string getShaderName() const { return shaderFileName; }
 
     // Parameter access
     std::vector<ShaderParameter> & getParameters() { return parameters; }
-    const std::vector<ShaderParameter> & getParameters() const { return parameters; }
+    [[nodiscard]] const std::vector<ShaderParameter> & getParameters() const { return parameters; }
 
     // Validation
-    bool isValid() const { return shaderLoaded && shaderCompiled; }
-    std::string getErrorMessage() const { return errorMessage; }
+    [[nodiscard]] bool isValid() const { return shaderLoaded && shaderCompiled; }
+    [[nodiscard]] std::string getErrorMessage() const { return errorMessage; }
 
    protected:
     // Subclasses override this to configure shader uniforms

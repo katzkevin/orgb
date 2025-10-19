@@ -24,12 +24,12 @@ class Field : public VisualForm {
    public:
     float width;
     float height;
-    float depth;
+    float depth{};
 
     Flock flock;
 
     Field(std::string name);
-    virtual ~Field() {};
+    virtual ~Field() = default;
     void setup() override;
 
     void update(KeyState & ks, ColorProvider & clr) override;
@@ -37,11 +37,11 @@ class Field : public VisualForm {
     void newPressHandler(ColorProvider & clr, Press & p) override;
 
     void adjustFlockPopulation();
-    void rotateFlockHueOverTime();
-    ofVec3f steerAccordingToKeyPresses(KeyState & ks);
+    static void rotateFlockHueOverTime();
+    static ofVec3f steerAccordingToKeyPresses(KeyState & ks);
 
-    float generateNoisySpriteSize(float salt);
-    ofColor generateNoisySpriteColor(float salt);
+    static float generateNoisySpriteSize(float salt);
+    static ofColor generateNoisySpriteColor(float salt);
 
     void backgroundChanged(ofColor & c);
     void spriteColorChanged(ofColor & c);
@@ -86,7 +86,7 @@ class Field : public VisualForm {
     ofParameter<bool> noiseVisualize;
 
    protected:
-    void translateField();
+    void translateField() const;
 };
 
 #endif /* Field_hpp */

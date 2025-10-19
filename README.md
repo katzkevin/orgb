@@ -61,7 +61,7 @@ just shader-test
 just shader-check
 ```
 
-includes film grain and scanlines effects. see [SHADERS.md](SHADERS.md) for usage.
+includes chromatic aberration, displacement warping, feedback/echo, VHS glitch, film grain, and scanlines. built for chaos and expressiveness, not clean processing vibes. see [SHADERS.md](SHADERS.md) for usage and audio-reactive examples.
 
 ## testing
 

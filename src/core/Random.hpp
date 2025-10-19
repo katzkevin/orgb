@@ -4,8 +4,8 @@
 #include <chrono>
 #include <random>
 
-namespace orgb {
-namespace core {
+
+namespace orgb::core {
 
 /**
  * Random number generator using C++ <random>
@@ -52,7 +52,9 @@ class Random {
     /**
      * Generate a random seed value (for creating deterministic random generators)
      */
-    static unsigned int generateSeed() { return static_cast<unsigned int>(uniformFloat(0.0f, 4096.0f)); }
+    static unsigned int generateSeed() {
+        return static_cast<unsigned int>(uniformFloat(0.0f, static_cast<float>(std::numeric_limits<unsigned int>::max())));
+    }
 
    private:
     // Get the thread-local random engine
@@ -63,7 +65,7 @@ class Random {
     }
 };
 
-}  // namespace core
-}  // namespace orgb
+} // namespace orgb::core
+
 
 #endif  // ORGB_CORE_RANDOM_HPP

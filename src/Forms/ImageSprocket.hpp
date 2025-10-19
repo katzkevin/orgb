@@ -23,14 +23,14 @@
 class ImageSprocket : public VisualForm {
    public:
     ImageSprocket();
-    virtual ~ImageSprocket() {};
+    virtual ~ImageSprocket() = default;
 
-    void setup();
-    void update(KeyState & ks, ColorProvider & clr);
-    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+    void setup() override;
+    void update(KeyState & ks, ColorProvider & clr) override;
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
 
-    void newPressHandler(ColorProvider & clr, Press & p);
-    void pressHandler(Press & p);
+    void newPressHandler(ColorProvider & clr, Press & p) override;
+    void pressHandler(Press & p) override;
 
     void updateUi();
     void loadPhotos(int count);

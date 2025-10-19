@@ -10,7 +10,7 @@
 
 using json = nlohmann::json;
 
-void ofApp::pollForOSCMessages() {
+void OfApp::pollForOSCMessages() {
     double t0 = getSystemTimeSecondsPrecise();
     while (receiver.hasWaitingMessages()) {
         ofxOscMessage m;

@@ -16,7 +16,7 @@
 class GravityParticles : public BaseParticles {
    public:
     GravityParticles(std::string name);
-    virtual ~GravityParticles() {};
+    ~GravityParticles() override  = default;
 
     void update(KeyState & ks, ColorProvider & clr) override;
 
@@ -26,7 +26,7 @@ class GravityParticles : public BaseParticles {
 
    protected:
     void createParticlesForPress(Press & press, int numberOfParticlesToCreate, ofColor c, float arousalPct) override;
-    virtual ofVec3f startPositionForPress(const Press & p) override;
+    ofVec3f startPositionForPress(const Press & p) override;
 
     void pruneParticles() override;
 };

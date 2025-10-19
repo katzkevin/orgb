@@ -60,35 +60,35 @@
 
 #define AMPERAGE_TEST_DURATION_S 3
 #define DEBUG_MODE_DURATION_S 5
-#define IDLE_DURATION_S 30 * 60
+#define IDLE_DURATION_S (30 * 60)
 
 // TODO x2 to shut warnings up
 #define TARGET_FRAME_RATE 60
-#define TARGET_FRAME_TIME_S 1.0 / TARGET_FRAME_RATE * 2
+#define TARGET_FRAME_TIME_S (1.0 / TARGET_FRAME_RATE)
 #define WARN_INTERVAL_DENOMINATOR_UPDATE_FORM 1
 #define WARN_INTERVAL_DENOMINATOR_OSC_IO 4   // TODO Speed this up, or diff't thread
 #define WARN_INTERVAL_DENOMINATOR_MQTT_IO 4  // TODO Speed this up, or diff't thread
 #define WARN_INTERVAL_DENOMINATOR_DRAW 1
 #define WARN_INTERVAL_DENOMINATOR_NDI_SCAN 64
 
-class ofApp : public ofBaseApp {
+class OfApp : public ofBaseApp {
    public:
-    void setup();
-    void update();
-    void draw();
+    void setup() override;
+    void update() override;
+    void draw() override;
 
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y);
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void mouseEntered(int x, int y);
-    void mouseExited(int x, int y);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
-    void exit();
+    void keyPressed(int key) override;
+    void keyReleased(int key) override;
+    void mouseMoved(int x, int y) override;
+    void mouseDragged(int x, int y, int button) override;
+    void mousePressed(int x, int y, int button) override;
+    void mouseReleased(int x, int y, int button) override;
+    void mouseEntered(int x, int y) override;
+    void mouseExited(int x, int y) override;
+    void windowResized(int w, int h) override;
+    void dragEvent(ofDragInfo dragInfo) override;
+    void gotMessage(ofMessage msg) override;
+    void exit() override;
 
     // Utility for AppIO
     ofParameterGroup * getParameterGroup(std::string groupName);
@@ -128,7 +128,7 @@ class ofApp : public ofBaseApp {
     std::string dumpSettingsToJsonFile();
     void loadSettingsFromJsonString(std::string payloadString);
     void noteOnHandler(int key, float velocityPct, unsigned int messageId, bool ephemeral = false);
-    void noteOffHandler(int key);
+    static void noteOffHandler(int key);
 
     /*
      * LED Matrices
@@ -136,7 +136,7 @@ class ofApp : public ofBaseApp {
 #ifdef TARGET_RASPBERRY_PI
     ofxRpiLED led;
 #endif
-    int initializeLEDMatrices();
+    static int initializeLEDMatrices();
     void brightnessUpdateHandler();
     ofParameter<float> ledBrightnessPct;      // Out of 100%, cast to uint8_t
     ofParameter<float> idleLedBrightnessPct;  // Out of 100%
@@ -159,7 +159,7 @@ class ofApp : public ofBaseApp {
     void drawLogo(uint8_t alpha, float verticalOffsetFromCenter);
     void drawWebsite(uint8_t alpha, float verticalOffsetFromCenter, std::string s);
 
-    ofRectangle userApparentDimensions();  // TODO incorporate into logo
+    static ofRectangle userApparentDimensions();  // TODO incorporate into logo
     int fontSize;
 
     /*
@@ -167,7 +167,7 @@ class ofApp : public ofBaseApp {
      */
     std::vector<std::shared_ptr<VisualForm>> forms;
     int currentFormIndex;
-    void initializeForms();
+    static void initializeForms();
     void switchToForm(int formIndex);
     void previousForm();
     void nextForm();
@@ -218,8 +218,8 @@ class ofApp : public ofBaseApp {
     ofPixels pixels_;
 
     bool ndiUpdateHandler();
-    bool ndiDrawHandler();
-    bool ndiScanForVideoSources();
+    static bool ndiDrawHandler();
+    static bool ndiScanForSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
 

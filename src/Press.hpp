@@ -28,19 +28,20 @@ class Press {
 
     Press(int n, float vPct, double pressTime, PressType pt, unsigned int messageId);
 
-    boost::optional<double> getReleaseTime() const;
+    [[nodiscard]] boost::optional<double> getReleaseTime() const;
     void setReleased(double time);
 
     void setSustained(double sustainTimeS);
     void releaseSustain(double sustainReleasedTimeS);
 
-    double audibleAmplitudePct(double attackTimeS, double decayTimeS, double sustainLevelPct,
-                               double releaseTimeS) const;
+    [[nodiscard]] double audibleAmplitudePct(double attackTimeS, double decayTimeS, double sustainLevelPct,
+                                              double releaseTimeS) const;
 
     // Percent across its entire range
-    float noteOverallPct() const;
+    [[nodiscard]] float noteOverallPct() const;
+
     // Percent across A-G#
-    float noteChromaticPct() const;
+    [[nodiscard]] float noteChromaticPct() const;
 
     bool operator<(const Press & other) const { return id < other.id; }
 

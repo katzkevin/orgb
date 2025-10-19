@@ -5,8 +5,8 @@
 #include <cmath>
 #include <limits>
 
-namespace orgb {
-namespace core {
+
+namespace orgb::core {
 
 /**
  * Mathematical utility functions
@@ -37,11 +37,9 @@ class MathUtils {
         if (clampResult) {
             if (outputMax < outputMin) {
                 return clamp(outVal, outputMax, outputMin);
-            } else {
-                return clamp(outVal, outputMin, outputMax);
             }
+            return clamp(outVal, outputMin, outputMax);
         }
-
         return outVal;
     }
 
@@ -68,7 +66,9 @@ class MathUtils {
      * @param epsilon Tolerance (default: 1e-6f)
      * @return True if values are equal within epsilon
      */
-    static bool floatEqual(float a, float b, float epsilon = 1e-6f) { return std::abs(a - b) < epsilon; }
+    static bool floatEqual(float a, float b, float epsilon = 1e-6f) {
+        return std::abs(a - b) < epsilon;
+    }
 
     /**
      * Checks if two doubles are equal within epsilon tolerance
@@ -78,7 +78,9 @@ class MathUtils {
      * @param epsilon Tolerance (default: 1e-9)
      * @return True if values are equal within epsilon
      */
-    static bool floatEqual(double a, double b, double epsilon = 1e-9) { return std::abs(a - b) < epsilon; }
+    static bool floatEqual(double a, double b, double epsilon = 1e-9) {
+        return std::abs(a - b) < epsilon;
+    }
 
     /**
      * Linear interpolation between two values
@@ -103,12 +105,14 @@ class MathUtils {
      */
     template <typename T>
     static float normalize(T value, T min, T max) {
-        if (max == min) return 0.0f;
+        if (max == min) {
+            return 0.0f;
+        }
         return static_cast<float>(value - min) / static_cast<float>(max - min);
     }
 };
 
-}  // namespace core
-}  // namespace orgb
+}  // namespace orgb::core
+
 
 #endif  // ORGB_CORE_MATH_UTILS_HPP
