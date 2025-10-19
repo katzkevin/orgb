@@ -71,7 +71,7 @@
 #define WARN_INTERVAL_DENOMINATOR_DRAW 1
 #define WARN_INTERVAL_DENOMINATOR_NDI_SCAN 64
 
-class OfApp : public ofBaseApp {
+class ofApp : public ofBaseApp {
    public:
     void setup() override;
     void update() override;
@@ -128,7 +128,7 @@ class OfApp : public ofBaseApp {
     std::string dumpSettingsToJsonFile();
     void loadSettingsFromJsonString(std::string payloadString);
     void noteOnHandler(int key, float velocityPct, unsigned int messageId, bool ephemeral = false);
-    static void noteOffHandler(int key);
+    void noteOffHandler(int key);
 
     /*
      * LED Matrices
@@ -167,7 +167,7 @@ class OfApp : public ofBaseApp {
      */
     std::vector<std::shared_ptr<VisualForm>> forms;
     int currentFormIndex;
-    static void initializeForms();
+    void initializeForms();
     void switchToForm(int formIndex);
     void previousForm();
     void nextForm();
@@ -218,8 +218,8 @@ class OfApp : public ofBaseApp {
     ofPixels pixels_;
 
     bool ndiUpdateHandler();
-    static bool ndiDrawHandler();
-    static bool ndiScanForSources();
+    bool ndiDrawHandler();
+    bool ndiScanForVideoSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
 

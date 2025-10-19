@@ -37,11 +37,11 @@ class Field : public VisualForm {
     void newPressHandler(ColorProvider & clr, Press & p) override;
 
     void adjustFlockPopulation();
-    static void rotateFlockHueOverTime();
-    static ofVec3f steerAccordingToKeyPresses(KeyState & ks);
+    void rotateFlockHueOverTime();
+    ofVec3f steerAccordingToKeyPresses(KeyState & ks);
 
-    static float generateNoisySpriteSize(float salt);
-    static ofColor generateNoisySpriteColor(float salt);
+    float generateNoisySpriteSize(float salt);
+    ofColor generateNoisySpriteColor(float salt);
 
     void backgroundChanged(ofColor & c);
     void spriteColorChanged(ofColor & c);
