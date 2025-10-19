@@ -18,7 +18,7 @@ class LightningBolt {
     LightningBolt(ofVec3f from, ofVec3f to, int depth, float jitterUnit, float branchingFactor, float seed);
     virtual ~LightningBolt() = default;
 
-    static void draw(ofColor color);
+    void draw(ofColor color);
 
     double tCreatedSeconds;
 

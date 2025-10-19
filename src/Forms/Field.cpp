@@ -143,7 +143,7 @@ void Field::update(KeyState & ks, ColorProvider & clr) {
     flock.update(ofGetLastFrameTime(), ofGetElapsedTimef());
 }
 
-void Field::translateField() {
+void Field::translateField() const {
     // Push to the right by the window width / 2 to center,
     // Push down by the window height / 2 to center
     // Push away 1/4 of depth to reduce in-your-face-ness
