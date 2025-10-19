@@ -1,0 +1,47 @@
+# Lefthook configuration for orgb project
+# See: https://github.com/evilmartians/lefthook
+
+pre-commit:
+  commands:
+    clang-tidy:
+      glob: "*.{cpp,hpp}"
+      run: |
+        # Only run on staged C++ files in src/ directory
+        STAGED_CPP_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^src/.*\.(cpp|hpp)$' || true)
+
+        if [ -z "$STAGED_CPP_FILES" ]; then
+          echo "No C++ files to check with clang-tidy"
+          exit 0
+        fi
+
+        echo "Running clang-tidy on staged C++ files..."
+
+        # Check if clang-tidy is available
+        if ! command -v /opt/homebrew/opt/llvm@19/bin/clang-tidy &> /dev/null; then
+          echo "Warning: clang-tidy not found at /opt/homebrew/opt/llvm@19/bin/clang-tidy"
+          echo "Skipping clang-tidy check"
+          exit 0
+        fi
+
+        # Check if compile_commands.json exists
+        if [ ! -f "compile_commands.json" ]; then
+          echo "Warning: compile_commands.json not found"
+          echo "Run: bear -- make -j4"
+          echo "Skipping clang-tidy check"
+          exit 0
+        fi
+
+        # Run clang-tidy on each staged file
+        EXIT_CODE=0
+        for file in $STAGED_CPP_FILES; do
+          echo "Checking: $file"
+          /opt/homebrew/opt/llvm@19/bin/clang-tidy "$file" 2>&1 | grep -E "warning:|error:" || true
+
+          # Note: We don't fail the commit on warnings, just show them
+          # Uncomment the following to fail on errors:
+          # if [ ${PIPESTATUS[0]} -ne 0 ]; then
+          #   EXIT_CODE=1
+          # fi
+        done
+
+        exit $EXIT_CODE

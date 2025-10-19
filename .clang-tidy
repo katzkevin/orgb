@@ -1,0 +1,55 @@
+---
+# Conservative clang-tidy configuration for openFrameworks projects
+# Focus on safety and correctness, avoid aggressive auto-fixes
+
+Checks: >
+  -*,
+  readability-identifier-naming,
+  readability-inconsistent-declaration-parameter-name,
+  bugprone-bool-pointer-implicit-conversion,
+  bugprone-dangling-handle,
+  bugprone-integer-division,
+  bugprone-misplaced-widening-cast,
+  bugprone-undefined-memory-manipulation,
+  bugprone-use-after-move,
+  cert-dcl50-cpp,
+  cert-err34-c,
+  cert-err52-cpp,
+  modernize-use-nullptr,
+  modernize-use-override,
+  performance-faster-string-find,
+  performance-for-range-copy,
+  performance-implicit-conversion-in-loop,
+  performance-inefficient-vector-operation,
+  performance-unnecessary-copy-initialization
+
+# Disabled checks that caused corruption:
+# - readability-convert-member-functions-to-static (DANGEROUS - added incorrect 'static')
+# - modernize-use-nodiscard (caused formatting issues)
+# - readability-uppercase-literal-suffix (cosmetic, not worth it)
+# - modernize-* (most are too aggressive for openFrameworks)
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.ParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: ''
+  - key: readability-identifier-naming.ProtectedMemberSuffix
+    value: ''
+  - key: modernize-use-override.AllowOverrideAndFinal
+    value: 'false'
+  - key: modernize-use-override.OverrideSpelling
+    value: 'override'
+  - key: modernize-use-override.FinalSpelling
+    value: 'final'
+
+# Only apply fixes for very safe checks
+WarningsAsErrors: ''
+HeaderFilterRegex: 'src/.*'
+FormatStyle: file
