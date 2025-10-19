@@ -79,9 +79,9 @@ void Lotus::rotatingPastelLotus() {
     float valueJitter = 20.0;
 
     for (unsigned int lap = laps; lap > 0; --lap) {
-        glPushMatrix();
+        ofPushMatrix();
         int flip = lap % 2 ? -1.0 : 1.0;
-        glRotatef(ofGetFrameNum() / 30.0 * flip, 0, 0, 1);
+        ofRotateZDeg(ofGetFrameNum() / 30.0 * flip);
         for (int i = 0; i < steps; i++) {
             hue = ofWrap(hue + (ofSignedNoise(i + 0.5) * hueJitter), 0.0, 255.0);
             saturation = ofWrap(saturation + (ofSignedNoise(i + 10.5) * saturationJitter), 0.0, 255.0);
@@ -102,9 +102,9 @@ void Lotus::rotatingPastelLotus() {
             }
 
             drawLeaf(lap * scalePerLap * smallestScale, color, static_cast<float>(lap * steps + i));
-            glRotatef(rotateDegrees, 0, 0, 1);
+            ofRotateZDeg(rotateDegrees);
         }
-        glPopMatrix();
+        ofPopMatrix();
     }
     ofPopStyle();
 }
