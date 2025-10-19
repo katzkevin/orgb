@@ -9,7 +9,7 @@
 class Particle : public BaseParticle {
    public:
     Particle(glm::vec3 pos, glm::vec3 vel, ofColor c);
-    virtual ~Particle() {};
+    ~Particle() override {};
 
     void setColor(ofColor c);
     void draw(float drawRadius);

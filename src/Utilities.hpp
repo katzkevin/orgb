@@ -56,8 +56,8 @@ void warnOnSlow(std::string label, double t0, float thresholdSeconds, unsigned i
 void monitorFrameRate(float targetFrameRate, unsigned int frameNum, float elapsedTimeS, float currentFrameRate,
                       int perNFrames = 30, float warmupTimeS = 5.0);
 
-int positive_modulo(int x, int y);
-float positive_modulo(float x, float y);
+int positiveModulo(int x, int y);
+float positiveModulo(float x, float y);
 glm::vec2 polarToRectangular(float r, float thetaRadians);
 glm::vec3 sphericalToRectangular(float r, float thetaRadians, float phiRadians);
 float exponentialMap(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp = true,

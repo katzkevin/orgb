@@ -114,7 +114,7 @@ void ColorProvider::setPalette(float baseHue, float baseSaturation, float baseVa
 
     for (int i = 0; i < NUM_NOTES; i++) {
         colors.push_back(ofColor::fromHsb(static_cast<int>(h), static_cast<int>(s), static_cast<int>(v)));
-        h = positive_modulo(h + hueStepSize, 256.0f);
+        h = positiveModulo(h + hueStepSize, 256.0f);
         s = orgb::core::MathUtils::clamp(s + satStepSize, 0.0f, 255.0f);
         v = orgb::core::MathUtils::clamp(v + valStepSize, 0.0f, 255.0f);
     }

@@ -15,7 +15,7 @@
 class GlowShape : public Shape {
    public:
     GlowShape(std::string name);
-    virtual ~GlowShape() {};
+    ~GlowShape() override {};
 };
 
 #endif /* FatGlowShape_hpp */

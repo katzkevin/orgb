@@ -28,7 +28,7 @@ class Shape : public VisualForm {
     Shape(std::string name);
     virtual ~Shape() {};
 
-    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
     ofPath shape(int sideCount, float radius);
     float calculateRadius(Press & p);
 

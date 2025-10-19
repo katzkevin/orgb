@@ -142,13 +142,13 @@ void ImageSprocket::pressHandler(Press & p) {
 void ImageSprocket::newPressHandler(ColorProvider & clr, Press & p) {
     switch (p.note) {
         case 'i':
-            index0 = positive_modulo(index0 - 1, static_cast<int>(images.size()));
+            index0 = positiveModulo(index0 - 1, static_cast<int>(images.size()));
             break;
         case 'o':
             index0 = (index0 + 1) % static_cast<int>(images.size());
             break;
         case 'k':
-            index1 = positive_modulo(index1 - 1, static_cast<int>(images.size()));
+            index1 = positiveModulo(index1 - 1, static_cast<int>(images.size()));
             break;
         case 'l':
             index1 = (index1 + 1) % static_cast<int>(images.size());
