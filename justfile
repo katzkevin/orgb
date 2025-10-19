@@ -24,12 +24,12 @@ build-macos-debug:
 # Build for Emscripten/WebAssembly (browser)
 build-emscripten:
     @just _setup-platform emscripten
-    make Release
+    CC=/private/tmp/emsdk/upstream/emscripten/emcc CXX=/private/tmp/emsdk/upstream/emscripten/em++ make Release
 
 # Build for Emscripten in Debug mode
 build-emscripten-debug:
     @just _setup-platform emscripten
-    make Debug
+    CC=/private/tmp/emsdk/upstream/emscripten/emcc CXX=/private/tmp/emsdk/upstream/emscripten/em++ make Debug
 
 # Build the project in Release mode (defaults to macOS)
 build:
@@ -77,7 +77,7 @@ run-debug: build-macos-debug _prepare-ndi
 # Build and serve Emscripten build in browser
 run-emscripten: build-emscripten
     @echo "Starting web server for Emscripten build..."
-    @echo "Open http://localhost:8000/bin/em/orgb/ in your browser"
+    @echo "Open http://localhost:8000/orgb/ in your browser"
     @cd bin/em && python3 -m http.server 8000
 
 # Clean and rebuild
