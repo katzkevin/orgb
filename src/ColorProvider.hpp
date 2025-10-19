@@ -15,7 +15,7 @@
 class ColorProvider {
    public:
     ColorProvider();
-    ~ColorProvider() override {};
+    ~ColorProvider() = default;
     ofColor color(const Press & p) const;
     ofColor color(const Press & p, double opacityPct) const;
 

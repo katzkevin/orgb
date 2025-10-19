@@ -6,9 +6,10 @@
 **.DS_Store
   
 .svn/  
-obj/  
-build/  
+obj/
+build/
 bin/*.app
+bin/em/
 bin/data/imagesprocket/descartes/*
 bin/data/imagesprocket/foreground/*
 

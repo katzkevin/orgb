@@ -17,6 +17,7 @@
 class VisualForm {
    public:
     VisualForm(std::string name);
+    virtual ~VisualForm() = default;
     virtual void setup() {};
     virtual void update(KeyState & ks, ColorProvider & clr) {};
     virtual void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) = 0;  // ABSTRACT!

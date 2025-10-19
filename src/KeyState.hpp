@@ -17,7 +17,7 @@
 class KeyState {
    public:
     KeyState();
-    ~KeyState() override {};
+    ~KeyState() = default;
 
     void cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime);
     void keyReleasedHandler(int key);

@@ -17,7 +17,7 @@
 class Flock {
    public:
     Flock();
-    ~Flock() override {};
+    ~Flock() = default;
 
     void update(float dt, float elapsedTimeF);
 

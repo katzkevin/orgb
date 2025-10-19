@@ -28,11 +28,16 @@ Checks: >
   -cppcoreguidelines-owning-memory,
   -google-runtime-references,
   -hicpp-named-parameter,
-  -readability-named-parameter
+  -readability-named-parameter,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -modernize-use-designated-initializers,
+  -modernize-use-constraints
 
 # Disabled checks and reasons:
 # - readability-convert-member-functions-to-static: DANGEROUS - causes corruption
-# - *magic-numbers: Too noisy for graphics/creative coding
+# - *magic-numbers: Too noisy for graphics/creative coding (thousands of warnings)
 # - *uppercase-literal-suffix: Cosmetic, not worth it
 # - modernize-use-nodiscard: Can cause formatting issues
 # - *c-arrays: openFrameworks uses C-style arrays extensively
@@ -41,6 +46,11 @@ Checks: >
 # - cppcoreguidelines-owning-memory: Would require GSL library
 # - google-runtime-references: Conflicts with openFrameworks API style
 # - *named-parameter: Too strict for simple getters/setters
+# - modernize-use-trailing-return-type: Cosmetic style preference (8512 warnings)
+# - readability-identifier-length: Short names common in graphics (5525 warnings)
+# - cppcoreguidelines-non-private-member-variables-in-classes: oF design pattern
+# - modernize-use-designated-initializers: C++20 feature, not needed
+# - modernize-use-constraints: C++20 concepts, too advanced for this project
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

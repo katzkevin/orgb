@@ -15,7 +15,7 @@
 class BaseParticle {
    public:
     BaseParticle(glm::vec3 pos, glm::vec3 vel);
-    ~BaseParticle() override {};
+    virtual ~BaseParticle() = default;
 
     glm::vec3 position;
     glm::vec3 velocity;
