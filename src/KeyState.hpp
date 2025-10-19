@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 
+#include <list>
 #include <unordered_map>
 
 #include "Press.hpp"
@@ -18,7 +19,7 @@
 class KeyState {
    public:
     KeyState();
-    virtual ~KeyState() = default;
+    virtual ~KeyState() {};
 
     void cleanup(float ttlSecondsAfterRelease, unsigned int currentFrame, double deltaTime);
     void keyReleasedHandler(int key);
@@ -29,36 +30,35 @@ class KeyState {
                                      std::unordered_map<int, unsigned int> messageIds);
     void ephemeralKeyPressedHandler(int key, float velocityPct, unsigned int messageId);
 
-    boost::optional<Press> getActivePress(int key);
-    boost::optional<Press> getMostRecentPress();
+    std::optional<Press> getActivePress(int key);
+    std::optional<Press> getMostRecentPress();
 
-    std::list<Press> presses{}
-    ;
+    std::list<Press> presses;
     const std::list<Press> & allPresses();
     const std::multimap<int, Press> allPressesChromaticGrouped();
     std::list<Press> activePresses();
 
-    std::unordered_map<int, Press> ephemeralPresses{};
+    std::unordered_map<int, Press> ephemeralPresses;
     void decayEphemeralKeypressAmplitudes(double deltaTime);
 
     const std::list<Press> allEphemeralPresses();
     const std::multimap<int, Press> allEphemeralPressesChromaticGrouped();
 
-    boost::optional<double> sustainTimeS;
+    std::optional<double> sustainTimeS;
     void sustainOnHandler(double timeSeconds);
     void sustainOffHandler(double timeSeconds);
 
     // Return True iff sequential c, c#, d, d#, e are pressed
-    boost::optional<int> getMetaInput();
+    std::optional<int> getMetaInput();
 
-    [[nodiscard]] float valencePct() const;
-    [[nodiscard]] float arousalPct() const;
+    float valencePct() const;
+    float arousalPct() const;
     void setArousalPct(float arousalPct);
     void setValencePct(float valencePct);
     void circumplexHomeostasis();
 
-    [[nodiscard]] float arousalGain() const;
-    [[nodiscard]] float valenceGain() const;
+    float arousalGain() const;
+    float valenceGain() const;
 
     unsigned int randomSeed;
 
@@ -71,10 +71,10 @@ class KeyState {
     ofParameter<float> valenceKurtosis;
 
    private:
-    float arousal{0.5};
-    boost::optional<float> arousalLastUpdateS;
-    float valence{0.5};
-    boost::optional<float> valenceLastUpdateS;
+    float arousal;
+    std::optional<float> arousalLastUpdateS;
+    float valence;
+    std::optional<float> valenceLastUpdateS;
 };
 
 #endif /* KeyState_hpp */

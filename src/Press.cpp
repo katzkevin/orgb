@@ -13,12 +13,11 @@
 #include <algorithm>
 
 #include "Utilities.hpp"
-#include "boost/functional/hash.hpp"
 #include "core/MathUtils.hpp"
 
 std::ostream & operator<<(std::ostream & os, const Press & p) {
     os << "(" << p.note << ", " << p.velocityPct << ", " << p.tSystemTimeSeconds << ")";
-    //    if (p.sustainTimeS.is_initialized()) {
+    //    if (p.sustainTimeS.has_value()) {
     //        os << " (sustained @ " << ;
     //    }
     return os;
@@ -32,18 +31,18 @@ Press::Press(int n, float vPct, double pressTime, PressType pt, unsigned int mes
     pressType = pt;
 }
 
-boost::optional<double> Press::getReleaseTime() const {
-    if (!t_released.is_initialized()) {
+std::optional<double> Press::getReleaseTime() const {
+    if (!t_released.has_value()) {
         // Still held
-        return boost::none;
+        return std::nullopt;
     } else {
         // Released
-        if (!sustainTimeS.is_initialized()) {
+        if (!sustainTimeS.has_value()) {
             // This was never sustained
             return t_released;
         } else {
             // This was, at some point sustained
-            if (sustainReleasedTimeS.is_initialized()) {
+            if (sustainReleasedTimeS.has_value()) {
                 // This was released
                 if (sustainReleasedTimeS.value() < t_released.value()) {
                     // Sustain was released before the key was released. No impact.
@@ -54,36 +53,36 @@ boost::optional<double> Press::getReleaseTime() const {
                 }
             } else {
                 // This released key is still sustained
-                return boost::none;  // could also return sustainReleasedTimeS but that's less immediately obvious
+                return std::nullopt;  // could also return sustainReleasedTimeS but that's less immediately obvious
             }
         }
     }
 }
 
-void Press::setReleased(double time) { t_released = boost::optional<double>(time); }
+void Press::setReleased(double time) { t_released = std::optional<double>(time); }
 
 void Press::setSustained(double timeS) {
     // NOTE: A key can only be sustained if it hasn't been released.
-    if (!t_released.is_initialized()) {
+    if (!t_released.has_value()) {
         // This is still pressed
         // * If the press was already sustained, this will overwrite it with the new
         //   sustainTime
-        sustainTimeS = boost::optional<double>(timeS);
-        sustainReleasedTimeS = boost::none;
+        sustainTimeS = std::optional<double>(timeS);
+        sustainReleasedTimeS = std::nullopt;
     } else {
         // This is already released, sustaining does nothing
     }
 }
 
 void Press::releaseSustain(double timeS) {
-    if (!sustainTimeS.is_initialized()) {
+    if (!sustainTimeS.has_value()) {
         // This isn't sustained. Do nothing.
     } else {
         // This is sustained.
-        if (sustainReleasedTimeS.is_initialized()) {
+        if (sustainReleasedTimeS.has_value()) {
             // This is us calling release on something already desustained. Do nothing
         } else {
-            sustainReleasedTimeS = boost::optional<double>(timeS);
+            sustainReleasedTimeS = std::optional<double>(timeS);
         }
     }
 }
@@ -145,12 +144,12 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
     double now = getSystemTimeSecondsPrecise();
     double dt = now - tSystemTimeSeconds;
 
-    boost::optional<double> dtReleased;
-    if (getReleaseTime().is_initialized()) {  // Released
-        dtReleased = boost::optional<double>(now - getReleaseTime().value());
+    std::optional<double> dtReleased;
+    if (getReleaseTime().has_value()) {  // Released
+        dtReleased = std::optional<double>(now - getReleaseTime().value());
     } else {
         // Held
-        dtReleased = boost::none;
+        dtReleased = std::nullopt;
     }
 
     double timeSpentAttackingS;
@@ -160,7 +159,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
     if (dt < attackTimeS) {
         // Attack phase (or released before)
 
-        if (dtReleased.is_initialized()) {
+        if (dtReleased.has_value()) {
             // Released (during attack)
             timeSpentAttackingS = getReleaseTime().value() - tSystemTimeSeconds;
             timeSpentDecayingS = 0;
@@ -175,7 +174,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
 
     } else if (dt < attackTimeS + decayTimeS) {
         // Decay phase (or released before)
-        if (dtReleased.is_initialized()) {
+        if (dtReleased.has_value()) {
             // Released (potentially during attack or decay)
             if (getReleaseTime().value() < tSystemTimeSeconds + attackTimeS) {
                 // Released during attack
@@ -198,7 +197,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
         }
     } else {
         // Sustain phase (or released before)
-        if (dtReleased.is_initialized()) {
+        if (dtReleased.has_value()) {
             // Released (potentially during attack, decay, or sustain)
             if (getReleaseTime().value() < tSystemTimeSeconds + attackTimeS) {
                 // Released during attack
@@ -272,7 +271,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
     return orgb::core::MathUtils::clamp(attackComponent + decayComponent + releaseComponent, 0.0, 1.0);
 }
 
-// float computeEnvelope(float dt, boost::optional<float> dtReleased, float attackTimeSeconds, float releaseTimeSeconds)
+// float computeEnvelope(float dt, std::optional<float> dtReleased, float attackTimeSeconds, float releaseTimeSeconds)
 // {
 //    // Ease out exponential 3 on attack means aggressive entrance (60% after 0.25, 85% after 0.5)
 //    float x;
@@ -282,7 +281,7 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
 //        x = transitionEaseOutExponential(dt / attackTimeSeconds, 3);
 //    }
 //
-//    if (!dtReleased.is_initialized()) {
+//    if (!dtReleased.has_value()) {
 //        return x;
 //    } else {
 //        float decay;

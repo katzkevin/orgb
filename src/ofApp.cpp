@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #define KEYSTATE_CLEANUP_TIME 10
 void ofApp::initializeForms() {
@@ -135,11 +135,11 @@ void ofApp::setup() {
     requireMQTT = getEnv("REQUIRE_MQTT", "true") == "true";
 
     try {
-        exitAfterFrames = boost::optional<int>(stoi(getEnv("EXIT_AFTER_FRAMES")));
+        exitAfterFrames = std::optional<int>(stoi(getEnv("EXIT_AFTER_FRAMES")));
         ofLogWarning() << "EXIT_AFTER_FRAMES present. Will exit after " << exitAfterFrames.value() << " frames.";
         //    } catch (const std::invalid_argument&) {
     } catch (...) {
-        exitAfterFrames = boost::none;
+        exitAfterFrames = std::nullopt;
     }
 
 #ifdef TARGET_RASPBERRY_PI
@@ -177,9 +177,11 @@ void ofApp::setup() {
     debugShow = false;
 
     // OSC
+#ifndef __EMSCRIPTEN__
     ofLogNotice("OSC") << "Setting up OSC receiver...";
     receiver.setup(OSC_PORT);
     ofLogNotice("OSC") << "Online. Port: " << OSC_PORT;
+#endif
 
     if (enableMQTT) {
         // MQTT
@@ -188,11 +190,13 @@ void ofApp::setup() {
         ofLogNotice("MQTT") << "Set up.";
     }
 
+#ifndef __EMSCRIPTEN__
     if (enableNDI) {
         ofLogNotice("NDI") << "Initializing NDI and watching sources.";
         NDIlib_initialize();
         finder_.watchSources();
     }
+#endif
 
 #ifdef TARGET_RASPBERRY_PI
     ofLogVerbose() << "VerticalSync disabled; FPS Target: " << ofGetTargetFrameRate();
@@ -236,9 +240,11 @@ void ofApp::update() {
         monitorFrameRate(ofGetTargetFrameRate(), ofGetFrameNum(), ofGetElapsedTimef(), ofGetFrameRate());
     }
 
+#ifndef __EMSCRIPTEN__
     if (enableNDI) {
         ndiUpdateHandler();  // Returns true when we have an active frame
     }
+#endif
 
     double t0 = getSystemTimeSecondsPrecise();
     forms[currentFormIndex]->update(ks, clr);
@@ -279,10 +285,12 @@ void ofApp::draw() {
     ofBackground(0, 0, 0, 255 * (1 - trail));
     //    ofDisableAlphaBlending();
 
+#ifndef __EMSCRIPTEN__
     if (enableNDI) {
         // Will draw screen if NDI is connected. Will return false otherwise.
         ndiDrawHandler();
     }
+#endif
 
     ofPushStyle();
     forms[currentFormIndex]->draw(ks, clr, dm);
@@ -383,11 +391,13 @@ void ofApp::switchToForm(int formIndex) {
 }
 
 void ofApp::exit() {
+#ifndef __EMSCRIPTEN__
     if (enableMQTT && mqttClientConnectedSuccessfully) {
         ofLogVerbose() << "MQTT disconnecting...";
         client.disconnect();
         ofLogNotice() << "Mqtt disconnected.";
     }
+#endif
 
     ofLogNotice("ofApp") << "Cleanly exiting.";
 }

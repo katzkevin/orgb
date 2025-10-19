@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "DrawContext.hpp"
 #include "ofMain.h"
@@ -27,7 +27,7 @@ class DrawManager {
         ShaderPackage(std::string shaderName) { shader = createShader(shaderName); }
         ofShader shader;
     };
-    boost::optional<ofFbo> activeCanvas;
+    std::optional<ofFbo> activeCanvas;
     ofFbo fboFront;
     ofFbo fboBack;
 

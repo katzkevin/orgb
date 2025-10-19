@@ -97,7 +97,7 @@ ofPath Shape::getOrCreatePath(Press & p) {
 // Expanding radius
 float Shape::calculateRadius(Press & p) {
     float dt;
-    if (p.getReleaseTime().is_initialized()) {
+    if (p.getReleaseTime().has_value()) {
         // Key is released (from sustain or just plain released)
         dt = p.getReleaseTime().value() - p.tSystemTimeSeconds;
     } else {

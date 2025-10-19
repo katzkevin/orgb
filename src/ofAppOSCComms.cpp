@@ -5,6 +5,8 @@
 //  Created by Kevin Katz on 9/5/22.
 //
 
+#ifndef __EMSCRIPTEN__
+
 #include "Utilities.hpp"
 #include "ofApp.h"
 
@@ -140,3 +142,5 @@ void ofApp::pollForOSCMessages() {
     warnOnSlow("OSC IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO, ofGetFrameNum(),
                ofGetElapsedTimef());  // Check every update frame
 }
+
+#endif  // __EMSCRIPTEN__

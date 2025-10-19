@@ -10,12 +10,12 @@
 
 #include <stdio.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 #include "ofMain.h"
 
-using namespace boost::filesystem;
+using namespace std::filesystem;
 
 class ImageWrapper {
    public:

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <optional>
+
+// Browser build - disable native networking addons
+#ifndef __EMSCRIPTEN__
 #include "ofxMQTT.h"
 #include "ofxOsc.h"
 
@@ -7,6 +11,7 @@
 #include "ofxNDIFinder.h"
 #include "ofxNDIReceiver.h"
 #include "ofxNDIRecvStream.h"
+#endif
 
 #ifdef TARGET_RASPBERRY_PI
 #include "ofxRpiLED.h"
@@ -39,7 +44,9 @@
 #include "Thunder.hpp"
 #include "Utilities.hpp"
 #include "VisualForm.hpp"
+#ifndef __EMSCRIPTEN__
 #include "ofxOscParameterSync.h"
+#endif
 
 // #include "FieldWithTrails.hpp"
 #include "Lotus.hpp"
@@ -96,11 +103,15 @@ class ofApp : public ofBaseApp {
     /*
      * MQTT Comms
      */
+#ifndef __EMSCRIPTEN__
     ofxMQTT client;
+#endif
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
     void pollForMQTTMessages();
+#ifndef __EMSCRIPTEN__
     void mqttOnMessage(ofxMQTTMessage & msg);
+#endif
     void mqttOnOnline();
     void mqttOnOffline();
 
@@ -114,7 +125,9 @@ class ofApp : public ofBaseApp {
     /*
      * OSC Comms
      */
+#ifndef __EMSCRIPTEN__
     ofxOscReceiver receiver;
+#endif
     void pollForOSCMessages();
 
     /*
@@ -191,7 +204,7 @@ class ofApp : public ofBaseApp {
     bool monitorFrameRateMode;
 
     // Self-destruct (useful for monitoring)
-    boost::optional<int> exitAfterFrames;
+    std::optional<int> exitAfterFrames;
     void exitAfterFramesHandler();
 
     uint64_t amperageTestModeMoment;  // Used for voltage test
@@ -207,7 +220,8 @@ class ofApp : public ofBaseApp {
     void updateLastInteractionMoment();
     bool applicationIsIdle();
 
-    boost::optional<double> lastNdiReconnectAttempt;
+#ifndef __EMSCRIPTEN__
+    std::optional<double> lastNdiReconnectAttempt;
 
     /*
      * NDI
@@ -222,6 +236,7 @@ class ofApp : public ofBaseApp {
     bool ndiScanForVideoSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
+#endif
 
     bool guiShow;
     bool debugShow;

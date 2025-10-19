@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <iostream>
 #include <string>
 
@@ -28,20 +28,19 @@ class Press {
 
     Press(int n, float vPct, double pressTime, PressType pt, unsigned int messageId);
 
-    [[nodiscard]] boost::optional<double> getReleaseTime() const;
+    std::optional<double> getReleaseTime() const;
     void setReleased(double time);
 
     void setSustained(double sustainTimeS);
     void releaseSustain(double sustainReleasedTimeS);
 
-    [[nodiscard]] double audibleAmplitudePct(double attackTimeS, double decayTimeS, double sustainLevelPct,
-                                              double releaseTimeS) const;
+    double audibleAmplitudePct(double attackTimeS, double decayTimeS, double sustainLevelPct,
+                               double releaseTimeS) const;
 
     // Percent across its entire range
-    [[nodiscard]] float noteOverallPct() const;
-
+    float noteOverallPct() const;
     // Percent across A-G#
-    [[nodiscard]] float noteChromaticPct() const;
+    float noteChromaticPct() const;
 
     bool operator<(const Press & other) const { return id < other.id; }
 
@@ -52,11 +51,11 @@ class Press {
     bool operator==(const Press & other) const { return (id == other.id); }
 
    private:
-    boost::optional<double> sustainReleasedTimeS;
-    boost::optional<double> sustainTimeS;
+    std::optional<double> sustainReleasedTimeS;
+    std::optional<double> sustainTimeS;
 
     // This should be accessed through getReleaseTime, which incorporates sustains
-    boost::optional<double> t_released;
+    std::optional<double> t_released;
 };
 
 // https://stackoverflow.com/a/1102720/1371634

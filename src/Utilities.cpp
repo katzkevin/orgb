@@ -82,11 +82,11 @@ float transitionEaseOutExponential(float pct, float exponent) {
     return 1 - pow(1 - orgb::core::MathUtils::clamp(pct, 0.0f, 1.0f), exponent);
 }
 
-boost::optional<std::string> getEnvOptional(std::string key) {
+std::optional<std::string> getEnvOptional(std::string key) {
     try {
-        return boost::optional<std::string>(getEnv(key));
+        return std::optional<std::string>(getEnv(key));
     } catch (...) {
-        return boost::none;
+        return std::nullopt;
     }
 }
 
@@ -120,20 +120,20 @@ std::uniform_real_distribution<> disr(0.0, 1.0);
 std::normal_distribution<> disGaussian(0.0, 1.0);
 
 std::mt19937 getRandomEngine(std::string seed) {
-    size_t randomSeed = boost::hash_value(seed);
+    size_t randomSeed = std::hash<std::string>{}(seed);
     std::mt19937 gen(randomSeed);
     return gen;
 }
 
 unsigned int deterministicRandom(float salt) {
-    size_t hash1ui = boost::hash_value(std::to_string(salt));
+    size_t hash1ui = std::hash<std::string>{}(std::to_string(salt));
     return hash1ui;
 }
 
 float deterministicRandomPct(float salt) {
     // This is not cryptographically secure. Mapping into 1-space not necessarily a good call.
     // % 2^31, Low 31 bits
-    size_t hash1ui = boost::hash_value(std::to_string(salt)) % MAX_HASH;
+    size_t hash1ui = std::hash<std::string>{}(std::to_string(salt)) % MAX_HASH;
     return ofMap(hash1ui, 0, MAX_HASH, 0, 1.0, true);
 }
 
