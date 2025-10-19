@@ -9,6 +9,7 @@
 #define LightningBolt_hpp
 
 #include <stdio.h>
+#include <list>
 
 #include "Utilities.hpp"
 

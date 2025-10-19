@@ -60,7 +60,7 @@ void ofApp::debugModeHandler() {
 }
 
 void ofApp::exitAfterFramesHandler() {
-    if (exitAfterFrames.is_initialized()) {
+    if (exitAfterFrames.has_value()) {
         if (ofGetFrameNum() % EXIT_AFTER_FRAME_PRESS_INTERVAL == 0) {
             // If in test mode, include three dummy presses.
             ks.newKeyPressedHandler(40, 1.0, static_cast<unsigned int>(ofGetSystemTimeMicros() % UINT_MAX));
@@ -73,7 +73,7 @@ void ofApp::exitAfterFramesHandler() {
         }
     }
 
-    if (exitAfterFrames.is_initialized() && ofGetFrameNum() > exitAfterFrames.value()) {
+    if (exitAfterFrames.has_value() && ofGetFrameNum() > exitAfterFrames.value()) {
         ofLogWarning() << "exitAfterFramesHandler triggering exit after " << exitAfterFrames.value() << " frames.";
         ofExit(0);
     }
@@ -87,7 +87,7 @@ void ofApp::startupTimeHandler() {
 }
 
 void ofApp::noteDebugHandler() {
-    if (!getEnvOptional("NOTE_DEBUG").is_initialized()) {
+    if (!getEnvOptional("NOTE_DEBUG").has_value()) {
         return;
     }
 

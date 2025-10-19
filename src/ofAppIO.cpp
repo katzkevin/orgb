@@ -21,16 +21,16 @@ void ofApp::noteOnHandler(int key, float velocityPct, unsigned int messageId, bo
     if (ephemeral) {
         ks.ephemeralKeyPressedHandler(key, velocityPct, messageId);
     } else {
-        boost::optional<Press> activePress = ks.getActivePress(key);
-        if (activePress.is_initialized()) {
+        std::optional<Press> activePress = ks.getActivePress(key);
+        if (activePress.has_value()) {
             Press press = activePress.value();
             forms[currentFormIndex]->pressHandler(press);  // TODO This won't play nice with ephemeral
         } else {
             // This is a new press.
             Press press = ks.newKeyPressedHandler(key, velocityPct, messageId);
 
-            boost::optional<int> metaInput = ks.getMetaInput();
-            if (metaInput.is_initialized()) {
+            std::optional<int> metaInput = ks.getMetaInput();
+            if (metaInput.has_value()) {
                 int metaInputIndex = key - (metaInput.value() + NUM_NOTES);
 
                 switch (metaInputIndex) {

@@ -5,6 +5,8 @@
 //  Created by Kevin Katz on 3/23/22.
 //
 
+#ifndef __EMSCRIPTEN__
+
 #include <ofApp.h>
 
 #include "json.hpp"
@@ -120,3 +122,5 @@ void ofApp::mqttOnOnline() {
 }
 
 void ofApp::mqttOnOffline() { ofLogNotice("MIDI") << "Offline."; }
+
+#endif  // __EMSCRIPTEN__

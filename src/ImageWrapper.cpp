@@ -7,7 +7,7 @@
 
 #include "ImageWrapper.hpp"
 
-using namespace boost::filesystem;
+using namespace std::filesystem;
 
 ImageWrapper::ImageWrapper(path p, ofImage & i) {
     imagePath = p;

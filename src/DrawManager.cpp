@@ -37,32 +37,32 @@ void DrawManager::beginDraw() {
 
 void DrawManager::endDraw() {
     // End drawing without drawing to screen (for post-processing pipeline)
-    if (activeCanvas.get().getId() != fboFront.getId()) {
-        throw std::runtime_error("Canvas must be front canvas.");
-    }
-    if (!activeCanvas.is_initialized()) {
-        throw std::runtime_error("Can't end draw without an active canvas");
-    }
-    activeCanvas.get().end();
-    activeCanvas = boost::none;
-}
-
-void DrawManager::endAndDrawFbo() {
-    // Extremely stateful, see existing examples
-    if (activeCanvas.get().getId() != fboFront.getId()) {
+    if (activeCanvas.value().getId() != fboFront.getId()) {
         throw std::runtime_error("Canvas must be front canvas.");
     }
     if (!activeCanvas.has_value()) {
         throw std::runtime_error("Can't end draw without an active canvas");
     }
-    activeCanvas.get().end();
-    drawFboAtZeroZero(activeCanvas.get());
+    activeCanvas.value().end();
+    activeCanvas = std::nullopt;
+}
+
+void DrawManager::endAndDrawFbo() {
+    // Extremely stateful, see existing examples
+    if (activeCanvas.value().getId() != fboFront.getId()) {
+        throw std::runtime_error("Canvas must be front canvas.");
+    }
+    if (!activeCanvas.has_value()) {
+        throw std::runtime_error("Can't end draw without an active canvas");
+    }
+    activeCanvas.value().end();
+    drawFboAtZeroZero(activeCanvas.value());
     activeCanvas = std::nullopt;
 }
 
 void DrawManager::shaderEpilogue(ShaderPackage & sp) {
     // Extremely stateful, see existing examples
-    if (activeCanvas.get().getId() != fboFront.getId()) {
+    if (activeCanvas.value().getId() != fboFront.getId()) {
         throw std::runtime_error("Canvas must be front canvas.");
     }
     if (!activeCanvas.has_value()) {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 // Browser build - disable native networking addons
 #ifndef __EMSCRIPTEN__
 #include "ofxMQTT.h"
@@ -101,11 +103,15 @@ class OfApp : public ofBaseApp {
     /*
      * MQTT Comms
      */
+#ifndef __EMSCRIPTEN__
     ofxMQTT client;
+#endif
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
     void pollForMQTTMessages();
+#ifndef __EMSCRIPTEN__
     void mqttOnMessage(ofxMQTTMessage & msg);
+#endif
     void mqttOnOnline();
     void mqttOnOffline();
 
@@ -119,7 +125,9 @@ class OfApp : public ofBaseApp {
     /*
      * OSC Comms
      */
+#ifndef __EMSCRIPTEN__
     ofxOscReceiver receiver;
+#endif
     void pollForOSCMessages();
 
     /*
@@ -196,7 +204,7 @@ class OfApp : public ofBaseApp {
     bool monitorFrameRateMode;
 
     // Self-destruct (useful for monitoring)
-    boost::optional<int> exitAfterFrames;
+    std::optional<int> exitAfterFrames;
     void exitAfterFramesHandler();
 
     uint64_t amperageTestModeMoment;  // Used for voltage test
@@ -212,7 +220,8 @@ class OfApp : public ofBaseApp {
     void updateLastInteractionMoment();
     bool applicationIsIdle();
 
-    boost::optional<double> lastNdiReconnectAttempt;
+#ifndef __EMSCRIPTEN__
+    std::optional<double> lastNdiReconnectAttempt;
 
     /*
      * NDI
@@ -227,6 +236,7 @@ class OfApp : public ofBaseApp {
     static bool ndiScanForSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
+#endif
 
     bool guiShow;
     bool debugShow;

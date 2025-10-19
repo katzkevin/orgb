@@ -7,7 +7,7 @@
 
 #include "ImageSprocket.hpp"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 #include "DrawContext.hpp"

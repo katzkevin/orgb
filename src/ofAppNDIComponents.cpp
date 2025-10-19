@@ -1,3 +1,4 @@
+#ifndef __EMSCRIPTEN__
 //
 //  ofAppNDIComponents.cpp
 //  orgb
@@ -132,3 +133,5 @@ bool ofApp::ndiDrawHandler() {
         return false;
     }
 }
+
+#endif  // __EMSCRIPTEN__
