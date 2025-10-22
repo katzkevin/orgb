@@ -5,6 +5,8 @@
 //  Created by Kevin Katz on 11/26/21.
 //
 
+#include <math.h>
+
 #include <unordered_map>
 
 #include "json.hpp"
@@ -103,7 +105,7 @@ void ofApp::jsonHandlerEphemeralNote(nlohmann::basic_json<> & j, unsigned int me
 void ofApp::jsonHandlerClassification(nlohmann::basic_json<> & j) {
     // {"type": "arousal", "value": 0.5, "time": "2022-05-25T21:15:21.729171+00:00"}
 
-    float messageValue;
+    float messageValue = NAN;
     CLASSIFICATIONTYPE messageTypeEnum = stringToClassificationType(j.at("type"));
 
     switch (messageTypeEnum) {
@@ -118,20 +120,20 @@ void ofApp::jsonHandlerClassification(nlohmann::basic_json<> & j) {
 }
 
 void ofApp::jsonHandlerMidiMessage(nlohmann::basic_json<> & j) {
-    int messageNote;
-    int messageVelocity;
-    int messageChannel;
-    int messageValue;
-    int messageControl;
-    int messageId;
-    bool ephemeral;
+    int messageNote = 0;
+    int messageVelocity = 0;
+    int messageChannel = 0;
+    int messageValue = 0;
+    int messageControl = 0;
+    int messageId = 0;
+    bool ephemeral = false;
 
     std::string messageKey;
 
     std::string messageForm;
     std::string messageParameter;
     std::string messageParameterType;
-    float messageParameterValue;
+    float messageParameterValue = NAN;
 
     MIDITYPE messageTypeEnum = stringToMidiType(j.at("type"));
 
@@ -247,7 +249,7 @@ void ofApp::jsonHandlerMidiMessage(nlohmann::basic_json<> & j) {
 }
 
 void ofApp::jsonHandlerParamMessage(nlohmann::basic_json<> & j) {
-    float messageValue;
+    float messageValue = NAN;
     std::vector<std::vector<int>> colorRgbsRaw;
     std::vector<ofColor> colors;
     PARAMTYPE messageTypeEnum = stringToParamType(j.at("type"));
@@ -309,7 +311,7 @@ void ofApp::jsonHandlerOfParamMessage(nlohmann::basic_json<> & j) {
     //    }
     std::string group;
     std::string name;
-    float valuePct;
+    float valuePct = NAN;
     try {
         group = j.at("group");
         name = j.at("name");

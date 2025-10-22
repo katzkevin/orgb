@@ -7,6 +7,8 @@
 
 #include "GravityParticles.hpp"
 
+#include <math.h>
+
 GravityParticles::GravityParticles(std::string name) : BaseParticles(name) {
     particleRate.set(2000);
     initialVelocityLowerBound.set(200);
@@ -64,7 +66,7 @@ void GravityParticles::createParticlesForPress(Press & press, int numberOfPartic
         float angle = ofMap(ofRandomf(), -1, 1, -angularVariance, angularVariance) +
                       PI / 2;  // + PI/2 because it's centered about PI/2 (down)
         float velocity = initialVelocityLowerBound * arousalModifier;
-        float vx;
+        float vx = NAN;
         if ((PI / 2.0) - 0.001 < angle && angle < (PI / 2.0) + 0.001) {
             vx = 0;
         } else {

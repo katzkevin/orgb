@@ -7,6 +7,8 @@
 
 #include "Orbit.hpp"
 
+#include <math.h>
+
 Orbit::Orbit(std::string name) : VisualForm(name) {
     parameters.add(glowIntensity.set("glowIntensity", 0.95, 0.5, 4.0));
     parameters.add(intensityAtEighthWidth.set("intensityAtEighthWidth", 0.927, 0, 1.0));
@@ -35,7 +37,7 @@ void Orbit::update(KeyState & ks, ColorProvider & clr) {
 void Orbit::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     ofPushStyle();
 
-    float computedDampenRadius =
+    float computedDampenRadius = NAN =
         getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
 
     std::multimap<int, Press> notePressTable;

@@ -7,6 +7,8 @@
 
 #include "RadialParticles.hpp"
 
+#include <math.h>
+
 #define TARGET_FRAME_RATE 60.0
 
 RadialParticles::RadialParticles(std::string name) : BaseParticles(name) {

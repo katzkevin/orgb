@@ -23,7 +23,7 @@ ofFbo getConfiguredFrameBuffer(int width, int height) {
 
 ofShader createShader(std::string shaderName) {
     ofShader shader;
-    bool result;
+    bool result = false;
 #ifdef TARGET_OPENGLES
     ofLogVerbose("createShader") << "Using OpenGL ES Shader.";
     shader.load("shadersES2/" + shaderName);

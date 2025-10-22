@@ -285,7 +285,7 @@ void ofApp::update() {
 void ofApp::draw() {
     double t0 = getSystemTimeSecondsPrecise();
 
-    bool ndiPreempt;
+    bool ndiPreempt = false;
 
     dm.beginDraw();  // Sets a new main frame Context
 
@@ -332,7 +332,7 @@ void ofApp::draw() {
         ofPopStyle();
     }
 
-    bool showWebsite = getEnv("SHOW_WEBSITE", "false") == "true";
+    bool showWebsite = false = getEnv("SHOW_WEBSITE", "false") == "true";
 
     showWebsite ? applicationLogoAndWebsiteHandler() : applicationLogoHandler();  // Draws logo if necessary
     amperageTestHandler();                                                        // Brightens everything if necessary

@@ -7,6 +7,8 @@
 
 #include "Lotus.hpp"
 
+#include <math.h>
+
 struct {
     ofColor magenta = ofColor(216, 0, 151);
     ofColor cyan = ofColor(0, 145, 141);

@@ -7,6 +7,8 @@
 
 #include "Shape.hpp"
 
+#include <math.h>
+
 #define MAX_SIDES 10
 #define ATTACK_TIME 0
 #define DECAY_TIME 0.5
@@ -31,7 +33,7 @@ void Shape::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Pre
     } else {
         auto v = shapeVertices.getOutline()[0].getVertices();
         float functionalGlowIntensity = glowIntensity * ks.arousalGain();
-        float computedDampenRadius =
+        float computedDampenRadius = NAN =
             getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
 
         for (int i = 0; i < v.size(); i++) {
@@ -96,7 +98,7 @@ ofPath Shape::getOrCreatePath(Press & p) {
 
 // Expanding radius
 float Shape::calculateRadius(Press & p) {
-    float dt;
+    float dt = NAN;
     if (p.getReleaseTime().has_value()) {
         // Key is released (from sustain or just plain released)
         dt = p.getReleaseTime().value() - p.tSystemTimeSeconds;

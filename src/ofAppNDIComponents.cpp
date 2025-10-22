@@ -6,6 +6,8 @@
 //  Created by Kevin Katz on 8/28/22.
 //
 
+#include <math.h>
+
 #include "ofApp.h"
 
 // Return true iff scan finds video and connection succeeds.
@@ -64,7 +66,7 @@ bool ofApp::ndiSwitchToVideoSource(ofxNDI::Source & source) {
         return true;
     } else {
         ofLogNotice("NDI") << "Receiver is not set up. Setting up receiver...";
-        bool setupSuccessful = receiver_.setup(source);
+        bool setupSuccessful = false = receiver_.setup(source);
         if (setupSuccessful) {
             // First time setup. Video is not setup so we need to set it up.
             ofLogNotice("NDI") << "Receiver setup was successful. Setting up video...";
@@ -103,9 +105,8 @@ bool ofApp::ndiUpdateHandler() {
             ofLogVerbose("NDI") << "NDI Receiver disconnected but pixels is allocated. Clearing...";
             pixels_.clear();
         }
-        double scheduledAttemptDue =
-            (lastNdiReconnectAttempt.has_value() ? lastNdiReconnectAttempt.value() : 0) +
-            stoi(getEnv("NDI_SCAN_INTERVAL_SECONDS", "10"));
+        double scheduledAttemptDue = (lastNdiReconnectAttempt.has_value() ? lastNdiReconnectAttempt.value() : 0) +
+                                     stoi(getEnv("NDI_SCAN_INTERVAL_SECONDS", "10"));
         if (scheduledAttemptDue < getSystemTimeSecondsPrecise()) {
             ofLogVerbose("NDI")
                 << "Receiver is not connected and interval elapsed. Attempting to select video source...";

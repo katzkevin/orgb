@@ -7,6 +7,8 @@
 
 #include "BaseParticles.hpp"
 
+#include <math.h>
+
 // If someone's pressing more than 4, then start relaxing the number of particles coming out
 #define CONCURRENT_PRESS_PARTICLE_BRAKE 4
 

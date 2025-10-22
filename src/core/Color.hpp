@@ -1,6 +1,8 @@
 #ifndef ORGB_CORE_COLOR_HPP
 #define ORGB_CORE_COLOR_HPP
 
+#include <math.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -40,7 +42,7 @@ struct Color {
         float s = saturation / 255.0f;
         float v = brightness / 255.0f;
 
-        float r, g, b;
+        float r = NAN, g = NAN, b = NAN;
 
         if (s == 0.0f) {
             // Achromatic (grey)

@@ -178,7 +178,7 @@ void ImageSprocket::drawCenteredAndScaled(ImageWrapper & imageWrapper, bool fill
     float horizontalScaleToFit = static_cast<float>(ofGetWidth()) / image.getWidth();
     float verticalScaleToFit = static_cast<float>(ofGetHeight()) / image.getHeight();
 
-    int drawWidth, drawHeight;
+    int drawWidth = 0, drawHeight = 0;
 
     bool horizontalChangeIsLessDrastic = horizontalScaleToFit < verticalScaleToFit;
 

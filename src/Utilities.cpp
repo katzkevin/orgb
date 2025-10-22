@@ -7,6 +7,8 @@
 
 #include "Utilities.hpp"
 
+#include <math.h>
+
 #define COMPILE_TIME_SIZE_T_MAX numeric_limits<size_t>::max()
 // 2^31
 #define MAX_HASH 2147483648
@@ -347,26 +349,26 @@ void drawNoiseVisualize(float spatialFrequency, float temporalRate, float noiseS
 namespace ColorUtilities {
 
 ofColor withSaturation(const ofColor & c, uint8_t newSaturation) {
-    float hue;
-    float saturation;
-    float value;
+    float hue = NAN;
+    float saturation = NAN;
+    float value = NAN;
     c.getHsb(hue, saturation, value);
     return ofColor::fromHsb(hue, newSaturation, value);
 }
 
 ofColor withValue(const ofColor & c, uint8_t newValue) {
-    float hue;
-    float saturation;
-    float value;
+    float hue = NAN;
+    float saturation = NAN;
+    float value = NAN;
     c.getHsb(hue, saturation, value);
     return ofColor::fromHsb(hue, saturation, newValue);
 }
 
 ofColor generateNoisyColor(ofColor baseColor, float baseAlphaPct, float hueNoiseMaximumPct,
                            float saturationNoiseMaximumPct, float valueNoiseMaximumPct, float salt) {
-    float hue;
-    float saturation;
-    float value;
+    float hue = NAN;
+    float saturation = NAN;
+    float value = NAN;
     float hueNoiseMaximumOutOf255 = ofMap(hueNoiseMaximumPct, 0, 1, 0, 255);
     float saturationNoiseMaximumOutOf255 = ofMap(saturationNoiseMaximumPct, 0, 1, 0, 255);
     float valueNoiseMaximumOutOf255 = ofMap(valueNoiseMaximumPct, 0, 1, 0, 255);

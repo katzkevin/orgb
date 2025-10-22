@@ -5,6 +5,7 @@
 //  Created by Kevin Katz on 4/25/22.
 //
 
+#include <math.h>
 #include <stdio.h>
 
 #include "ofApp.h"
@@ -121,7 +122,7 @@ void ofApp::drawWebsite(uint8_t alpha, float verticalOffsetFromCenter, std::stri
 }
 
 void ofApp::applicationLogoHandler() {
-    uint8_t alpha;
+    uint8_t alpha = 0;
     float showLogoForSeconds = stof(getEnv("SHOW_LOGO_FOR_SECONDS", "2.0"));
 
     if (ofGetElapsedTimef() > showLogoForSeconds) {
@@ -140,7 +141,7 @@ void ofApp::applicationLogoHandler() {
 }
 
 void ofApp::applicationLogoAndWebsiteHandler() {
-    uint8_t alpha;
+    uint8_t alpha = 0;
     float showLogoForSeconds = stof(getEnv("SHOW_LOGO_FOR_SECONDS", "2.0"));
 
     if (ofGetElapsedTimef() > showLogoForSeconds) {

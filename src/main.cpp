@@ -3,8 +3,8 @@
 
 //========================================================================
 int main() {
-    int width;
-    int height;
+    int width = 0;
+    int height = 0;
 #ifdef TARGET_RASPBERRY_PI
     width = stoi(getEnv("OFW_WIDTH"));
     height = stoi(getEnv("OFW_HEIGHT"));

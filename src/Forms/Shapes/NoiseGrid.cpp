@@ -7,6 +7,8 @@
 
 #include "NoiseGrid.hpp"
 
+#include <math.h>
+
 #define PERIOD_S 1.0
 #define NOISE_GRID_PRESS_OFFSET_PRIME 7919
 
@@ -44,7 +46,7 @@ void NoiseGrid::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm,
     // Higher note, shorter wavelengthsha
     // float waveLength = ofMap(press.noteOverallPct(), 1, 0, minWaveLength, minWaveLength *
     // topToBottomWaveLengthRatio);
-    float frequency;
+    float frequency = NAN;
 
     if (scaleFrequency) {
         frequency = midiToHz(press.note) * a4Frequency;  // A4 has a4WaveLength
@@ -78,7 +80,7 @@ void NoiseGrid::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm,
         for (int j = 0; j < h; j += resolution) {
             // Translate Z by p.note * 100 to collect different noise per note, you would never see the pattern
             // Scale by less-than-one noise amplitude to make space more black than colorful.
-            float noise =
+            float noise = NAN =
                 ofNoise(i / shortSide * frequency + pressOffset, j / shortSide * frequency, z + press.note * 100.0) *
                 noiseAmplitude;
             ofColor c = ofColor(color.r, color.g, color.b, color.a * noise);

@@ -7,6 +7,8 @@
 
 #include "ColorProvider.hpp"
 
+#include <math.h>
+
 #include "core/MathUtils.hpp"
 
 void ColorProvider::floatParamChanged(float & v) {
@@ -39,7 +41,7 @@ ColorProvider::ColorProvider() {
 
 ofColor ColorProvider::color(const Press & p) const {
     ofColor c;
-    float indexPct;
+    float indexPct = NAN;
     if (cyclical) {
         // notePct = (p.note % NUM_NOTES) / static_cast<float>(NUM_NOTES);
         indexPct = (p.note % NUM_NOTES) / static_cast<float>(NUM_NOTES);
@@ -94,7 +96,7 @@ void ColorProvider::setPalette(float baseHue, float baseSaturation, float baseVa
     float s = baseSaturation;
     float v = baseValue;
 
-    float hueStepSize;
+    float hueStepSize = NAN;
 
     if (clockwise) {
         if (baseHue <= maxHue) {

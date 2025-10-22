@@ -7,6 +7,8 @@
 
 #include "LightningBolt.hpp"
 
+#include <math.h>
+
 LightningBolt::LightningBolt(ofVec3f from, ofVec3f to, int depth, float jitterUnit, float branchingFactor, float seed) {
     tCreatedSeconds = getSystemTimeSecondsPrecise();
     std::list<vector<ofPoint>> branchQueue;

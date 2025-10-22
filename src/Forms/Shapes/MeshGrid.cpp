@@ -7,6 +7,8 @@
 
 #include "MeshGrid.hpp"
 
+#include <math.h>
+
 #define PERIOD_S 1.0
 
 MeshGrid::MeshGrid(std::string name) : Shape(name) {
@@ -42,7 +44,7 @@ void MeshGrid::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, 
     // Higher note, shorter wavelengthsha
     // float waveLength = ofMap(press.noteOverallPct(), 1, 0, minWaveLength, minWaveLength *
     // topToBottomWaveLengthRatio);
-    float waveLength;
+    float waveLength = NAN;
 
     if (scaleWavelength) {
         waveLength = 1.0 / midiToHz(press.note) * 440.0 * a4WaveLength;  // A4 has a4WaveLength

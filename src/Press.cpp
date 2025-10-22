@@ -7,6 +7,8 @@
 
 #include "Press.hpp"
 
+#include <math.h>
+
 #include <iostream>
 
 // For std::min and std::max (stupid)
@@ -152,9 +154,9 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
         dtReleased = std::nullopt;
     }
 
-    double timeSpentAttackingS;
-    double timeSpentDecayingS;
-    double timeSpentReleasingS;
+    double timeSpentAttackingS = NAN;
+    double timeSpentDecayingS = NAN;
+    double timeSpentReleasingS = NAN;
 
     if (dt < attackTimeS) {
         // Attack phase (or released before)
@@ -233,9 +235,9 @@ double Press::audibleAmplitudePct(double attackTimeS, double decayTimeS, double 
     //    Velocity float decayPctPerSecond = ofIsFloatEqual(decayTimeS, 0.0f) ? CGFLOAT_MAX : -((1.0 - sustainLevelPct)
     //    / decayTimeS);  // Decay Velocity float releasePctPerSecond = ofIsFloatEqual(releaseTimeS, 0.0f) ? CGFLOAT_MAX
     //    : -(sustainLevelPct / releaseTimeS);      // Release Velocity
-    double attackComponent;
-    double decayComponent;
-    double releaseComponent;
+    double attackComponent = NAN;
+    double decayComponent = NAN;
+    double releaseComponent = NAN;
     if (orgb::core::MathUtils::floatEqual(attackTimeS, 0.0)) {
         attackComponent = 1.0;
     } else {

@@ -7,6 +7,8 @@
 
 #include "Flock.hpp"
 
+#include <math.h>
+
 Flock::Flock() {}
 
 void Flock::update(float dt, float elapsedTimeF) {

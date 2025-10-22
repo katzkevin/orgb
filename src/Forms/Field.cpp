@@ -7,6 +7,8 @@
 
 #include "Field.hpp"
 
+#include <math.h>
+
 Field::Field(std::string name) : VisualForm(name) {
     width = 32;
     height = 160;
@@ -162,7 +164,7 @@ void Field::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
         return;
     }
 
-    float computedDampenRadius;
+    float computedDampenRadius = NAN;
     float scale = std::min(ofGetWidth() / width, ofGetHeight() / height);
     for (auto it = flock.l.begin(); it != flock.l.end(); ++it) {
         float colinearityWithOpticalAxis = abs(glm::dot(glm::normalize(it->velocity), glm::vec3(0, 0, 1)));
@@ -234,9 +236,9 @@ void Field::adjustFlockPopulation() {
 
 void Field::rotateFlockHueOverTime() {
     if (ofGetFrameNum() % 120 == 0) {
-        float hue;
-        float saturation;
-        float value;
+        float hue = NAN;
+        float saturation = NAN;
+        float value = NAN;
         spriteBaseColor.get().getHsb(hue, saturation, value);
         hue = fmod(hue + 1, 255.0);
         ofColor newColor = ofColor::fromHsb(hue, saturation, value);
