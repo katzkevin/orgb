@@ -22,7 +22,7 @@ class DrawManager {
    public:
     class ShaderPackage {
        public:
-        ShaderPackage(std::string shaderName) { shader = createShader(shaderName); }
+        explicit ShaderPackage(std::string shaderName) { shader = createShader(shaderName); }
         ofShader shader;
     };
     std::optional<ofFbo> activeCanvas;
@@ -30,7 +30,7 @@ class DrawManager {
     ofFbo fboBack;
 
     DrawManager();
-    ~DrawManager() override {};
+    ~DrawManager() = default;
 
     void beginDraw();
     void endDraw();  // End drawing without drawing to screen

@@ -37,7 +37,7 @@ void Orbit::update(KeyState & ks, ColorProvider & clr) {
 void Orbit::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     ofPushStyle();
 
-    float computedDampenRadius = NAN =
+    float computedDampenRadius =
         getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
 
     std::multimap<int, Press> notePressTable;

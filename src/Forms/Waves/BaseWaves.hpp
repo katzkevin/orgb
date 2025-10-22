@@ -16,7 +16,7 @@
 
 class BaseWaves : public VisualForm {
    public:
-    BaseWaves(std::string name);
+    explicit BaseWaves(std::string name);
     ~BaseWaves() override {};
 
     void update(KeyState & ks, ColorProvider & clr) override;

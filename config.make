@@ -1,6 +1,6 @@
 ################################################################################
-# CONFIGURE PROJECT MAKEFILE (Emscripten)
-#   This file is for Emscripten/WebAssembly browser builds
+# CONFIGURE PROJECT MAKEFILE (macOS)
+#   This file is for macOS native builds
 ################################################################################
 
 ################################################################################
@@ -11,17 +11,12 @@
 OF_ROOT = /Users/katz/workspace/of_v0.12.1_osx_release
 
 ################################################################################
-# EMSCRIPTEN SPECIFIC CONFIGURATION
-#   Settings for compiling to WebAssembly for browser deployment
+# MACOS CONFIGURATION
+#   Settings for native macOS builds
 ################################################################################
-# Use the emscripten platform (must be lowercase)
-PLATFORM_OS = emscripten
 
 # Set the binary name
 BIN_NAME = orgb
-
-# Memory configuration (128MB default, can be increased if needed)
-# PROJECT_EMSCRIPTEN_TOTAL_MEMORY = 268435456  # 256MB if needed
 
 ################################################################################
 # PROJECT ROOT

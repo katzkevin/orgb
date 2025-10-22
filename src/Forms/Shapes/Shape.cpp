@@ -33,7 +33,7 @@ void Shape::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Pre
     } else {
         auto v = shapeVertices.getOutline()[0].getVertices();
         float functionalGlowIntensity = glowIntensity * ks.arousalGain();
-        float computedDampenRadius = NAN =
+        float computedDampenRadius =
             getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
 
         for (int i = 0; i < v.size(); i++) {

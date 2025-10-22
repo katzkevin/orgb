@@ -13,7 +13,7 @@
 
 class EdgeParticles : public GravityParticles {
    public:
-    EdgeParticles(std::string name);
+    explicit EdgeParticles(std::string name);
     ~EdgeParticles() override {};
 
    protected:

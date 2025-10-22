@@ -332,7 +332,7 @@ void ofApp::draw() {
         ofPopStyle();
     }
 
-    bool showWebsite = false = getEnv("SHOW_WEBSITE", "false") == "true";
+    bool showWebsite = getEnv("SHOW_WEBSITE", "false") == "true";
 
     showWebsite ? applicationLogoAndWebsiteHandler() : applicationLogoHandler();  // Draws logo if necessary
     amperageTestHandler();                                                        // Brightens everything if necessary

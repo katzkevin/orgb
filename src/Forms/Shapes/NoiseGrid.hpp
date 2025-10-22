@@ -12,7 +12,7 @@
 
 class NoiseGrid : public Shape {
    public:
-    NoiseGrid(std::string name);
+    explicit NoiseGrid(std::string name);
     ~NoiseGrid() override {};
 
    protected:

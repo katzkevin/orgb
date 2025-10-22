@@ -13,7 +13,7 @@
 
 class RandomParticles : public BaseParticles {
    public:
-    RandomParticles(std::string name);
+    explicit RandomParticles(std::string name);
     ~RandomParticles() override {};
 
     ofParameter<float> baseRandom;

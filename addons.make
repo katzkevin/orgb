@@ -1,8 +1,13 @@
-# Emscripten browser build addons
-# Note: Network addons (MQTT, NDI, OSC) don't work in browser without modifications
+# macOS native addons configuration
+# This file is for native macOS builds with full networking support
 
-# Required for Emscripten support
-ofxEmscripten
-
-# GUI - works in browser
+# GUI
 ofxGui
+
+# Network addons
+# ofxMQTT - Currently disabled due to compilation errors with C++23
+ofxNDI
+ofxOsc
+
+# Testing
+ofxUnitTests

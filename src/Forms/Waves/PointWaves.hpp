@@ -12,7 +12,7 @@
 
 class PointWaves : public BaseWaves {
    public:
-    PointWaves(std::string name);
+    explicit PointWaves(std::string name);
     ~PointWaves() override {};
 
    protected:

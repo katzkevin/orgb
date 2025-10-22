@@ -80,7 +80,7 @@ void NoiseGrid::drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm,
         for (int j = 0; j < h; j += resolution) {
             // Translate Z by p.note * 100 to collect different noise per note, you would never see the pattern
             // Scale by less-than-one noise amplitude to make space more black than colorful.
-            float noise = NAN =
+            float noise =
                 ofNoise(i / shortSide * frequency + pressOffset, j / shortSide * frequency, z + press.note * 100.0) *
                 noiseAmplitude;
             ofColor c = ofColor(color.r, color.g, color.b, color.a * noise);

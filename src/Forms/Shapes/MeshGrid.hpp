@@ -12,7 +12,7 @@
 
 class MeshGrid : public Shape {
    public:
-    MeshGrid(std::string name);
+    explicit MeshGrid(std::string name);
     ~MeshGrid() override {};
 
    protected:

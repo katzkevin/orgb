@@ -14,7 +14,7 @@
 
 class RapidThunder : public Thunder {
    public:
-    RapidThunder(std::string name);
+    explicit RapidThunder(std::string name);
     ~RapidThunder() override {};
 
     ofParameter<float> boltHz;

@@ -20,7 +20,7 @@ void PointWaves::drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, 
     float numOctaves = ceil((PIANO_MIDI_MAX - PIANO_MIDI_MIN) / 12.0);  // (vertical columns)
     float intensityModulator = exponentialMap(alpha, 0, 1, 1 / GOLDEN_RATIO, GOLDEN_RATIO);
     float modulatedIntensity = intensityModulator * glowIntensity;
-    float computedDampenRadius = NAN =
+    float computedDampenRadius =
         getGlowDampenRatio(modulatedIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
     float halfZoneHeight = (ofGetHeight() / NUM_NOTES) / 2.0;
 

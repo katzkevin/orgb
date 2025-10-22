@@ -31,14 +31,11 @@ class Thunder : public VisualForm {
     ofParameter<bool> lineSegmentDeterministic;
 
    public:
-    Thunder(std::string name);
+    explicit Thunder(std::string name);
     ~Thunder() override;
 
-    void draw(KeyState void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
-              ks, ColorProvider void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
-              clr, DrawManager void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm); dm) override;
-    void update(KeyState void update(KeyState & ks, ColorProvider & clr);
-                ks, ColorProvider void update(KeyState & ks, ColorProvider & clr); clr) override;
+    void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
+    void update(KeyState & ks, ColorProvider & clr) override;
 };
 
 #endif /* Thunder_hpp */

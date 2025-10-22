@@ -29,7 +29,7 @@ void EdgeLasers::drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, 
     ofVec3f from = lineSegment.first;
     ofVec3f to = lineSegment.second;
 
-    float computedDampenRadius = NAN =
+    float computedDampenRadius =
         getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
     dm.shadeGlowLine(to + (from - to) * 2, from + (to - from) * 2, clr.color(p, alpha), glowIntensity,
                      computedDampenRadius, blendMode, toneMap);

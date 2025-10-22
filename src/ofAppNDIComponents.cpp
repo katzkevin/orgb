@@ -66,7 +66,7 @@ bool ofApp::ndiSwitchToVideoSource(ofxNDI::Source & source) {
         return true;
     } else {
         ofLogNotice("NDI") << "Receiver is not set up. Setting up receiver...";
-        bool setupSuccessful = false = receiver_.setup(source);
+        bool setupSuccessful = receiver_.setup(source);
         if (setupSuccessful) {
             // First time setup. Video is not setup so we need to set it up.
             ofLogNotice("NDI") << "Receiver setup was successful. Setting up video...";

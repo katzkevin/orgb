@@ -18,7 +18,7 @@ using namespace std::filesystem;
 class ImageWrapper {
    public:
     ImageWrapper(path p, ofImage & i);
-    ~ImageWrapper() override {};
+    ~ImageWrapper() = default;
     path imagePath;
     ofImage image;
     float scale;

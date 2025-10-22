@@ -26,7 +26,7 @@ class Field : public VisualForm {
 
     Flock flock;
 
-    Field(std::string name);
+    explicit Field(std::string name);
     virtual ~Field() = default;
     void setup() override;
 

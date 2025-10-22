@@ -25,7 +25,7 @@ GlowLinePlayground::GlowLinePlayground(std::string name) : VisualForm(name) {
 void GlowLinePlayground::draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) {
     ofPushStyle();
 
-    float computedDampenRadius = NAN =
+    float computedDampenRadius =
         getGlowDampenRatio(glowIntensity, intensityAtEighthWidth, std::min(ofGetWidth(), ofGetHeight()) / 8.0);
     ofPushMatrix();
 
