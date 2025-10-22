@@ -22,7 +22,7 @@ class DrawManager {
    public:
     class ShaderPackage {
        public:
-        explicit ShaderPackage(std::string shaderName) { shader = createShader(shaderName); }
+        explicit ShaderPackage(const std::string & shaderName) : shader(createShader(shaderName)) {}
         ofShader shader;
     };
     std::optional<ofFbo> activeCanvas;
