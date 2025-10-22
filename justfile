@@ -176,6 +176,7 @@ lint:
     fi
     @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
         --header-filter='src/.*' \
+        --system-headers=false \
         --quiet
     @echo "✓ Linting complete"
 
@@ -188,6 +189,7 @@ lint-fix:
     fi
     @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
         --header-filter='src/.*' \
+        --system-headers=false \
         --fix-errors \
         --quiet
     @echo "✓ Auto-fixes applied"
