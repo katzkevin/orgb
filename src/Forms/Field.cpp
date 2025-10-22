@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-Field::Field(std::string name) : VisualForm(name) {
+Field::Field(const std::string & name) : VisualForm(name) {
     width = 32;
     height = 160;
     depth = std::min(width, height);

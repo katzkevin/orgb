@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-FatGlowShape::FatGlowShape(std::string name) : Shape(name) {
+FatGlowShape::FatGlowShape(const std::string & name) : Shape(name) {
     glowIntensity.set(2.59);
     intensityAtEighthWidth.set(0.16);
     toneMap.set(false);

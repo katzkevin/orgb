@@ -17,7 +17,7 @@
 
 class Orbit : public VisualForm {
    public:
-    explicit Orbit(std::string name);
+    explicit Orbit(const std::string & name);
     ~Orbit() override {};
 
     void update(KeyState & ks, ColorProvider & clr);

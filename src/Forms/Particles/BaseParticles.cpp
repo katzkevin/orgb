@@ -12,7 +12,7 @@
 // If someone's pressing more than 4, then start relaxing the number of particles coming out
 #define CONCURRENT_PRESS_PARTICLE_BRAKE 4
 
-BaseParticles::BaseParticles(std::string name) : VisualForm(name) {
+BaseParticles::BaseParticles(const std::string & name) : VisualForm(name) {
     canvas.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
 
     parameters.add(particleRate.set("Particle Rate", 1000, 10, 8000));

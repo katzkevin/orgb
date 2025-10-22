@@ -12,7 +12,7 @@
 #define PERIOD_S 1.0
 #define NOISE_GRID_PRESS_OFFSET_PRIME 7919
 
-NoiseGrid::NoiseGrid(std::string name) : Shape(name) {
+NoiseGrid::NoiseGrid(const std::string & name) : Shape(name) {
     canvas.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
 
     glowIntensity.set(2.59);

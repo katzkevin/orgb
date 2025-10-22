@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-GlowShape::GlowShape(std::string name) : Shape(name) {
+GlowShape::GlowShape(const std::string & name) : Shape(name) {
     glowIntensity.set(0.729);
     intensityAtEighthWidth.set(0.06);
     toneMap.set(false);

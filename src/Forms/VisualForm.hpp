@@ -16,7 +16,7 @@
 
 class VisualForm {
    public:
-    explicit VisualForm(std::string name);
+    explicit VisualForm(const std::string & name);
     virtual ~VisualForm() = default;
     virtual void setup() {};
     virtual void update(KeyState & ks, ColorProvider & clr) {};

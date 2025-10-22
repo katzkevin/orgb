@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-RandomParticles::RandomParticles(std::string name) : BaseParticles(name) {
+RandomParticles::RandomParticles(const std::string & name) : BaseParticles(name) {
     particleRate.set(2000);
     initialVelocityLowerBound.set(40.0);
     blurGain.set(2.75);

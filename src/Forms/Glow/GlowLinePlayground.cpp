@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-GlowLinePlayground::GlowLinePlayground(std::string name) : VisualForm(name) {
+GlowLinePlayground::GlowLinePlayground(const std::string & name) : VisualForm(name) {
     parameters.add(glowIntensity.set("glowIntensity", 1.5, 0.5, 4.0));
     parameters.add(intensityAtEighthWidth.set("intensityAtEighthWidth", 0.01, 0, 0.05));
 

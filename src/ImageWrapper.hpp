@@ -17,7 +17,7 @@ using namespace std::filesystem;
 
 class ImageWrapper {
    public:
-    ImageWrapper(path p, ofImage & i);
+    ImageWrapper(const path & p, ofImage & i);
     ~ImageWrapper() = default;
     path imagePath;
     ofImage image;

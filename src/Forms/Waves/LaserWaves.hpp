@@ -12,7 +12,7 @@
 
 class LaserWaves : public BaseWaves {
    public:
-    explicit LaserWaves(std::string name);
+    explicit LaserWaves(const std::string & name);
     ~LaserWaves() override {};
 };
 

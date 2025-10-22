@@ -7,7 +7,7 @@
 
 #include "LaserWaves.hpp"
 
-LaserWaves::LaserWaves(std::string name) : BaseWaves(name) {
+LaserWaves::LaserWaves(const std::string & name) : BaseWaves(name) {
     glowIntensity.set(2.98);
     intensityAtEighthWidth.set(0.13);
     blendMode.set(0);

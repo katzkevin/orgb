@@ -225,7 +225,7 @@ void ImageSprocket::drawCenteredAndScaled(ImageWrapper & imageWrapper, bool fill
 }
 namespace ImageUtilities {
 
-std::vector<ImageWrapper> getImages(std::filesystem::path directory, unsigned int maxCount) {
+std::vector<ImageWrapper> getImages(const std::filesystem::path & directory, unsigned int maxCount) {
     ofImageLoadSettings settings;
     settings.exifRotate = true;
 
@@ -245,7 +245,8 @@ std::vector<ImageWrapper> getImages(std::filesystem::path directory, unsigned in
         }
     }
 
-    sort(acc.begin(), acc.end(), [](ImageWrapper a, ImageWrapper b) { return a.imagePath < b.imagePath; });
+    sort(acc.begin(), acc.end(),
+         [](const ImageWrapper & a, const ImageWrapper & b) { return a.imagePath < b.imagePath; });
     return acc;
 }
 

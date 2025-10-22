@@ -76,7 +76,7 @@ class ImageSprocket : public VisualForm {
 };
 
 namespace ImageUtilities {
-std::vector<ImageWrapper> getImages(std::filesystem::path directory, unsigned int maxCount = 999999);
+std::vector<ImageWrapper> getImages(const std::filesystem::path & directory, unsigned int maxCount = 999999);
 
 }
 

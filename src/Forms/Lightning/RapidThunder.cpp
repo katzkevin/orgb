@@ -9,7 +9,9 @@
 
 #include <math.h>
 
-RapidThunder::RapidThunder(std::string name) : Thunder(name) { parameters.add(boltHz.set("boltHz", 10, 4, 60)); }
+RapidThunder::RapidThunder(const std::string & name) : Thunder(name) {
+    parameters.add(boltHz.set("boltHz", 10, 4, 60));
+}
 
 LightningBolt RapidThunder::getOrCreateBolt(const Press & p, float arousalGain, unsigned int randomSeed) {
     // Slower with low arousal, faster with high arousal

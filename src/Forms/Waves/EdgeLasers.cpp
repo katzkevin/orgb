@@ -12,7 +12,7 @@
 #define SHAPE_PRIME 7757
 #define MAX_DEPTH_FRACTION 64
 
-EdgeLasers::EdgeLasers(std::string name) : BaseWaves(name) {
+EdgeLasers::EdgeLasers(const std::string & name) : BaseWaves(name) {
     glowIntensity.set(1.2);
     toneMap.set(false);
     // intensityAtEighthWidth.set(0.);

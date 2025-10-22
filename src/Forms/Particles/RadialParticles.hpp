@@ -13,7 +13,7 @@
 
 class RadialParticles : public BaseParticles {
    public:
-    explicit RadialParticles(std::string name);
+    explicit RadialParticles(const std::string & name);
     ~RadialParticles() override {};
 
    protected:

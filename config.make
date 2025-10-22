@@ -85,7 +85,6 @@ BIN_NAME = orgb
 # add a runtime path to search for those shared libraries, since they aren't
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-# NOTE: Disabled for Emscripten - macOS-specific flags and boost not available in browser
 # PROJECT_LDFLAGS=-Wl,-rpath,@executable_path -L/opt/homebrew/opt/boost/lib -lboost_filesystem
 
 ################################################################################
@@ -114,8 +113,7 @@ BIN_NAME = orgb
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# Stricter warning flags for industry-standard code quality
-PROJECT_CFLAGS = -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wcast-align -Wunused -Woverloaded-virtual
+# PROJECT_CFLAGS = -I/opt/homebrew/opt/boost/include
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

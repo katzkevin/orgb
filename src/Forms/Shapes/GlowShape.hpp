@@ -12,7 +12,7 @@
 
 class GlowShape : public Shape {
    public:
-    explicit GlowShape(std::string name);
+    explicit GlowShape(const std::string & name);
     ~GlowShape() override {};
 };
 

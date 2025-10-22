@@ -14,7 +14,7 @@
 #define DECAY_TIME 0.5
 #define SHAPE_PRIME 7757
 
-Shape::Shape(std::string name) : VisualForm(name) {
+Shape::Shape(const std::string & name) : VisualForm(name) {
     parameters.add(drawMode.set("drawMode", 1, 0, 1));
     parameters.add(blurOffset.set("blurOffset", 1.5, 0, 4.0));
     parameters.add(blurGain.set("blurGain", 1.5, 1.0, 4.0));

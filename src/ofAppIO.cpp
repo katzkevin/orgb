@@ -80,7 +80,7 @@ std::string ofApp::dumpSettingsToJsonFile() {
     return settingsName;
 }
 
-void ofApp::loadSettingsFromJsonString(std::string payloadString) {
+void ofApp::loadSettingsFromJsonString(const std::string & payloadString) {
     json j = json::parse(payloadString);
     ofLogNotice() << "Loading JSON settings.";
     gui.loadFrom(j);
@@ -368,7 +368,7 @@ void ofApp::jsonHandlerOfParamMessage(nlohmann::basic_json<> & j) {
     }
 }
 
-ofParameterGroup * ofApp::getParameterGroup(std::string groupName) {
+ofParameterGroup * ofApp::getParameterGroup(const std::string & groupName) {
     ofxBaseGui * controlGroup = gui.getControl(groupName);
     if (!controlGroup) {
         ofLogError() << groupName << " not found in gui.getControl (top level groups): "

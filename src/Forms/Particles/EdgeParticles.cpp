@@ -7,7 +7,7 @@
 
 #include "EdgeParticles.hpp"
 
-EdgeParticles::EdgeParticles(std::string name) : GravityParticles(name) {
+EdgeParticles::EdgeParticles(const std::string & name) : GravityParticles(name) {
     blurLowerLimit.set(0);
     blurUpperLimit.set(0);
     blurGain.set(1);

@@ -13,7 +13,7 @@
 
 class GravityParticles : public BaseParticles {
    public:
-    explicit GravityParticles(std::string name);
+    explicit GravityParticles(const std::string & name);
     ~GravityParticles() override = default;
 
     void update(KeyState & ks, ColorProvider & clr) override;

@@ -9,7 +9,7 @@
 
 using namespace std::filesystem;
 
-ImageWrapper::ImageWrapper(path p, ofImage & i) {
+ImageWrapper::ImageWrapper(const path & p, ofImage & i) {
     imagePath = p;
     image = i;
     scale = 1.0;

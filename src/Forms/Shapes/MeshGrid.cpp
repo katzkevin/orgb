@@ -11,7 +11,7 @@
 
 #define PERIOD_S 1.0
 
-MeshGrid::MeshGrid(std::string name) : Shape(name) {
+MeshGrid::MeshGrid(const std::string & name) : Shape(name) {
     glowIntensity.set(2.59);
     intensityAtEighthWidth.set(0.01);
     toneMap.set(false);

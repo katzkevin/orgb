@@ -31,7 +31,7 @@ class Thunder : public VisualForm {
     ofParameter<bool> lineSegmentDeterministic;
 
    public:
-    explicit Thunder(std::string name);
+    explicit Thunder(const std::string & name);
     ~Thunder() override;
 
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;

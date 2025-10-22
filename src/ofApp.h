@@ -104,7 +104,7 @@ class ofApp : public ofBaseApp {
     void exit() override;
 
     // Utility for AppIO
-    ofParameterGroup * getParameterGroup(std::string groupName);
+    ofParameterGroup * getParameterGroup(const std::string & groupName);
 
     /*
      * MQTT Comms
@@ -142,7 +142,7 @@ class ofApp : public ofBaseApp {
     void jsonHandlerOfParamMessage(nlohmann::basic_json<> & j);
     void jsonHandlerClassification(nlohmann::basic_json<> & j);
     std::string dumpSettingsToJsonFile();
-    void loadSettingsFromJsonString(std::string payloadString);
+    void loadSettingsFromJsonString(const std::string & payloadString);
     void noteOnHandler(int key, float velocityPct, unsigned int messageId, bool ephemeral = false);
     void noteOffHandler(int key);
 

@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-BaseWaves::BaseWaves(std::string name) : VisualForm(name) {
+BaseWaves::BaseWaves(const std::string & name) : VisualForm(name) {
     parameters.add(glowIntensity.set("glowIntensity", 0.7, 0.1, 4.0));
     parameters.add(intensityAtEighthWidth.set("intensityAtEighthWidth", 0.667, 0, 1.0));
     parameters.add(blendMode.set("blendMode", 1, 0, 8));

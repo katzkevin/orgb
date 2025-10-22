@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-PointWaves::PointWaves(std::string name) : BaseWaves(name) {
+PointWaves::PointWaves(const std::string & name) : BaseWaves(name) {
     glowIntensity.set(1.68);
     intensityAtEighthWidth.set(0.68);
     blendMode.set(1);

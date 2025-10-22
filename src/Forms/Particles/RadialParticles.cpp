@@ -11,7 +11,7 @@
 
 #define TARGET_FRAME_RATE 60.0
 
-RadialParticles::RadialParticles(std::string name) : BaseParticles(name) {
+RadialParticles::RadialParticles(const std::string & name) : BaseParticles(name) {
     particleRate.set(1500);
     initialVelocityLowerBound.set(32);
     blurLowerLimit.set(0);

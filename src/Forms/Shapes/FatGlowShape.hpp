@@ -12,7 +12,7 @@
 
 class FatGlowShape : public Shape {
    public:
-    explicit FatGlowShape(std::string name);
+    explicit FatGlowShape(const std::string & name);
     ~FatGlowShape() override {};
 };
 

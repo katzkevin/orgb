@@ -23,7 +23,7 @@ class Shape : public VisualForm {
     ofPath getOrCreatePath(Press & p);
 
    public:
-    explicit Shape(std::string name);
+    explicit Shape(const std::string & name);
     ~Shape() override {};
 
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;

@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-Orbit::Orbit(std::string name) : VisualForm(name) {
+Orbit::Orbit(const std::string & name) : VisualForm(name) {
     parameters.add(glowIntensity.set("glowIntensity", 0.95, 0.5, 4.0));
     parameters.add(intensityAtEighthWidth.set("intensityAtEighthWidth", 0.927, 0, 1.0));
     parameters.add(blendMode.set("blendMode", 1, 0, 8));

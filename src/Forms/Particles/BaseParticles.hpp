@@ -17,7 +17,7 @@
 
 class BaseParticles : public VisualForm {
    public:
-    explicit BaseParticles(std::string name);
+    explicit BaseParticles(const std::string & name);
     virtual ~BaseParticles() = default;
 
     void update(KeyState & ks, ColorProvider & clr) override;

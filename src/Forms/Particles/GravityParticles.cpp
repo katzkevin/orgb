@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-GravityParticles::GravityParticles(std::string name) : BaseParticles(name) {
+GravityParticles::GravityParticles(const std::string & name) : BaseParticles(name) {
     particleRate.set(2000);
     initialVelocityLowerBound.set(200);
     blurLowerLimit.set(1);
