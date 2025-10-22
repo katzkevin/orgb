@@ -13,7 +13,7 @@
 class MeshGrid : public Shape {
    public:
     explicit MeshGrid(const std::string & name);
-    ~MeshGrid() override {};
+    ~MeshGrid() override = default;
 
    protected:
     void drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press) override;

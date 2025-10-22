@@ -16,7 +16,7 @@
 class SizedSprite : public Particle {
    public:
     SizedSprite(glm::vec3 pos, glm::vec3 vel, ofColor c, float s);
-    ~SizedSprite() override {};
+    ~SizedSprite() override = default;
 
     unsigned int id;
     float size;

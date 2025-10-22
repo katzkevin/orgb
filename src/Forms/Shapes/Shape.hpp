@@ -24,7 +24,7 @@ class Shape : public VisualForm {
 
    public:
     explicit Shape(const std::string & name);
-    ~Shape() override {};
+    ~Shape() override = default;
 
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm) override;
     ofPath shape(int sideCount, float radius);

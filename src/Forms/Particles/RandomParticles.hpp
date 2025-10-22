@@ -14,7 +14,7 @@
 class RandomParticles : public BaseParticles {
    public:
     explicit RandomParticles(const std::string & name);
-    ~RandomParticles() override {};
+    ~RandomParticles() override = default;
 
     ofParameter<float> baseRandom;
 

@@ -13,7 +13,7 @@
 class NoiseGrid : public Shape {
    public:
     explicit NoiseGrid(const std::string & name);
-    ~NoiseGrid() override {};
+    ~NoiseGrid() override = default;
 
    protected:
     void drawUnit(const ofColor & color, KeyState & ks, DrawManager & dm, Press & press) override;

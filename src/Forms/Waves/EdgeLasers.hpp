@@ -13,7 +13,7 @@
 class EdgeLasers : public BaseWaves {
    public:
     explicit EdgeLasers(const std::string & name);
-    ~EdgeLasers() override {};
+    ~EdgeLasers() override = default;
 
     ofParameter<bool> lineSegmentDeterministic;
 

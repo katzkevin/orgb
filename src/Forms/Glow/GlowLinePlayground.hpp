@@ -17,7 +17,7 @@
 class GlowLinePlayground : public VisualForm {
    public:
     explicit GlowLinePlayground(const std::string & name);
-    ~GlowLinePlayground() override {};
+    ~GlowLinePlayground() override = default;
     void draw(KeyState & ks, ColorProvider & clr, DrawManager & dm);
 
    protected:

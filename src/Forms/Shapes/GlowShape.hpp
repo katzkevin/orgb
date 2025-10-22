@@ -13,7 +13,7 @@
 class GlowShape : public Shape {
    public:
     explicit GlowShape(const std::string & name);
-    ~GlowShape() override {};
+    ~GlowShape() override = default;
 };
 
 #endif /* FatGlowShape_hpp */

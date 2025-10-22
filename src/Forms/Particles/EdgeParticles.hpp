@@ -14,7 +14,7 @@
 class EdgeParticles : public GravityParticles {
    public:
     explicit EdgeParticles(const std::string & name);
-    ~EdgeParticles() override {};
+    ~EdgeParticles() override = default;
 
    protected:
     ofVec3f startPositionForPress(const Press & p) override;

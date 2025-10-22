@@ -14,7 +14,7 @@
 class RadialParticles : public BaseParticles {
    public:
     explicit RadialParticles(const std::string & name);
-    ~RadialParticles() override {};
+    ~RadialParticles() override = default;
 
    protected:
     void createParticlesForPress(Press & press, int numberOfParticlesToCreate, ofColor c, float arousalPct) override;

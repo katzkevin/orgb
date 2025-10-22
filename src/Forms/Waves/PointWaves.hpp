@@ -13,7 +13,7 @@
 class PointWaves : public BaseWaves {
    public:
     explicit PointWaves(const std::string & name);
-    ~PointWaves() override {};
+    ~PointWaves() override = default;
 
    protected:
     void drawUnit(ColorProvider & clr, KeyState & ks, DrawManager & dm, const Press & p, float alpha) override;
