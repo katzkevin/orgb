@@ -75,4 +75,5 @@ CheckOptions:
 # Only apply fixes for very safe checks
 WarningsAsErrors: ''
 HeaderFilterRegex: 'src/.*'
+SystemHeaders: false
 FormatStyle: file

@@ -76,10 +76,11 @@ pre-commit:
         fi
 
         # Run clang-tidy on each staged file
+        # --system-headers=false suppresses warnings from external libraries (openFrameworks, etc)
         EXIT_CODE=0
         for file in $STAGED_CPP_FILES; do
           echo "Checking: $file"
-          /opt/homebrew/opt/llvm@19/bin/clang-tidy "$file" 2>&1 | grep -E "warning:|error:" || true
+          /opt/homebrew/opt/llvm@19/bin/clang-tidy --system-headers=false "$file" 2>&1 | grep -E "warning:|error:" || true
 
           # Note: We don't fail the commit on warnings, just show them
           # Uncomment the following to fail on errors:
