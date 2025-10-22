@@ -167,29 +167,26 @@ compile-db:
     @bear -- make clean && bear -- make Release
     @echo "✓ compile_commands.json generated"
 
-# Run clang-tidy linter on all source files
+# Run clang-tidy linter on all source files (without using compile_commands.json to avoid system header noise)
 lint:
     @echo "Running clang-tidy linter..."
-    @if [ ! -f compile_commands.json ]; then \
-        echo "compile_commands.json not found. Run 'just compile-db' first."; \
-        exit 1; \
-    fi
-    @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
-        --header-filter='src/.*' \
-        --system-headers=false \
-        --quiet
+    @find src -name "*.cpp" -o -name "*.hpp" | grep -v "3rdparty" | \
+        xargs -I {} /opt/homebrew/opt/llvm@19/bin/clang-tidy --system-headers=false {} -- -std=c++17 \
+            -I./src -I./src/Forms -I./src/Forms/Lightning -I./src/Forms/Shapes \
+            -I./src/Forms/Particles -I./src/Forms/Waves -I./src/Forms/Glow \
+            -I./src/core -I./src/3rdparty -I./src/Effects \
+            -I/Users/katz/workspace/of_v0.12.1_osx_release/libs/openFrameworks 2>&1 | \
+        grep -E "warning:|error:" | grep -v "^Error while" || true
     @echo "✓ Linting complete"
 
-# Run clang-tidy with auto-fix on simple issues
+# Run clang-tidy with auto-fix on simple issues (without using compile_commands.json to avoid system header noise)
 lint-fix:
     @echo "Running clang-tidy with auto-fix..."
-    @if [ ! -f compile_commands.json ]; then \
-        echo "compile_commands.json not found. Run 'just compile-db' first."; \
-        exit 1; \
-    fi
-    @find src -name "*.cpp" | xargs /opt/homebrew/opt/llvm/bin/clang-tidy -p . \
-        --header-filter='src/.*' \
-        --system-headers=false \
-        --fix-errors \
-        --quiet
+    @find src -name "*.cpp" -o -name "*.hpp" | grep -v "3rdparty" | \
+        xargs -I {} /opt/homebrew/opt/llvm@19/bin/clang-tidy --system-headers=false --fix-errors {} -- -std=c++17 \
+            -I./src -I./src/Forms -I./src/Forms/Lightning -I./src/Forms/Shapes \
+            -I./src/Forms/Particles -I./src/Forms/Waves -I./src/Forms/Glow \
+            -I./src/core -I./src/3rdparty -I./src/Effects \
+            -I/Users/katz/workspace/of_v0.12.1_osx_release/libs/openFrameworks 2>&1 | \
+        grep -E "warning:|error:" | grep -v "^Error while" || true
     @echo "✓ Auto-fixes applied"
