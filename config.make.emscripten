@@ -122,6 +122,9 @@ BIN_NAME = orgb
 # NOTE: Disabled for Emscripten - boost not available in browser
 # PROJECT_CFLAGS = -I/opt/homebrew/opt/boost/include
 
+# Suppress warnings from third-party libraries (UTF8, openFrameworks)
+PROJECT_CFLAGS = -Wno-character-conversion
+
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
 #   These are lists of CFLAGS that are target-specific.  While any flags could
