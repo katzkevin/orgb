@@ -4,6 +4,8 @@ audio-reactive visualizations for piano, guitar, whatever
 
 plays MIDI over MQTT/OSC and makes pretty things happen in real-time. made for live performances, generative art, or just messing around.
 
+![orgb visualization](docs/images/orgb_screenshot.png)
+
 ## what it does
 
 - listens to MIDI input (piano/guitar/controllers)
