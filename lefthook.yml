@@ -90,3 +90,27 @@ pre-commit:
         done
 
         exit $EXIT_CODE
+
+    tests:
+      run: |
+        # Run unit tests before committing
+        echo "Running unit tests..."
+
+        # Check if tests exist and are built
+        if [ ! -f "tests/build/orgb_tests" ]; then
+          echo "⚠️  Tests not built yet. Building tests..."
+          cd tests && ./run_tests.sh
+          TEST_RESULT=$?
+        else
+          # Tests are already built, just run them
+          cd tests/build && ./orgb_tests
+          TEST_RESULT=$?
+        fi
+
+        if [ $TEST_RESULT -eq 0 ]; then
+          echo "✅ All tests passed"
+          exit 0
+        else
+          echo "❌ Tests failed - fix failing tests before committing"
+          exit 1
+        fi

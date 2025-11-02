@@ -24,12 +24,12 @@ build-macos-debug:
 # Build for Emscripten/WebAssembly (browser)
 build-emscripten:
     @just _setup-platform emscripten
-    CC=/private/tmp/emsdk/upstream/emscripten/emcc CXX=/private/tmp/emsdk/upstream/emscripten/em++ make Release
+    bash -c 'source ~/emsdk/emsdk_env.sh && make Release'
 
 # Build for Emscripten in Debug mode
 build-emscripten-debug:
     @just _setup-platform emscripten
-    CC=/private/tmp/emsdk/upstream/emscripten/emcc CXX=/private/tmp/emsdk/upstream/emscripten/em++ make Debug
+    bash -c 'source ~/emsdk/emsdk_env.sh && make Debug'
 
 # Build the project in Release mode (defaults to macOS)
 build:
@@ -76,9 +76,13 @@ run-debug: build-macos-debug _prepare-ndi
 
 # Build and serve Emscripten build in browser
 run-emscripten: build-emscripten
-    @echo "Starting web server for Emscripten build..."
-    @echo "Open http://localhost:8000/orgb/ in your browser"
-    @cd bin/em && python3 -m http.server 8000
+    @./scripts/emscripten-server.sh
+
+# Clean up Emscripten server if it's still running
+clean-emscripten-server:
+    @echo "Cleaning up any Emscripten server on port 8005..."
+    @lsof -ti :8005 2>/dev/null | xargs -r kill -9 2>/dev/null || true
+    @echo "✓ Port 8005 is now free"
 
 # Clean and rebuild
 rebuild: clean build

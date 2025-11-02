@@ -20,6 +20,21 @@ void ofApp::noteOnHandler(int key, float velocityPct, unsigned int messageId, bo
 
     ofLogVerbose("IO") << "[" << key << "] " << velocityPct;
 
+    // Safety check for Emscripten
+    if (forms.empty()) {
+        ofLogError() << "noteOnHandler called but forms vector is empty!";
+        return;
+    }
+    if (currentFormIndex < 0 || currentFormIndex >= static_cast<int>(forms.size())) {
+        ofLogError() << "noteOnHandler: currentFormIndex " << currentFormIndex
+                     << " out of bounds (forms.size=" << forms.size() << ")";
+        return;
+    }
+    if (!forms[currentFormIndex]) {
+        ofLogError() << "noteOnHandler: forms[" << currentFormIndex << "] is null!";
+        return;
+    }
+
     if (ephemeral) {
         ks.ephemeralKeyPressedHandler(key, velocityPct, messageId);
     } else {

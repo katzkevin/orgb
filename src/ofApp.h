@@ -11,6 +11,10 @@
 #ifdef HAS_MQTT
 #include "ofxMQTT.h"
 #endif
+#include <atomic>
+#include <thread>
+
+#include "ThreadSafeOSCQueue.hpp"
 #include "ofxOsc.h"
 
 // NDI
@@ -131,6 +135,15 @@ class ofApp : public ofBaseApp {
 #ifndef __EMSCRIPTEN__
     ofxOscReceiver receiver;
     void pollForOSCMessages();
+
+    // Threading support
+    ThreadSafeOSCQueue oscMessageQueue;
+    std::thread oscThread;
+    std::atomic<bool> oscThreadRunning{false};
+    void oscThreadFunction();         // Runs in background thread
+    void processQueuedOSCMessages();  // Processes messages in main thread
+    void startOSCThread();
+    void stopOSCThread();
 #endif  // __EMSCRIPTEN__
 
     /*

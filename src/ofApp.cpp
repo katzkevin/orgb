@@ -7,47 +7,45 @@ void ofApp::initializeForms() {
     // To be invoked on resize / startup. Initialize forms (makes resizes easier).
     forms.clear();
 
+    ofLogNotice("initializeForms") << "Starting form initialization...";
+
     // clang-format off
-    forms = {
-        std::shared_ptr<VisualForm>(new RadialParticles("RadialParticles")),
-        
-        std::shared_ptr<VisualForm>(new NoiseGrid("NoiseGrid")),
-        std::shared_ptr<VisualForm>(new EdgeParticles("EdgeParticles")),
-        std::shared_ptr<VisualForm>(new MeshGrid("MeshGrid")),
-        std::shared_ptr<VisualForm>(new EdgeLasers("EdgeLasers")),
+    try {
+        ofLogNotice("initializeForms") << "Creating RadialParticles...";
+        forms.push_back(std::shared_ptr<VisualForm>(new RadialParticles("RadialParticles")));
+
+        ofLogNotice("initializeForms") << "Creating NoiseGrid...";
+        forms.push_back(std::shared_ptr<VisualForm>(new NoiseGrid("NoiseGrid")));
+
+        ofLogNotice("initializeForms") << "Creating EdgeParticles...";
+        forms.push_back(std::shared_ptr<VisualForm>(new EdgeParticles("EdgeParticles")));
+
+        ofLogNotice("initializeForms") << "Creating MeshGrid...";
+        forms.push_back(std::shared_ptr<VisualForm>(new MeshGrid("MeshGrid")));
+
+        ofLogNotice("initializeForms") << "Creating EdgeLasers...";
+        forms.push_back(std::shared_ptr<VisualForm>(new EdgeLasers("EdgeLasers")));
+
+#if 0  // Temporarily disable remaining forms to isolate the issue
         
         
         
         
 //        std::shared_ptr<VisualForm>(new LaserWaves("LaserWaves")),
-        // std::shared_ptr<VisualForm>(new GravityParticles("GravityParticles")),
-        std::shared_ptr<VisualForm>(new Field("Field")),
-        std::shared_ptr<VisualForm>(new RandomParticles("RandomParticles")),
-        // std::shared_ptr<VisualForm>(new GlowLinePlayground("GlowLinePlayground")),
-        std::shared_ptr<VisualForm>(new Shape("Shape")),
-        std::shared_ptr<VisualForm>(new GlowShape("GlowShape")),
-//        std::shared_ptr<VisualForm>(new FatGlowShape("FatGlowShape")),
-        
-        // std::shared_ptr<VisualForm>(new Orbit("Orbit")),
-//        std::shared_ptr<VisualForm>(new BaseWaves("BaseWaves")),
-                
-        
-        std::shared_ptr<VisualForm>(new Thunder("Thunder")),
-        std::shared_ptr<VisualForm>(new RapidThunder("StableThunder")),
-        
+#endif
 
-        // std::shared_ptr<VisualForm>(new ImageSprocket()),
-        std::shared_ptr<VisualForm>(new PointWaves("PointWaves")),
-        
-
-        // std::shared_ptr<VisualForm>(new Drawer()),
-//        std::shared_ptr<VisualForm>(new March()),  // TODO Is this a memory leak?
-// std::shared_ptr<VisualForm>(new ImageSprocket()),
-//        std::shared_ptr<VisualForm>(new BlackDot()),
-//        std::shared_ptr<VisualForm>(new Lotus()),
-//        std::shared_ptr<VisualForm>(new BlackLight())};
-        
-    };
+        ofLogNotice("initializeForms") << "All forms created successfully, count: " << forms.size();
+    } catch (const std::exception& e) {
+        ofLogError("initializeForms") << "Exception during form creation: " << e.what();
+#ifndef TARGET_EMSCRIPTEN
+        throw;
+#endif
+    } catch (...) {
+        ofLogError("initializeForms") << "Unknown exception during form creation";
+#ifndef TARGET_EMSCRIPTEN
+        throw;
+#endif
+    }
     // clang-format on
 
     // Clear every time because resize should just reinitialize everything from scratch.
@@ -123,12 +121,14 @@ void ofApp::initializeForms() {
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+    ofLogNotice("ofApp::setup") << "=== SETUP STARTED ===";
     ofSetLogLevel(getLogLevelEnum(getEnv("OFW_LOG_LEVEL", "OF_LOG_NOTICE")));
     ofSetLogLevel("NDI", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("OSC", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("MQTT", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_NDI", "OF_LOG_NOTICE")));
     ofSetLogLevel("warnOnSlow", getLogLevelEnum(getEnv("OFW_LOG_LEVEL_WARN_ON_SLOW", "OF_LOG_WARNING")));
     monitorFrameRateMode = getEnv("MONITOR_FRAME_RATE", "false") == "true";
+    ofLogNotice("ofApp::setup") << "Log levels configured";
 
     enableNDI = getEnv("ENABLE_NDI", "true") == "true";
 #ifdef HAS_MQTT
@@ -159,21 +159,32 @@ void ofApp::setup() {
     ks = KeyState();
     clr = ColorProvider();
 
+    ofLogNotice("ofApp::setup") << "Loading fonts...";
     fontSize = stoi(getEnv("APPLICATION_LOGO_FONT_SIZE", "13"));
     if (!helveticaNeue.load("Inter-Bold.ttf", fontSize, true, true)) {
+        ofLogError("ofApp::setup") << "Couldn't load font: Inter-Bold.ttf";
+#ifndef TARGET_EMSCRIPTEN
         throw std::runtime_error("Couldn't load font.");
+#endif
     }
     helveticaNeue.setLetterSpacing(stof(getEnv("FONT_SIZE_SPACING", "0.98")));
 
     if (!helveticaNeueSmall.load("Inter-Bold.ttf", stoi(getEnv("FONT_SIZE_SMALL", "10")), true, true)) {
+        ofLogError("ofApp::setup") << "Couldn't load small font: Inter-Bold.ttf";
+#ifndef TARGET_EMSCRIPTEN
         throw std::runtime_error("Couldn't load font.");
+#endif
     }
     helveticaNeueSmall.setLetterSpacing(stof(getEnv("FONT_SIZE_SMALL_SPACING", "0.98")));
 
     if (!helveticaNeueTiny.load("Inter-Regular.ttf", stof(getEnv("FONT_SIZE_TINY", "9")), true, true)) {
+        ofLogError("ofApp::setup") << "Couldn't load tiny font: Inter-Regular.ttf";
+#ifndef TARGET_EMSCRIPTEN
         throw std::runtime_error("Couldn't load font.");
+#endif
     }
     helveticaNeueTiny.setLetterSpacing(stof(getEnv("FONT_SIZE_TINY_SPACING", "0.9")));
+    ofLogNotice("ofApp::setup") << "Fonts loaded";
 
     guiShow = false;
     debugShow = false;
@@ -183,6 +194,9 @@ void ofApp::setup() {
     ofLogNotice("OSC") << "Setting up OSC receiver...";
     receiver.setup(OSC_PORT);
     ofLogNotice("OSC") << "Online. Port: " << OSC_PORT;
+
+    // Start OSC thread for background message receiving
+    startOSCThread();
 #endif
 
 #ifdef HAS_MQTT
@@ -230,8 +244,29 @@ void ofApp::setup() {
     postProcessing->printPipeline();
 
     updateLastInteractionMoment();
-    initializeForms();
-    switchToForm(0);
+    ofLogNotice("ofApp::setup") << "About to initialize forms...";
+    try {
+        initializeForms();
+        ofLogNotice("ofApp::setup") << "Forms initialized, count: " << forms.size();
+        switchToForm(0);
+        ofLogNotice("ofApp::setup") << "=== SETUP COMPLETE ===";
+    } catch (const std::exception & e) {
+        ofLogError("ofApp::setup") << "FATAL: Exception during setup: " << e.what();
+#ifdef TARGET_EMSCRIPTEN
+        // In Emscripten, don't crash - just log and continue with empty forms
+        ofLogError("ofApp::setup") << "Continuing with degraded functionality...";
+#else
+        throw;
+#endif
+    } catch (...) {
+        ofLogError("ofApp::setup") << "FATAL: Unknown exception during setup";
+#ifdef TARGET_EMSCRIPTEN
+        // In Emscripten, don't crash - just log and continue
+        ofLogError("ofApp::setup") << "Continuing with degraded functionality...";
+#else
+        throw;
+#endif
+    }
 }
 
 //--------------------------------------------------------------
@@ -270,8 +305,8 @@ void ofApp::update() {
     // ks.circumplexHomeostasis();
 
 #ifndef __EMSCRIPTEN__
-    // check for waiting messages
-    pollForOSCMessages();
+    // Process OSC messages from background thread queue
+    processQueuedOSCMessages();
 #endif  // __EMSCRIPTEN__
 
 #ifdef HAS_MQTT
@@ -399,6 +434,11 @@ void ofApp::switchToForm(int formIndex) {
 }
 
 void ofApp::exit() {
+#ifndef __EMSCRIPTEN__
+    // Stop OSC thread
+    stopOSCThread();
+#endif
+
 #ifdef HAS_MQTT
     if (enableMQTT && mqttClientConnectedSuccessfully) {
         ofLogVerbose() << "MQTT disconnecting...";

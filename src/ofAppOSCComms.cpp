@@ -7,10 +7,183 @@
 
 #ifndef __EMSCRIPTEN__
 
+#include <chrono>
+#include <thread>
+
 #include "Utilities.hpp"
 #include "ofApp.h"
 
 using json = nlohmann::json;
+
+// ====================
+// Threading Functions
+// ====================
+
+void ofApp::startOSCThread() {
+    if (oscThreadRunning) {
+        ofLogWarning("OSC") << "OSC thread already running";
+        return;
+    }
+
+    oscThreadRunning = true;
+    oscThread = std::thread(&ofApp::oscThreadFunction, this);
+    ofLogNotice("OSC") << "OSC thread started";
+}
+
+void ofApp::stopOSCThread() {
+    if (!oscThreadRunning) {
+        return;
+    }
+
+    ofLogNotice("OSC") << "Stopping OSC thread...";
+    oscThreadRunning = false;
+
+    if (oscThread.joinable()) {
+        oscThread.join();
+    }
+
+    ofLogNotice("OSC") << "OSC thread stopped";
+}
+
+void ofApp::oscThreadFunction() {
+    ofLogNotice("OSC") << "OSC background thread running";
+
+    while (oscThreadRunning) {
+        // Poll for messages and add to queue
+        while (receiver.hasWaitingMessages() && oscThreadRunning) {
+            ofxOscMessage m;
+            receiver.getNextMessage(m);
+            oscMessageQueue.push(m);
+        }
+
+        // Small sleep to prevent busy-waiting
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    ofLogNotice("OSC") << "OSC background thread exiting";
+}
+
+void ofApp::processQueuedOSCMessages() {
+    double t0 = getSystemTimeSecondsPrecise();
+
+    int processedCount = 0;
+    const int maxMessagesPerFrame = 100;  // Limit processing per frame
+
+    ofxOscMessage m;
+    while (processedCount < maxMessagesPerFrame && oscMessageQueue.tryPop(m)) {
+        processedCount++;
+
+        // Log messages (same as before)
+        if (m.getAddress() == MIDI_GUITAR_OSC_ADDRESS) {
+            if (ofGetFrameNum() % 400 == 0) {
+                ofLogNotice("OSC") << "(midi-guitar, 1/400th) " << m;
+            }
+        } else if (m.getAddress() == MIC0_PITCH_OSC_ADDRESS) {
+            if (ofGetFrameNum() % 400 == 0) {
+                ofLogVerbose("OSC") << "(mic-0, 1/400th) " << m;
+            }
+        } else {
+            ofLogNotice("OSC") << m;
+        }
+
+        // Process message (same logic as before)
+        try {
+            if (m.getAddress() == MIDI_KEYBOARD_OSC_ADDRESS) {
+                json j = nlohmann::json::object();
+                std::string messageType = m.getArgAsString(0);
+                j["type"] = messageType;
+
+                switch (stringToMidiType(messageType)) {
+                    case MIDITYPE::NOTE_ON:
+                    case MIDITYPE::NOTE_OFF:
+                        j["channel"] = m.getArgAsInt(1);
+                        j["note"] = m.getArgAsInt(2);
+                        j["velocity"] = m.getArgAsInt(3);
+                        break;
+                    case MIDITYPE::CONTROL_CHANGE:
+                        j["channel"] = m.getArgAsInt(1);
+                        j["control"] = m.getArgAsInt(2);
+                        j["value"] = m.getArgAsInt(3);
+                        j["time"] = m.getArgAsInt(4);
+                        break;
+                    case MIDITYPE::PITCHWHEEL:
+                        j["channel"] = m.getArgAsInt(1);
+                        j["pitch"] = m.getArgAsInt(2);
+                        j["time"] = m.getArgAsInt(3);
+                        break;
+                    case MIDITYPE::KEYBOARD_ON:
+                        j["key"] = m.getArgAsString(1);
+                        break;
+                    case MIDITYPE::KEYBOARD_OFF:
+                        j["key"] = m.getArgAsString(1);
+                        break;
+                    default:
+                        ofLogWarning() << "Unhandled OSC Message: " << messageType;
+                }
+                jsonHandlerMidiMessage(j);
+
+            } else if (m.getAddress() == MIDI_GUITAR_OSC_ADDRESS) {
+                json j = nlohmann::json::object();
+                if (m.getNumArgs() <= 1) {
+                    ofLogNotice("OSC") << "Got " << m.getNumArgs() << "-length " << MIDI_GUITAR_OSC_ADDRESS
+                                       << " message. Skipping.";
+                    continue;
+                }
+                int messageId = m.getArgAsInt(m.getNumArgs() - 1);
+                for (int i = 0; i < static_cast<int>(m.getNumArgs()) - 1; i += 2) {
+                    if (m.getArgAsInt(i + 1) > 127) {
+                        ofLogVerbose("OSC") << "Guitar pitch velocity greater than 127: " << m.getArgAsInt(i + 1);
+                    }
+                    j[std::to_string(m.getArgAsInt(i))] = ofMap(m.getArgAsInt(i + 1), 0, MIDI_NOTE_MAX, 0, 1, true);
+                }
+                jsonHandlerEphemeralNote(j, messageId);
+
+            } else if (m.getAddress() == MIC0_PITCH_OSC_ADDRESS) {
+                if (m.getNumArgs() == 0) {
+                    ofLogWarning("OSC") << "Received 0 arg message: " << m;
+                    continue;
+                }
+
+                json j = nlohmann::json::object();
+                unsigned int messageId = m.getArgAsInt(m.getNumArgs() - 1);
+
+                for (int i = 1; i < static_cast<int>(m.getNumArgs()) - 2; i += 2) {
+                    j[std::to_string(std::lround(m.getArgAsFloat(i)))] = m.getArgAsFloat(i + 1);
+                }
+
+                jsonHandlerEphemeralNote(j, messageId);
+
+            } else if (m.getAddress() == SETTINGS_ADDRESS) {
+                auto x = m.getArgAsString(0);
+                ofLogVerbose("OSC") << "Received SETTINGS message: " << x;
+                loadSettingsFromJsonString(x);
+            }
+
+        } catch (nlohmann::detail::parse_error e) {
+            ofLogWarning("OSC") << "Skipping parse error: " << e.what();
+        }
+    }
+
+    // Check queue status
+    size_t queueSize = oscMessageQueue.size();
+    if (queueSize > 50) {
+        ofLogWarning("OSC") << "Queue backing up: " << queueSize << " messages pending";
+    }
+
+    size_t droppedCount = oscMessageQueue.getAndResetDroppedCount();
+    if (droppedCount > 0) {
+        ofLogError("OSC") << "Dropped " << droppedCount << " messages due to queue overflow!";
+    }
+
+    if (monitorFrameRateMode && ofGetFrameNum() % 30 == 0 && ofGetElapsedTimef() > 5.0) {
+        warnOnSlow("OSC IO (threaded)", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_OSC_IO, ofGetFrameNum(),
+                   ofGetElapsedTimef(), 30);
+    }
+}
+
+// ====================
+// Legacy Non-Threaded Function (keep for reference/fallback)
+// ====================
 
 void ofApp::pollForOSCMessages() {
     double t0 = getSystemTimeSecondsPrecise();
