@@ -104,52 +104,22 @@ status:
 stop:
     @killall orgb 2>/dev/null && echo "Stopped orgb" || echo "orgb was not running"
 
-# Build and run unit tests
+# Run unit tests (fast, no GL required)
 test:
-    @cd tests && ./run_tests.sh
+    @echo "Building and running unit tests..."
+    @cd tests/build && cmake --build . --target unit-tests
+    @cd tests/build && ctest -L unit --output-on-failure
 
-# Clean and rebuild tests
-test-clean:
-    @cd tests && ./run_tests.sh clean
+# Run integration tests (requires GL context)
+test-integration:
+    @echo "Building and running integration tests..."
+    @cd tests/build && cmake --build . --target integration-tests
+    @cd tests/build && ctest -L integration --output-on-failure
 
-# Run specific test suite (e.g., just test-filter UtilitiesTest.*)
-test-filter PATTERN:
-    @cd tests && ./run_tests.sh --filter={{PATTERN}}
-
-# Validate all shaders for compilation errors
+# Validate shader syntax
 shader-validate:
     @echo "Validating shaders..."
     @./scripts/validateShaders.sh
-
-# Validate shaders with verbose output
-shader-validate-verbose:
-    @echo "Validating shaders (verbose)..."
-    @./scripts/validateShaders.sh --verbose
-
-# Run shader unit tests (requires full openFrameworks environment)
-shader-test:
-    @echo "Building and running shader tests..."
-    @echo "Note: Requires openFrameworks and dependencies to compile"
-    @if [ ! -f tests/shader_tests ]; then \
-        echo "Compiling shader tests..."; \
-        cd tests && g++ -std=c++17 shader_tests.cpp -o shader_tests -I../src 2>&1 || \
-        (echo "❌ Shader tests require full build environment - skipping" && exit 0); \
-    fi
-    @if [ -f tests/shader_tests ]; then \
-        cd tests && ./shader_tests; \
-    fi
-
-# Run all shader-related checks (validation only - tests require full build)
-shader-check: shader-validate
-    @echo ""
-    @echo "✓ Shader validation passed!"
-    @echo "  (Unit tests skipped - run 'just shader-test' after full build)"
-
-# Clean shader test artifacts
-shader-clean:
-    @rm -f tests/shader_tests
-    @rm -rf tests/test_output tests/diff_images
-    @echo "Cleaned shader test artifacts"
 
 # Format all C++ source files with clang-format
 format:

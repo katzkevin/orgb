@@ -5,9 +5,9 @@
 //  Created by Kevin Katz on 3/23/22.
 //
 
-#ifdef HAS_MQTT
-
 #include <ofApp.h>
+
+#ifdef HAS_MQTT
 
 #include "json.hpp"
 

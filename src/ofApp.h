@@ -2,9 +2,7 @@
 
 #include <optional>
 
-// TODO: MQTT addon has C++23 compatibility issues - temporarily disabled
-// Uncomment the line below to enable MQTT support when the addon is fixed
-// #define HAS_MQTT
+#define HAS_MQTT
 
 // Browser build - disable native networking addons
 #ifndef __EMSCRIPTEN__

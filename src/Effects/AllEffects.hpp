@@ -8,7 +8,7 @@
 #ifndef AllEffects_hpp
 #define AllEffects_hpp
 
-// #include "ChromaticAberrationEffect.hpp" // TODO: Missing .hpp file
+#include "ChromaticAberrationEffect.hpp"
 #include "DisplacementEffect.hpp"
 #include "FeedbackEffect.hpp"
 #include "FilmGrainEffect.hpp"

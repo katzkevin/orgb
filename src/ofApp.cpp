@@ -26,11 +26,32 @@ void ofApp::initializeForms() {
         ofLogNotice("initializeForms") << "Creating EdgeLasers...";
         forms.push_back(std::shared_ptr<VisualForm>(new EdgeLasers("EdgeLasers")));
 
+        ofLogNotice("initializeForms") << "Creating Field...";
+        forms.push_back(std::shared_ptr<VisualForm>(new Field("Field")));
+
+        ofLogNotice("initializeForms") << "Creating RandomParticles...";
+        forms.push_back(std::shared_ptr<VisualForm>(new RandomParticles("RandomParticles")));
+
+        ofLogNotice("initializeForms") << "Creating Shape...";
+        forms.push_back(std::shared_ptr<VisualForm>(new Shape("Shape")));
+
+        ofLogNotice("initializeForms") << "Creating GlowShape...";
+        forms.push_back(std::shared_ptr<VisualForm>(new GlowShape("GlowShape")));
+
+        ofLogNotice("initializeForms") << "Creating Thunder...";
+        forms.push_back(std::shared_ptr<VisualForm>(new Thunder("Thunder")));
+
+        ofLogNotice("initializeForms") << "Creating RapidThunder...";
+        forms.push_back(std::shared_ptr<VisualForm>(new RapidThunder("StableThunder")));
+
+        ofLogNotice("initializeForms") << "Creating PointWaves...";
+        forms.push_back(std::shared_ptr<VisualForm>(new PointWaves("PointWaves")));
+
 #if 0  // Temporarily disable remaining forms to isolate the issue
-        
-        
-        
-        
+
+
+
+
 //        std::shared_ptr<VisualForm>(new LaserWaves("LaserWaves")),
 #endif
 

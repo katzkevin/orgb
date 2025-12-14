@@ -21,7 +21,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-# Include directories
+# Common include directories for all tests
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../src
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Forms
@@ -30,6 +30,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Forms/Shapes
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Forms/Lightning
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Forms/Glow
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/Effects
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/core
     ${OF_ROOT}/libs/openFrameworks
     ${OF_ROOT}/libs/openFrameworks/graphics
     ${OF_ROOT}/libs/openFrameworks/app
@@ -60,9 +62,11 @@ include_directories(
     ${OF_ROOT}/libs/cairo/include/cairo
     ${OF_ROOT}/libs/uriparser/include
     /opt/homebrew/opt/boost/include
+    # Addons
+    ${OF_ROOT}/addons/ofxGui/src
 )
 
-# Link directories
+# Common link directories for all tests
 link_directories(
     ${OF_ROOT}/libs/openFrameworksCompiled/lib/osx
     ${OF_ROOT}/libs/freeimage/lib/macos/FreeImage.xcframework/macos-arm64_x86_64
@@ -83,71 +87,49 @@ link_directories(
     /opt/homebrew/opt/openssl/lib
 )
 
-# Source files to test
-set(SRC_FILES
-    ../src/Utilities.cpp
-    ../src/Press.cpp
-    ../src/ColorProvider.cpp
-    ../src/KeyState.cpp
-    ../src/Forms/Flock.cpp
-    ../src/Forms/BaseParticle.cpp
-    ../src/Forms/Particle.cpp
-    ../src/Forms/SizedSprite.cpp
+# Add unit tests subdirectory
+add_subdirectory(unit)
+
+# Add integration tests subdirectory
+# Only build integration tests if not doing headless/CI builds
+option(BUILD_INTEGRATION_TESTS "Build integration tests (requires GL context)" ON)
+
+if(BUILD_INTEGRATION_TESTS)
+    add_subdirectory(integration)
+endif()
+
+# Custom targets for running specific test suites
+add_custom_target(test-unit
+    COMMAND ${CMAKE_CTEST_COMMAND} -L unit --output-on-failure
+    DEPENDS unit-tests
+    COMMENT "Running unit tests (fast, no GL required)"
 )
 
-# Test files
-set(TEST_FILES
-    test_utilities.cpp
-    test_press.cpp
-    test_keystate.cpp
-    test_colorprovider.cpp
-    test_flock.cpp
-)
+if(BUILD_INTEGRATION_TESTS)
+    add_custom_target(test-integration
+        COMMAND ${CMAKE_CTEST_COMMAND} -L integration --output-on-failure
+        DEPENDS integration-tests
+        COMMENT "Running integration tests (requires GL context)"
+    )
 
-# Create test executable
-add_executable(
-    orgb_tests
-    ${TEST_FILES}
-    ${SRC_FILES}
-)
+    add_custom_target(test-all
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+        DEPENDS unit-tests integration-tests
+        COMMENT "Running all tests"
+    )
+else()
+    add_custom_target(test-all
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+        DEPENDS unit-tests
+        COMMENT "Running all tests (integration tests disabled)"
+    )
+endif()
 
-# Link libraries
-target_link_libraries(
-    orgb_tests
-    GTest::gtest_main
-    ${OF_ROOT}/libs/openFrameworksCompiled/lib/osx/libopenFrameworksDebug.a
-    ${OF_ROOT}/libs/FreeImage/lib/macos/FreeImage.xcframework/macos-arm64_x86_64/FreeImage.a
-    ${OF_ROOT}/libs/freetype/lib/macos/freetype.xcframework/macos-arm64_x86_64/libfreetype.a
-    ${OF_ROOT}/libs/cairo/lib/macos/cairo.xcframework/macos-arm64_x86_64/libcairo.a
-    ${OF_ROOT}/libs/pixman/lib/macos/pixman.xcframework/macos-arm64_x86_64/libpixman-1.a
-    ${OF_ROOT}/libs/curl/lib/macos/curl.xcframework/macos-arm64_x86_64/curl.a
-    ${OF_ROOT}/libs/uriparser/lib/macos/uriparser.xcframework/macos-arm64_x86_64/uriparser.a
-    ${OF_ROOT}/libs/pugixml/lib/macos/pugixml.xcframework/macos-arm64_x86_64/libpugixml.a
-    ${OF_ROOT}/libs/tess2/lib/macos/tess2.xcframework/macos-arm64_x86_64/libtess2.a
-    ${OF_ROOT}/libs/glew/lib/macos/glew.xcframework/macos-arm64_x86_64/libGLEW.a
-    ${OF_ROOT}/libs/libpng/lib/macos/libpng.xcframework/macos-arm64_x86_64/libpng.a
-    ${OF_ROOT}/libs/zlib/lib/macos/zlib.xcframework/macos-arm64_x86_64/zlib.a
-    ${OF_ROOT}/libs/brotli/lib/macos/brotli.xcframework/macos-arm64_x86_64/brotli.a
-    ${OF_ROOT}/libs/fmt/lib/macos/fmt.xcframework/macos-arm64_x86_64/libfmt.a
-    ${OF_ROOT}/libs/rtAudio/lib/macos/rtAudio.xcframework/macos-arm64_x86_64/librtaudio.a
-    ${OF_ROOT}/libs/glfw/lib/macos/glfw.xcframework/macos-arm64_x86_64/libglfw3.a
-    boost_filesystem
-    "-framework Cocoa"
-    "-framework IOKit"
-    "-framework CoreVideo"
-    "-framework CoreFoundation"
-    "-framework OpenGL"
-    "-framework AppKit"
-    "-framework AVFoundation"
-    "-framework CoreMedia"
-    "-framework CoreAudio"
-    "-framework AudioToolbox"
-    "-framework Security"
-    "-framework SystemConfiguration"
-    crypto
-    ssl
-)
-
-# Discover tests
-include(GoogleTest)
-gtest_discover_tests(orgb_tests)
+# Print configuration summary
+message(STATUS "==========================================")
+message(STATUS "Test Configuration")
+message(STATUS "==========================================")
+message(STATUS "Unit tests: ENABLED")
+message(STATUS "Integration tests: ${BUILD_INTEGRATION_TESTS}")
+message(STATUS "OpenFrameworks: ${OF_ROOT}")
+message(STATUS "==========================================")

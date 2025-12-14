@@ -59,8 +59,8 @@ if [ ! -f "Makefile" ]; then
 fi
 
 # Build tests
-echo -e "${YELLOW}Building tests...${NC}"
-make -j$(sysctl -n hw.ncpu)
+echo -e "${YELLOW}Building unit tests...${NC}"
+cmake --build . --target unit-tests
 
 # Check if build succeeded
 if [ $? -ne 0 ]; then
@@ -74,10 +74,10 @@ echo ""
 # Run tests
 if [ -n "$FILTER" ]; then
     echo -e "${YELLOW}Running tests matching: $FILTER${NC}"
-    ./orgb_tests --gtest_filter="$FILTER"
+    ctest -L unit --output-on-failure -R "$FILTER"
 else
-    echo -e "${YELLOW}Running all tests...${NC}"
-    ./orgb_tests
+    echo -e "${YELLOW}Running unit tests...${NC}"
+    ctest -L unit --output-on-failure
 fi
 
 # Check test results

@@ -96,14 +96,14 @@ pre-commit:
         # Run unit tests before committing
         echo "Running unit tests..."
 
-        # Check if tests exist and are built
-        if [ ! -f "tests/build/orgb_tests" ]; then
+        # Check if tests are built
+        if [ ! -f "tests/build/unit/unit-tests" ]; then
           echo "⚠️  Tests not built yet. Building tests..."
           cd tests && ./run_tests.sh
           TEST_RESULT=$?
         else
           # Tests are already built, just run them
-          cd tests/build && ./orgb_tests
+          cd tests/build && ctest -L unit --output-on-failure
           TEST_RESULT=$?
         fi
 

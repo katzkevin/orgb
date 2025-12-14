@@ -5,7 +5,7 @@
 ofxGui
 
 # Network addons
-# ofxMQTT - Currently disabled due to compilation errors with C++23
+ofxMQTT
 ofxNDI
 ofxOsc
 
