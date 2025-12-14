@@ -7,6 +7,7 @@
 // Browser build - disable native networking addons
 #ifndef __EMSCRIPTEN__
 #ifdef HAS_MQTT
+#include "ThreadSafeMQTTQueue.hpp"
 #include "ofxMQTT.h"
 #endif
 #include <atomic>
@@ -115,12 +116,20 @@ class ofApp : public ofBaseApp {
     ofxMQTT client;
     bool mqttClientConnectedSuccessfully;
     void mqttConnectHandler();
-    void pollForMQTTMessages();
     void mqttOnMessage(ofxMQTTMessage & msg);
     void mqttOnOnline();
     void mqttOnOffline();
     void dumpSettingsToMqtt();
-    bool mqttMessageEncountered;  // TODO Document. This was one message per frame before this for some reason.
+
+    // Threading support for MQTT
+    ThreadSafeMQTTQueue mqttMessageQueue;
+    std::thread mqttThread;
+    std::atomic<bool> mqttThreadRunning{false};
+    void mqttThreadFunction();         // Runs in background thread
+    void processQueuedMQTTMessages();  // Processes messages in main thread
+    void startMQTTThread();
+    void stopMQTTThread();
+    void processMQTTMessage(const MQTTQueueMessage & msg);  // Actual message handling
 
     bool enableMQTT;
     bool requireMQTT;

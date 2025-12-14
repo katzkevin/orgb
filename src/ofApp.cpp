@@ -225,6 +225,7 @@ void ofApp::setup() {
         // MQTT
         ofLogNotice("MQTT") << "Setting up MQTT receiver.";
         mqttConnectHandler();
+        startMQTTThread();
         ofLogNotice("MQTT") << "Set up.";
     }
 #endif  // HAS_MQTT
@@ -332,7 +333,7 @@ void ofApp::update() {
 
 #ifdef HAS_MQTT
     if (enableMQTT) {
-        pollForMQTTMessages();
+        processQueuedMQTTMessages();
     }
 #endif  // HAS_MQTT
 }
@@ -461,10 +462,15 @@ void ofApp::exit() {
 #endif
 
 #ifdef HAS_MQTT
-    if (enableMQTT && mqttClientConnectedSuccessfully) {
-        ofLogVerbose() << "MQTT disconnecting...";
-        client.disconnect();
-        ofLogNotice() << "Mqtt disconnected.";
+    if (enableMQTT) {
+        // Stop MQTT thread first
+        stopMQTTThread();
+
+        if (mqttClientConnectedSuccessfully) {
+            ofLogVerbose() << "MQTT disconnecting...";
+            client.disconnect();
+            ofLogNotice() << "MQTT disconnected.";
+        }
     }
 #endif
 

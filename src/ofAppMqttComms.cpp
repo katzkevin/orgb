@@ -9,12 +9,19 @@
 
 #ifdef HAS_MQTT
 
+#include <chrono>
+#include <thread>
+
 #include "json.hpp"
 
 // for convenience
 using json = nlohmann::json;
 
 // https://github.com/256dpi/ofxMQTT/blob/master/example-ofxMQTT/src/ofApp.h
+
+// ====================
+// Connection Setup
+// ====================
 
 void ofApp::mqttConnectHandler() {
     std::string mqttHost = getEnv("MOSQUITTO_HOST", "");
@@ -36,56 +43,100 @@ void ofApp::mqttConnectHandler() {
         ofAddListener(client.onOffline, this, &ofApp::mqttOnOffline);
         ofAddListener(client.onMessage, this, &ofApp::mqttOnMessage);
     } else if (requireMQTT) {
-        ofLogWarning("MQTT") << "MQTT Conenction failed. Restarting...";
+        ofLogWarning("MQTT") << "MQTT Connection failed. Restarting...";
         ofSleepMillis(5000);
         ofExit(0);
     }
 }
 
-void ofApp::dumpSettingsToMqtt() {
+// ====================
+// Threading Functions
+// ====================
+
+void ofApp::startMQTTThread() {
     if (!mqttClientConnectedSuccessfully) {
-        ofLogNotice("MQTT") << "MQTT Client not connected, skipping dumpSettingsToMqtt.";
+        ofLogNotice("MQTT") << "MQTT not connected, skipping thread start";
         return;
-    } else {
-        ofLogNotice("MQTT") << "Writing settings to " << SETTINGS_MQTT_TOPIC;
     }
-    ofJson json;
-    gui.saveTo(json);
-    client.publish(SETTINGS_MQTT_TOPIC, json.dump());
+
+    if (mqttThreadRunning) {
+        ofLogWarning("MQTT") << "MQTT thread already running";
+        return;
+    }
+
+    mqttThreadRunning = true;
+    mqttThread = std::thread(&ofApp::mqttThreadFunction, this);
+    ofLogNotice("MQTT") << "MQTT thread started";
 }
 
-void ofApp::pollForMQTTMessages() {
-    if (!mqttClientConnectedSuccessfully) {
+void ofApp::stopMQTTThread() {
+    if (!mqttThreadRunning) {
         return;
     }
 
-    double t0 = getSystemTimeSecondsPrecise();
+    ofLogNotice("MQTT") << "Stopping MQTT thread...";
+    mqttThreadRunning = false;
 
-    // Check for twenty messages a second... WHAT? Why necessary. Hmm.
+    if (mqttThread.joinable()) {
+        mqttThread.join();
+    }
 
-    while (true) {
-        mqttMessageEncountered = false;
-        // onMessage will set midiMessage encountered to true if there is a message.
+    ofLogNotice("MQTT") << "MQTT thread stopped";
+}
+
+void ofApp::mqttThreadFunction() {
+    ofLogNotice("MQTT") << "MQTT background thread running";
+
+    while (mqttThreadRunning) {
+        // client.update() triggers callbacks including mqttOnMessage
+        // which will push messages to the queue
         client.update();
-        if (monitorFrameRateMode) {
-            warnOnSlow("MQTT IO Update", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(),
-                       ofGetElapsedTimef());  // Check every update frame
-        }
-        // If there isn't a message at this point, the onMessage handler _wasn't invoked_, queue is empty.
-        if (mqttMessageEncountered == false) {
-            break;
-        }
+
+        // Small sleep to prevent busy-waiting
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    warnOnSlow("MQTT IO", t0, TARGET_FRAME_TIME_S / WARN_INTERVAL_DENOMINATOR_MQTT_IO, ofGetFrameNum(),
-               ofGetElapsedTimef());  // Check every update frame
+    ofLogNotice("MQTT") << "MQTT background thread exiting";
 }
 
+// Called from background thread during client.update()
 void ofApp::mqttOnMessage(ofxMQTTMessage & msg) {
-    // Update loop will set this to false
+    // Just push to queue - don't process here (we're in background thread)
+    MQTTQueueMessage queueMsg;
+    queueMsg.topic = msg.topic;
+    queueMsg.payload = msg.payload;
+    mqttMessageQueue.push(queueMsg);
+}
 
-    mqttMessageEncountered = true;
+// Called from main thread to process queued messages
+void ofApp::processQueuedMQTTMessages() {
+    if (!mqttClientConnectedSuccessfully) {
+        return;
+    }
 
+    int processedCount = 0;
+    const int maxMessagesPerFrame = 100;  // Limit processing per frame
+
+    MQTTQueueMessage msg;
+    while (processedCount < maxMessagesPerFrame && mqttMessageQueue.tryPop(msg)) {
+        processedCount++;
+        processMQTTMessage(msg);
+    }
+
+    // Check queue status
+    size_t queueSize = mqttMessageQueue.size();
+    if (queueSize > 50) {
+        ofLogWarning("MQTT") << "Queue backing up: " << queueSize << " messages pending";
+    }
+
+    size_t droppedCount = mqttMessageQueue.getAndResetDroppedCount();
+    if (droppedCount > 0) {
+        ofLogError("MQTT") << "Dropped " << droppedCount << " messages due to queue overflow!";
+    }
+}
+
+// Actual message processing (runs in main thread)
+void ofApp::processMQTTMessage(const MQTTQueueMessage & msg) {
     ofLogNotice("MQTT") << "Received message: [" << msg.topic << "] " << msg.payload;
 
     try {
@@ -111,6 +162,22 @@ void ofApp::mqttOnMessage(ofxMQTTMessage & msg) {
     }
 }
 
+// ====================
+// Utility Functions
+// ====================
+
+void ofApp::dumpSettingsToMqtt() {
+    if (!mqttClientConnectedSuccessfully) {
+        ofLogNotice("MQTT") << "MQTT Client not connected, skipping dumpSettingsToMqtt.";
+        return;
+    } else {
+        ofLogNotice("MQTT") << "Writing settings to " << SETTINGS_MQTT_TOPIC;
+    }
+    ofJson json;
+    gui.saveTo(json);
+    client.publish(SETTINGS_MQTT_TOPIC, json.dump());
+}
+
 void ofApp::mqttOnOnline() {
     ofLogNotice("MQTT") << "Online.";
     client.subscribe("midi");
@@ -121,6 +188,6 @@ void ofApp::mqttOnOnline() {
     client.subscribe(ORGB_OFPARAMETER_MQTT_TOPIC);
 }
 
-void ofApp::mqttOnOffline() { ofLogNotice("MIDI") << "Offline."; }
+void ofApp::mqttOnOffline() { ofLogNotice("MQTT") << "Offline."; }
 
 #endif  // HAS_MQTT
