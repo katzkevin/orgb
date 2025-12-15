@@ -13,7 +13,7 @@ FilmGrainEffect::FilmGrainEffect()
 
     // Setup ofParameter integration
     parameterGroup.setName("Film Grain");
-    parameterGroup.add(enableParam.set("Enable", true));
+    parameterGroup.add(enableParam.set("Enable", false));
     parameterGroup.add(intensityParam.set("Intensity", 0.05f, 0.0f, 1.0f));
     parameterGroup.add(grainSizeParam.set("Grain Size", 1.5f, 1.0f, 4.0f));
 

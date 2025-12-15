@@ -21,7 +21,7 @@ ScanlinesEffect::ScanlinesEffect()
 
     // Setup ofParameter integration
     parameterGroup.setName("Scanlines");
-    parameterGroup.add(enableParam.set("Enable", true));
+    parameterGroup.add(enableParam.set("Enable", false));
     parameterGroup.add(intensityParam.set("Intensity", 0.3f, 0.0f, 1.0f));
     parameterGroup.add(scanlineCountParam.set("Line Count", 200.0f, 50.0f, 500.0f));
     parameterGroup.add(speedParam.set("Speed", 0.1f, 0.0f, 1.0f));
