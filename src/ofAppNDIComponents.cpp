@@ -1,4 +1,5 @@
 #ifndef __EMSCRIPTEN__
+#ifndef NO_NDI
 //
 //  ofAppNDIComponents.cpp
 //  orgb
@@ -135,4 +136,5 @@ bool ofApp::ndiDrawHandler() {
     }
 }
 
+#endif  // NO_NDI
 #endif  // __EMSCRIPTEN__

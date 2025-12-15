@@ -17,9 +17,11 @@
 #include "ofxOsc.h"
 
 // NDI
+#ifndef NO_NDI
 #include "ofxNDIFinder.h"
 #include "ofxNDIReceiver.h"
 #include "ofxNDIRecvStream.h"
+#endif
 #endif
 
 #ifdef TARGET_RASPBERRY_PI
@@ -172,7 +174,7 @@ class ofApp : public ofBaseApp {
 #ifdef TARGET_RASPBERRY_PI
     ofxRpiLED led;
 #endif
-    static int initializeLEDMatrices();
+    int initializeLEDMatrices();
     void brightnessUpdateHandler();
     ofParameter<float> ledBrightnessPct;      // Out of 100%, cast to uint8_t
     ofParameter<float> idleLedBrightnessPct;  // Out of 100%
@@ -244,6 +246,7 @@ class ofApp : public ofBaseApp {
     bool applicationIsIdle();
 
 #ifndef __EMSCRIPTEN__
+#ifndef NO_NDI
     std::optional<double> lastNdiReconnectAttempt;
 
     /*
@@ -259,7 +262,8 @@ class ofApp : public ofBaseApp {
     bool ndiScanForVideoSources();
     bool ndiSwitchToVideoSource(ofxNDI::Source & source);
     uint64_t ndiMoment;
-#endif
+#endif  // NO_NDI
+#endif  // __EMSCRIPTEN__
 
     bool guiShow;
     bool debugShow;

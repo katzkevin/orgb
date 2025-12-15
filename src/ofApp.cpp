@@ -231,11 +231,13 @@ void ofApp::setup() {
 #endif  // HAS_MQTT
 
 #ifndef __EMSCRIPTEN__
+#ifndef NO_NDI
     if (enableNDI) {
         ofLogNotice("NDI") << "Initializing NDI and watching sources.";
         NDIlib_initialize();
         finder_.watchSources();
     }
+#endif
 #endif
 
 #ifdef TARGET_RASPBERRY_PI
@@ -302,9 +304,11 @@ void ofApp::update() {
     }
 
 #ifndef __EMSCRIPTEN__
+#ifndef NO_NDI
     if (enableNDI) {
         ndiUpdateHandler();  // Returns true when we have an active frame
     }
+#endif
 #endif
 
     double t0 = getSystemTimeSecondsPrecise();
@@ -351,10 +355,12 @@ void ofApp::draw() {
     //    ofDisableAlphaBlending();
 
 #ifndef __EMSCRIPTEN__
+#ifndef NO_NDI
     if (enableNDI) {
         // Will draw screen if NDI is connected. Will return false otherwise.
         ndiDrawHandler();
     }
+#endif
 #endif
 
     ofPushStyle();
