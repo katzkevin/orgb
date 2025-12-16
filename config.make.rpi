@@ -1,0 +1,25 @@
+################################################################################
+# CONFIGURE PROJECT MAKEFILE (Raspberry Pi)
+#   This file is for Raspberry Pi ARM64 builds
+################################################################################
+
+################################################################################
+# OF ROOT
+#   The location of your root openFrameworks installation
+################################################################################
+OF_ROOT = /opt/openframeworks
+
+################################################################################
+# RASPBERRY PI CONFIGURATION
+#   Settings for ARM64 Raspberry Pi builds
+################################################################################
+
+# Set the binary name
+BIN_NAME = piex
+
+################################################################################
+# PROJECT CFLAGS
+#   Raspberry Pi specific flags
+################################################################################
+PROJECT_CFLAGS = -DNO_NDI
+PROJECT_CFLAGS += -DTARGET_RASPBERRY_PI

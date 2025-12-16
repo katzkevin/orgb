@@ -1,0 +1,15 @@
+# Raspberry Pi addons configuration
+# Minimal set for LED matrix output
+
+# GUI
+ofxGui
+
+# Network addons
+ofxMQTT
+ofxOsc
+
+# Testing
+ofxUnitTests
+
+# Raspberry Pi LED matrix
+ofxRpiLED

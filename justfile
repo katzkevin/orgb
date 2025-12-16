@@ -31,6 +31,23 @@ build-emscripten-debug:
     @just _setup-platform emscripten
     bash -c 'source ~/emsdk/emsdk_env.sh && make Debug'
 
+# Build for Raspberry Pi (ARM64) using Docker
+build-rpi:
+    @echo "Building for Raspberry Pi (ARM64) via Docker..."
+    @echo "This requires Docker with buildx and SSH agent forwarding for ofxRpiLED"
+    docker buildx build \
+        --platform linux/arm64 \
+        --ssh default \
+        -f Dockerfile.arm64 \
+        -t orgb-arm64:latest \
+        --load \
+        .
+    @mkdir -p bin
+    docker run --rm orgb-arm64:latest cat /opt/openframeworks/apps/myApps/piex/bin/piex > bin/piex
+    @chmod +x bin/piex
+    @echo "Binary extracted to bin/piex"
+    @ls -lh bin/piex
+
 # Build the project in Release mode (defaults to macOS)
 build:
     @just build-macos

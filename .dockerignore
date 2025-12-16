@@ -1,0 +1,32 @@
+# Docker build ignore file
+.git
+.gitignore
+*.md
+README*
+
+# macOS build artifacts
+bin/*.app
+bin/orgb
+bin/orgb_debug
+obj/
+
+# Test artifacts
+tests/build/
+
+# IDE files
+.vscode/
+.idea/
+*.xcodeproj/
+
+# Other platform configs (we copy the right one in Dockerfile)
+config.make
+config.make.macos
+config.make.emscripten
+addons.make
+addons.make.macos
+addons.make.emscripten
+
+# Misc
+*.dylib
+compile_commands.json
+.DS_Store

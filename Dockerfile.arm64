@@ -1,0 +1,81 @@
+# Dockerfile for cross-compiling ORGB for Raspberry Pi (ARM64)
+# Build with: docker buildx build --platform linux/arm64 -f Dockerfile.arm64 -t orgb-arm64 .
+# Extract binary: docker run --rm orgb-arm64 cat /opt/openframeworks/apps/myApps/piex/bin/piex > bin/piex
+
+FROM --platform=linux/arm64 arm64v8/debian:bookworm
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basic build tools and git
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    curl \
+    ca-certificates \
+    ssh \
+    rsync \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and extract OpenFrameworks 0.12.0 for ARM64
+WORKDIR /opt
+RUN curl -L -o openframeworks.tar.gz \
+    "https://github.com/openframeworks/openFrameworks/releases/download/0.12.0/of_v0.12.0_linuxaarch64_release.tar.gz" \
+    && mkdir -p openframeworks \
+    && tar -xzf openframeworks.tar.gz --strip-components=1 -C openframeworks \
+    && rm openframeworks.tar.gz
+
+# Install OpenFrameworks dependencies
+WORKDIR /opt/openframeworks/scripts/linux/debian
+RUN yes | ./install_dependencies.sh || true
+
+# Compile OpenFrameworks core libraries
+WORKDIR /opt/openframeworks/scripts/linux
+RUN ./compileOF.sh -j$(nproc)
+
+# Create addons directory
+WORKDIR /opt/openframeworks/addons
+
+# Clone ofxMQTT (public)
+RUN git clone --depth 1 https://github.com/256dpi/ofxMQTT.git
+
+# Clone ofxRpiLED (private - requires SSH key mount)
+# Build with: docker buildx build --ssh default -f Dockerfile.arm64 ...
+RUN --mount=type=ssh \
+    mkdir -p ~/.ssh && \
+    ssh-keyscan github.com >> ~/.ssh/known_hosts && \
+    git clone --depth 1 git@github.com:kevcmk/ofxRpiLED.git
+
+# Build the rgb_matrix library
+WORKDIR /opt/openframeworks/addons/ofxRpiLED/libs/rgb_matrix/lib
+RUN make
+
+# Create app directory structure
+RUN mkdir -p /opt/openframeworks/apps/myApps/piex/src \
+    /opt/openframeworks/apps/myApps/piex/bin
+
+WORKDIR /opt/openframeworks/apps/myApps/piex
+
+# Copy config files
+COPY config.make.rpi config.make
+COPY addons.make.rpi addons.make
+
+# Create Makefile using heredoc to preserve $(OF_ROOT) literally
+RUN cat > Makefile <<'MAKEFILE'
+ifndef OF_ROOT
+OF_ROOT = /opt/openframeworks
+endif
+include config.make
+include $(OF_ROOT)/libs/openFrameworksCompiled/project/makefileCommon/compile.project.mk
+MAKEFILE
+
+# Copy source and data
+COPY src/ src/
+COPY bin/data/ bin/data/
+
+# Build the application
+RUN make Release -j$(nproc)
+
+# Output is at /opt/openframeworks/apps/myApps/piex/bin/piex
+CMD ["echo", "Binary built at /opt/openframeworks/apps/myApps/piex/bin/piex"]
