@@ -9,6 +9,7 @@
 obj/
 build/
 bin/*.app
+bin/piex
 bin/em/
 bin/data/imagesprocket/descartes/*
 bin/data/imagesprocket/foreground/*
