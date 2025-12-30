@@ -48,6 +48,24 @@ build-rpi:
     @echo "Binary extracted to bin/piex"
     @ls -lh bin/piex
 
+# Upload Raspberry Pi build artifacts to S3 for CI deployment
+upload-rpi:
+    @echo "Uploading piex build artifacts to S3..."
+    @if [ ! -f bin/piex ]; then \
+        echo "Error: bin/piex not found. Run 'just build-rpi' first."; \
+        exit 1; \
+    fi
+    @echo "Uploading bin/piex..."
+    aws s3 cp bin/piex s3://sbc-build-artifacts/piex/bin/piex
+    @echo "Uploading bin/data/..."
+    aws s3 sync bin/data s3://sbc-build-artifacts/piex/bin/data --delete
+    @echo "✓ Upload complete"
+    @echo "Artifacts available at s3://sbc-build-artifacts/piex/"
+
+# Build and upload Raspberry Pi artifacts in one step
+deploy-rpi: build-rpi upload-rpi
+    @echo "✓ Build and upload complete"
+
 # Build the project in Release mode (defaults to macOS)
 build:
     @just build-macos
